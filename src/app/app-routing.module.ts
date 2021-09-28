@@ -1,7 +1,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ChallengeDetailsComponent } from './component/challenge/challenge-details/challenge-details.component';
+import { LiveChallengeComponent } from './component/challenge/live-challenge/live-challenge.component';
+import { ViewChallengeComponent } from './component/challenge/view-challenge/view-challenge.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path : "challenge",
+    component : ViewChallengeComponent
+  },
+  {
+    path : "challenge/details",
+    component : ChallengeDetailsComponent
+  },
+  {
+    path : "challenge/live",
+    component : LiveChallengeComponent
+  },
+  {
+    path : "",
+    redirectTo : "challenge",
+    pathMatch : "full"
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

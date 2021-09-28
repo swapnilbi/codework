@@ -1,0 +1,32 @@
+
+
+<div class="editor-header">  
+  <span class="language">Language : </span>     
+ 
+  <select [(ngModel)]="language" class="editor-header-select">
+    <option *ngFor="let lang of languages" [value]="lang.id">
+      {{lang.description}}
+    </option>
+  </select>
+
+</div>
+
+<ngx-monaco-editor
+  class="template-editor"
+  [options]="editorOptions"  
+  [(ngModel)]="code"  
+></ngx-monaco-editor>
+
+<div class="editor-footer">
+
+    <div class="test-result">Test Result</div>
+
+    <div class="custom-input">Custom Input</div>    
+    
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-primary">Compile</button>
+      <button type="button" class="btn btn-secondary">Run Tests</button>
+      <button type="button" class="btn btn-success">Submit</button>
+    </div>
+  
+</div>

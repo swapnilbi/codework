@@ -1,0 +1,110 @@
+.challenge-live{
+    width: 100%; 
+    height: calc(100vh - 65px);
+    margin-top: -30px;
+}
+
+.language{
+  font-size: 15px;
+  font-family: Open Sans,sans-serif;
+}
+
+.problem-details-wrapper{
+    overflow-y: hidden !important;
+}
+
+.problem-select-header{
+  background-color: #f0f0f0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;    
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 8px 27px;  
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.problem-select{
+    background: #fff;
+    color: #46535e;
+    font-weight: 600;
+    font-family: Open Sans,sans-serif;
+    font-size: 14px;
+    padding: 0 5px 1px;
+    outline: 0;
+    border-color: #e5e7e8;
+    width: 120px;
+    height: 30px;
+    margin-left: 5px;
+}
+
+.challenge-editor{
+    background-color: white;     
+    overflow-y: hidden !important;
+}
+
+.problem-details{
+    padding: 10px 20px;
+    max-height: 600px;
+    overflow-x: hidden;
+    font-family: Open Sans,Helvetica,Arial,sans-serif;
+
+    p {
+        line-height: 1.6;
+        margin: 15px 0;    
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+    }
+
+    .title {
+        color: #333;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 20px;
+    }
+
+    .description {
+        color: #666;
+        font-size: 14px;
+        line-height: 17px;
+    }
+
+}
+
+
+.editor-footer{
+    background-color: #f0f0f0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 8px 27px;    
+    z-index: 1000;
+    position: fixed;
+    width: 100%;
+    height: 60px;
+    bottom: 0;
+    
+    .custom-input{      
+      font-weight: 500;
+      margin-right: 40px;
+    }
+  
+    .test-result{      
+      font-weight: 500;
+      margin-right: 40px;    
+    }
+  
+  }
