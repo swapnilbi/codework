@@ -9,11 +9,15 @@ h5 {
 .card {
     font-size: 1em;
     width: 250px;
+    height: 350px;
     overflow: hidden;
     padding: 0;
     border: none;
     border-radius: .28571429rem;
     box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+    display: inline-block !important;
+    margin: 0px 15px 10px 10px;
+    cursor: pointer;
 }
 
 .card-block {
@@ -24,6 +28,7 @@ h5 {
     border: none;
     border-top: 1px solid rgba(34, 36, 38, .1);
     box-shadow: none;
+    height: 45%;
 }
 
 .card-img-top {
@@ -83,7 +88,7 @@ h5 {
 }
 
 .card-footer {
-    font-size: 1em;
+    font-size: 1em;    
     position: static;
     top: 0;
     left: 0;
@@ -135,7 +140,7 @@ h5 {
 }
 
 .meta {
-    font-size: 0.8em;
+    font-size: 0.7em;
     color: rgba(0, 0, 0, .4);
 }
 

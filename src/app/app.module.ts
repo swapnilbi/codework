@@ -19,6 +19,17 @@ import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { CodeEditorComponent } from './component/challenge/code-editor/code-editor.component';
 import { CodeEditorConfig } from './component/challenge/code-editor/code-editor.config';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FakeBackendInterceptor } from './common/interceptors/mock-http-interceptor';
+import { HttpRequestInterceptor } from './common/interceptors/http-interceptor';
+import { environment } from 'src/environments/environment';
+import { AlertComponent } from './component/common/alert/alert.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoaderComponent } from './component/common/loader/loader.component';
+import { LoaderService } from './component/common/loader/loader.service';
+
+export const isMock = environment.mock;
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -32,7 +43,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ChallengeWidgetComponent,
     ChallengeDetailsComponent,
     LiveChallengeComponent,
-    CodeEditorComponent        
+    CodeEditorComponent,
+    AlertComponent,
+    LoaderComponent        
   ],
   imports: [
     BrowserModule,
@@ -42,12 +55,23 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PerfectScrollbarModule,
     AngularSplitModule,
     FormsModule,
-    MonacoEditorModule.forRoot(CodeEditorConfig) // use forRoot() in main app module only.    
+    MonacoEditorModule.forRoot(CodeEditorConfig), // use forRoot() in main app module only.  
+    HttpClientModule,
+    SweetAlert2Module.forRoot(),
+    MatProgressSpinnerModule
   ],
-  providers: [{
-    provide: PERFECT_SCROLLBAR_CONFIG,
-    useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-  }],
+  providers: [
+    {
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
+    },    
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: isMock ? FakeBackendInterceptor : HttpRequestInterceptor,
+      multi: true
+    },
+    LoaderService       
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -6,11 +6,11 @@ import { ViewChallengeComponent } from './component/challenge/view-challenge/vie
 
 const routes: Routes = [
   {
-    path : "challenge",
+    path : "challenges",
     component : ViewChallengeComponent
   },
   {
-    path : "challenge/details",
+    path : "challenge/:id/details",
     component : ChallengeDetailsComponent
   },
   {
@@ -19,7 +19,7 @@ const routes: Routes = [
   },
   {
     path : "",
-    redirectTo : "challenge",
+    redirectTo : "challenges",
     pathMatch : "full"
   }
 ];

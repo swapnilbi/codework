@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Challenge } from 'src/app/model/challenge.model';
 
 @Component({
   selector: 'challenge-widget',
@@ -8,13 +9,17 @@ import { Router } from '@angular/router';
 })
 export class ChallengeWidgetComponent implements OnInit {
 
+
+  @Input() challenge!: Challenge;
+
   constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
-  registerChallenge(){
-    this.router.navigate(['/challenge/details']);
+  viewChallenge(){
+    var url = '/challenge/'+this.challenge.id+'/details';
+    this.router.navigateByUrl(url);
   }
 
 }

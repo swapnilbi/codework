@@ -1,6 +1,6 @@
 .challenge-details {
     font-family: 'Open Sans',sans-serif;
-    max-width: 75%;
+    max-width: 95%;
     background-color: #fff;
     margin: 0 auto;
     border-radius: 3px;
@@ -36,6 +36,11 @@
     box-sizing: border-box;
 }
 
-.challenge-body{
-    height: 200px;
+.challenge-body{    
+    width: 95%;
+}
+
+.challenge-details-body{
+    background: #fff;
+    padding: 1.5rem 1.5rem;
 }

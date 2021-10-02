@@ -1,5 +1,5 @@
-<div class="card card-inverse card-info">
-    <div class="card-header" style="background-image: url('https://picsum.photos/200/150/?random')">            
+<div class="card card-inverse card-info" (click)="viewChallenge()">
+    <div class="card-header" style="background-image: url('{{challenge.bannerImage}}')">            
         <div class="card-container text-center">
             <div class="registrations tool-tip align-left">
                 <i class="fa fa-user"></i> 0
@@ -7,15 +7,19 @@
         </div>
     </div>            
     <div class="card-block">                
-        <h4 class="card-title">Code Cracker</h4>
+        <h4 class="card-title">{{ challenge.name }}</h4>
         <div class="meta">
-            <a href="#">Start Date : 12-12-2021</a>
+            <a >Start Date : {{ challenge.startDate | date: 'MMM d, y h:mm a' }}</a>            
         </div>
+        <div class="meta">
+            <a >End Date : {{ challenge.endDate | date: 'MMM d, y h:mm a' }}</a>
+        </div>        
         <div class="card-text">
-            Tawshif is a web designer living in Bangladesh.
+            {{ challenge.shortDescription }}
         </div>
-    </div>
-    <div class="card-footer text-center">
-        <button class="btn btn-info btn-sm" (click)="registerChallenge()">Register</button>
+    </div>    
+    <div class="card-footer text-center">        
+        <button *ngIf="!challenge.isRegistered" class="btn btn-info btn-sm" (click)="viewChallenge()">Register</button>
+        <button *ngIf="challenge.isRegistered" class="btn btn-success btn-sm">Registered</button>
     </div>
 </div>

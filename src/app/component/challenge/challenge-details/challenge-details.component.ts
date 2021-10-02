@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Challenge } from 'src/app/model/challenge.model';
+import { AlertService } from '../../common/alert/alert-service.service';
+import { LoaderService } from '../../common/loader/loader.service';
+import { ChallengeService } from '../view-challenge/challenge.service';
 
 @Component({
   selector: 'app-challenge-details',
@@ -7,9 +12,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChallengeDetailsComponent implements OnInit {
 
-  constructor() { }
+  public challenge?: Challenge;
+
+  constructor(private route: ActivatedRoute, private challengeService : ChallengeService, protected alertService: AlertService, private loaderService: LoaderService) {     
+  }
 
   ngOnInit(): void {
+    let challengeId : any = this.route.snapshot.paramMap.get('id');    
+    this.loaderService.show();
+    this.challengeService.getChallengeDetails(challengeId).subscribe(response => {
+      this.loaderService.hide();
+      this.challenge = response;
+    }, error => {
+      this.loaderService.hide();       
+    });    
+  }
+
+  registerChallenge(){    
+    if(this.challenge){
+      this.loaderService.show();
+      this.challengeService.registerChallenge(this.challenge?.id).subscribe(response => {
+        console.log('registered');
+        this.alertService.success("You have been successfully registered");        
+        this.challenge = response;          
+        this.loaderService.hide();
+      }, error => {
+        this.loaderService.hide();         
+      });
+    }    
   }
 
 }

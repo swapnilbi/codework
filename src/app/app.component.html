@@ -4,7 +4,9 @@
       <header class='dashboard-toolbar'><a class="menu-toggle" (click)="toggleSidebar()"><i class="fas fa-bars"></i></a>
         <a href="#" class="brand-logo"><i class="fas fa-laptop-code"></i> <span>CodeWork</span></a>
       </header>      
-      <div class="container-body">        
+      <div class="container-body">     
+          <app-loader></app-loader>
+          <app-alert></app-alert>
           <router-outlet></router-outlet>        
       </div>      
   </div>
