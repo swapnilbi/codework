@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Challenge } from 'src/app/model/challenge.model';
+import { Challenge, ChallengeStatus } from 'src/app/model/challenge.model';
 
 @Component({
   selector: 'challenge-widget',
@@ -20,6 +20,20 @@ export class ChallengeWidgetComponent implements OnInit {
   viewChallenge(){
     var url = '/challenge/'+this.challenge.id+'/details';
     this.router.navigateByUrl(url);
+  }
+
+  isLiveChallenge(){
+    if(this.challenge){
+      return this.challenge.status ==  ChallengeStatus.LIVE;
+    }
+    return false;
+  }
+
+  startChallenge(){    
+    if(this.challenge){
+      var url = '/challenge/'+this.challenge.id+'/live';
+      this.router.navigateByUrl(url);    
+    }    
   }
 
 }

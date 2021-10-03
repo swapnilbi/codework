@@ -28,6 +28,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoaderComponent } from './component/common/loader/loader.component';
 import { LoaderService } from './component/common/loader/loader.service';
+import { ChallengeInstructionComponent } from './component/challenge/live-challenge/challenge-instruction/challenge-instruction.component';
 
 export const isMock = environment.mock;
 
@@ -45,7 +46,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LiveChallengeComponent,
     CodeEditorComponent,
     AlertComponent,
-    LoaderComponent        
+    LoaderComponent,
+    ChallengeInstructionComponent        
   ],
   imports: [
     BrowserModule,

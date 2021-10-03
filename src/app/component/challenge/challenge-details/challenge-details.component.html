@@ -1,17 +1,18 @@
-<div *ngIf="challenge" class="challenge-details align-center">
+<div *ngIf="challenge" class="details-container align-center">
     <div class="event-header">        
         <div class="inline-block event-title-block">
-            <h3 class="larger dark capitalize font-weight-bold less-margin-2-bottom less-margin-2 ellipsis">Code Work Challenge 1</h3>
+            <h3 class="font-weight-bold">Code Work Challenge 1</h3>
             <div class="regular light">STARTS ON:  {{ challenge.startDate | date: 'MMM d, y h:mm a' }} </div>
             <div class="regular light">ENDS ON:  {{ challenge.endDate | date: 'MMM d, y h:mm a' }} </div>
         </div>
         <div class="clear"></div>
     </div>
-    <div class="jumbotron challenge-details-body">
+    <div class="jumbotron details-container-body">
         <div [innerHTML]="challenge.longDescription"></div>        
         <p class="lead">
             <a *ngIf="!challenge.isRegistered" class="btn btn-primary btn-lg ml-3" (click)="registerChallenge()" role="button">Register</a>
-            <a *ngIf="challenge.isRegistered" class="btn btn-success btn-lg ml-3" role="button">Registered</a>
+            <a *ngIf="challenge.isRegistered && isLiveChallenge()" class="btn btn-success btn-lg ml-3" (click)="startChallenge()" role="button">Start</a>
+            <a *ngIf="challenge.isRegistered && !isLiveChallenge()" class="btn btn-success btn-lg ml-3" role="button">Registered</a>
         </p>
     </div>  
 </div>

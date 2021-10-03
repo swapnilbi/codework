@@ -1,72 +1,34 @@
-<div class="challenge-live">
+<app-challenge-instruction (challengeStartEvent)="startChallenge()" *ngIf="showInstruction"></app-challenge-instruction>
+<div class="challenge-live" *ngIf="showLiveChallenge">
     <as-split direction="horizontal">
       <as-split-area class="problem-details-wrapper" [size]="30" [minSize]="10" [maxSize]="40">        
           <div class="problem-select-header">  
-            <span class="language">Problem : </span>     
-           
+            <span class="language">Problem : </span>                
             <select [(ngModel)]="selectedProblem" class="problem-select">
-              <option *ngFor="let problem of problemStatements" [value]="problem.id">
-                {{problem.description}}
+              <option *ngFor="let problem of problems; let i = index" [ngValue]="problem">
+                {{problem.name}}
               </option>
-            </select>
-          
+            </select>          
           </div>
-          <div class="problem-details">
+          <div class="problem-details" *ngIf="selectedProblem">
             <div class="title">Problem Statement</div>
-            <div class="description">
-              <p>
-                You are given a set of binary elements. You have to eliminate the binary numbers that contain as a substring. The
-                resultant sequence will be 1, 10, 100, 101, 1000, and so on.
-                You are required to generate the code to determine the value of the new sequence. </p>
-              <p>
-                You are required to generate the code to determine the value of the new sequence. </p>        
-              <p>
-                <strong>Input format</strong>
-              </p>
-              <ul>
-                <li>First line: <i><b>T</b></i> denoting the number of test cases</li>
-                <li>Next <i><b>T</b></i> lines: A single integer<i><b>K</b></i>
-              </ul>
-              <p>
-                <strong>Output format</strong>
-              </p>
-              <p>
-                Print <i><b>T</b></i> lines representing the code to display the <i><b>K</b></i>th  value.
-               </p>
-              <p>
-                <strong>Constraints</strong>
-              </p>
-              <p>
-                1 <code> < </code> T <code> < </code> 10
-               </p>
-               <p>
-                1 <code> < </code> K <code> < </code> 10
-               </p>
-              <p>
-                <strong>Explanation</strong>
-              </p>
+            <div class="description">              
+              <div [innerHTML]="selectedProblem.problemStatement"></div>
             </div>
           </div>        
-
       </as-split-area>
-      <as-split-area class="challenge-editor" [size]="70" [minSize]="60" [maxSize]="90">
-        
-        <code-editor></code-editor>
-
+      <as-split-area class="challenge-editor" [size]="70" [minSize]="60" [maxSize]="90">        
+        <code-editor *ngIf="selectedProblem" [problem]="selectedProblem"></code-editor>      
         <div class="editor-footer">
-
           <div class="test-result">Test Result</div>      
-          <div class="custom-input">Custom Input</div>    
-          
+          <div class="custom-input">Custom Input</div>              
           <div class="btn-group" role="group">
             <button type="button" class="btn btn-primary">Compile</button>
             <button type="button" class="btn btn-secondary">Run Tests</button>
             <button type="button" class="btn btn-success">Submit</button>
-          </div>
-        
+          </div>        
         </div>
-
       </as-split-area>
     </as-split>
-  </div>
+</div>
   

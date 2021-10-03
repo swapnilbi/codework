@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Challenge } from 'src/app/model/challenge.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Challenge, ChallengeStatus } from 'src/app/model/challenge.model';
 import { AlertService } from '../../common/alert/alert-service.service';
 import { LoaderService } from '../../common/loader/loader.service';
 import { ChallengeService } from '../view-challenge/challenge.service';
@@ -14,7 +14,7 @@ export class ChallengeDetailsComponent implements OnInit {
 
   public challenge?: Challenge;
 
-  constructor(private route: ActivatedRoute, private challengeService : ChallengeService, protected alertService: AlertService, private loaderService: LoaderService) {     
+  constructor(private router: Router, private route: ActivatedRoute, private challengeService : ChallengeService, protected alertService: AlertService, private loaderService: LoaderService) {     
   }
 
   ngOnInit(): void {
@@ -39,6 +39,20 @@ export class ChallengeDetailsComponent implements OnInit {
       }, error => {
         this.loaderService.hide();         
       });
+    }    
+  }
+
+  isLiveChallenge(){
+    if(this.challenge){
+      return this.challenge.status ==  ChallengeStatus.LIVE;
+    }
+    return false;
+  }
+
+  startChallenge(){    
+    if(this.challenge){
+      var url = '/challenge/'+this.challenge.id+'/live';
+      this.router.navigateByUrl(url);    
     }    
   }
 

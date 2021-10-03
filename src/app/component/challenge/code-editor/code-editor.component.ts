@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Language, Problem } from 'src/app/model/problem.model';
 
 @Component({
   selector: 'code-editor',
@@ -12,22 +13,31 @@ export class CodeEditorComponent implements OnInit {
   };  
 
   language: string;
-
-  languages = [
-        { id: 'C', description: 'C (gcc 5.4.0)' },
-        { id: 'CPP', description: 'C++ (g++ 5.4.0)' },
-        { id: 'JAVA', description: 'Java (openjdk 1.7.0_95)' },
-        { id: 'JAVA8', description: 'Java 14 (oracle 14)' }
-    ];
-  
   loader = true;
-  code: string= 'class Simple{\n\n  public static void main(String args[]){\n \t System.out.println("Hello Java"); \n  } \n\n }';
+  code: string= '';
+  selectedProblem?: Problem;
 
   constructor() {
     this.language = 'JAVA';
    }
 
   ngOnInit(): void {
+    this.updateSolution();  
+  }
+
+  @Input() set problem(problem: Problem) {  
+    this.selectedProblem  = problem;
+    this.updateSolution();
+  }
+
+  updateSolution(){    
+    if(this.selectedProblem){
+      if(this.selectedProblem.solution && this.selectedProblem.solution.trim().length > 0){
+        this.code = this.selectedProblem.solution;
+      }else if(this.selectedProblem.placeHolderSolution){
+        this.code = this.selectedProblem.placeHolderSolution;
+      }   
+    }
   }
 
 }
