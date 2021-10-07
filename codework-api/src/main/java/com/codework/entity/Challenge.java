@@ -1,7 +1,8 @@
-package com.example.codework.entity;
+package com.codework.entity;
 
 import java.sql.Date;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,9 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @Document(collection = "Challenge")
 public class Challenge {
 	@Id
@@ -22,6 +21,5 @@ public class Challenge {
 	private Date startDate;
 	private Date endDate;
 	private String bannerImage;
-	private boolean isRegistered;
 	private ChallengeStatus status;
 }

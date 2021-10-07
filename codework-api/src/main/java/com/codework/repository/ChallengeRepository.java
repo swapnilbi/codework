@@ -1,8 +1,8 @@
-package com.example.codework.repo;
+package com.codework.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.example.codework.entity.Challenge;
+import com.codework.entity.Challenge;
 
 public interface ChallengeRepository extends MongoRepository<Challenge, Integer>{
 

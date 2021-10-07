@@ -6,13 +6,13 @@
     <parent>
         <groupId>com.codework</groupId>
         <artifactId>codework-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.codework</groupId>
     <artifactId>codework-ui</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <build>
@@ -42,7 +42,7 @@
                                 <outputDirectory>${project.build.directory}/classes/static</outputDirectory>
                                 <resources>
                                     <resource>
-                                        <directory>${basedir}/src/codework/dist/codework</directory>
+                                        <directory>${basedir}/dist/codework</directory>
                                     </resource>
                                 </resources>
                             </configuration>
@@ -55,5 +55,5 @@
 
 
     </build>
-    
+
 </project>

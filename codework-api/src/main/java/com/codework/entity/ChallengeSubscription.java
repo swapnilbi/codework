@@ -1,4 +1,4 @@
-package com.example.codework.entity;
+package com.codework.entity;
 
 import java.util.Date;
 
