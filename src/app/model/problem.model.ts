@@ -29,4 +29,5 @@ export enum ProblemType {
 export interface Language {    
     id : string,
     description : string,
+    editorCode : string
 }

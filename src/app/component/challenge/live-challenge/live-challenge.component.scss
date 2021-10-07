@@ -13,6 +13,41 @@
     overflow-y: hidden !important;
 }
 
+.editor-header{
+  background-color: #f0f0f0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;    
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 8px 27px;  
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.language{
+  font-size: 15px;
+  font-family: Open Sans,sans-serif;
+}
+
+.editor-header-select{
+    background: #fff;
+    color: #46535e;
+    font-weight: 600;
+    font-family: Open Sans,sans-serif;
+    font-size: 14px;
+    padding: 0 5px 1px;
+    outline: 0;
+    border-color: #e5e7e8;
+    width: 220px;
+    height: 30px;
+    margin-left: 5px;
+}
+
 .problem-select-header{
   background-color: #f0f0f0;
   display: -webkit-box;
@@ -74,11 +109,20 @@
     .description {
         color: #666;
         font-size: 14px;
-        line-height: 17px;
+        line-height: 17px;        
     }
 
 }
 
+.test-result, .custom-input{
+  cursor: pointer;
+  color : #6152b3 !important;
+}
+
+.not-allowed {
+  color: #6c757d!important;
+  cursor: not-allowed !important;  
+}
 
 .editor-footer{
     background-color: #f0f0f0;

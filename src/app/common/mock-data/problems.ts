@@ -7,11 +7,12 @@ let problemList : Array<Problem> = [
         problemStatement : "<p> You are given a set of binary elements. You have to eliminate the binary numbers that contain as a substring. The resultant sequence will be 1, 10, 100, 101, 1000, and so on. You are required to generate the code to determine the value of the new sequence. </p> <p> You are required to generate the code to determine the value of the new sequence. </p> <p> <strong>Input format</strong> </p> <ul> <li>First line: <i><b>T</b></i> denoting the number of test cases</li> <li>Next <i><b>T</b></i> lines: A single integer<i><b>K</b></i> </ul> <p> <strong>Output format</strong> </p> <p> Print <i><b>T</b></i> lines representing the code to display the <i><b>K</b></i>th value. </p> <p> <strong>Constraints</strong> </p> <p> 1 <code> < </code> T <code> < </code> 10 </p> <p> 1 <code> < </code> K <code> < </code> 10 </p> <p> <strong>Explanation</strong> </p>",
         isSubmitted : false,
         type : ProblemType.PROGRAM,           
-        languagesAllowed : [
-            { id: 'C', description: 'C (gcc 5.4.0)' },
-            { id: 'CPP', description: 'C++ (g++ 5.4.0)' },
-            { id: 'JAVA', description: 'Java (openjdk 1.7.0_95)' },
-            { id: 'JAVA8', description: 'Java 14 (oracle 14)' }
+        languagesAllowed : [            
+            { id: 'JAVA', editorCode : 'java', description: 'Java (openjdk 1.7.0_95)' },              
+            { id: 'JAVA8', editorCode : 'java', description: 'Java 14 (oracle 14)' },
+            { id: 'Python', editorCode : 'python', description: 'Python' },                      
+            { id: 'C', editorCode : 'c', description: 'C (gcc 5.4.0)' },
+            { id: 'CPP', editorCode : 'c', description: 'C++ (g++ 5.4.0)' }            
         ],
         noOfTestCases : 5,
         placeHolderSolution : "class Simple{\r\n\r\n  public static void main(String args[]){\r\n \t System.out.println(\"Hello Java\"); \r\n  } \r\n\r\n }",        
@@ -29,8 +30,9 @@ let problemList : Array<Problem> = [
         isSubmitted : false,
         type : ProblemType.PROGRAM,   
         languagesAllowed : [            
-            { id: 'JAVA', description: 'Java (openjdk 1.7.0_95)' },
-            { id: 'JAVA8', description: 'Java 14 (oracle 14)' }
+            { id: 'Python', editorCode : 'python', description: 'Python' },                      
+            { id: 'JAVA', editorCode : 'java', description: 'Java (openjdk 1.7.0_95)' },
+            { id: 'JAVA8', editorCode : 'java', description: 'Java 14 (oracle 14)' }
         ],
         noOfTestCases : 5,
         placeHolderSolution : "class SimpleSolution{\r\n\r\n  public static void main(String args[]){\r\n \t System.out.println(\"Hello Java\"); \r\n  } \r\n\r\n }",

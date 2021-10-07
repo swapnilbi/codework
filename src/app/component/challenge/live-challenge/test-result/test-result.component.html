@@ -1,0 +1,77 @@
+<div class="modal-content" *ngIf="compileResult">
+	<div class="modal-header">
+		<h6 class="font-weight-bold">Test Result</h6>
+		<button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="hideModal()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+	</div>
+	<div class="modal-body">
+      <div class="vl">
+          <div>  
+            <span class="font-weight-bold">Result : </span>   
+            <span *ngIf="compileResult.result" class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Compiled & Run Successfully</span>        
+            <span *ngIf="!compileResult.result && compileResult.compilationStatus" class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Wrong Answer</span>        
+            <span *ngIf="!compileResult.result && !compileResult.compilationStatus" class="text-danger"><i class="fa fa-exclamation-circle"></i> Compilation Error</span>        
+          </div>
+          <hr/>
+
+        <div class="result-section">        
+            <p>
+                <span class="font-weight-bold">  Limits : </span>
+            </p>
+            <p class="text-secondary">          
+                <small> Time(sec) : {{ compileResult.timeLimit }}, &nbsp; Memory(KB) :  {{ compileResult.memoryLimit }}  </small>
+            </p>            
+        </div>
+
+        <div class="result-section" *ngIf="compileResult.compilationStatus">
+          <div>
+            <span class="font-weight-bold">  Test Cases : </span>
+          </div>                    
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Result</th>
+                <th scope="col">Time(sec)</th>
+                <th scope="col">Memory(KB)</th>
+                <th scope="col">Remark</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let testCase of compileResult.testCaseResults;  let i = index ">
+                <th scope="row">{{i+1}}</th>
+                <td>
+                    <span *ngIf="testCase.status" class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Pass</span>
+                    <span *ngIf="!testCase.status" class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Fail</span>
+                </td>
+                <td>{{testCase.time}}</td>
+                <td>{{testCase.memory}}</td>
+                <td><span class="text-danger"><small>{{testCase.remark}}</small></span></td>
+              </tr>            
+            </tbody>
+          </table>
+        </div>
+        <div class="result-section" *ngIf="!compileResult.compilationStatus">        
+          <p>
+            <span class="font-weight-bold">  Compilation Log : </span>
+          </p>
+          <p class="text-white compilation-log">          
+            <small>              
+              {{compileResult.compilationLog}}
+            </small>          
+          </p>
+        </div>
+      </div> 
+	</div>
+
+  <div class="modal-footer">    
+    <button type="button" class="btn btn-primary" (click)="hideModal()">Close</button>
+  </div>
+
+</div>

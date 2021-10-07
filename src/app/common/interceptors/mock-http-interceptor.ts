@@ -6,6 +6,7 @@ import { Challenge, ChallengeStatus } from '../../model/challenge.model';
 import { challengeList } from '../mock-data/challenges';
 import { Problem } from 'src/app/model/problem.model';
 import { problemList } from '../mock-data/problems';
+import { compileResult, runAllTestsResult } from '../mock-data/compile-result';
 
 // array in local storage for registered users
 let challenges : Array<Challenge> = challengeList;
@@ -35,6 +36,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return registerChallenge(getIdFromUrl(url,2));                
                 case url.match(/\/api\/challenge\/\d+\/problems$/) && true:
                     return getProblems(getIdFromUrl(url,2));                
+                case url.endsWith('/api/challenge/solution/compile'):
+                    return compileSolution();
+                case url.endsWith('/api/challenge/solution/run'):
+                    return runAllTests();
+                case url.endsWith('/api/challenge/solution/save'):
+                    return saveSolution();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -56,9 +63,21 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return ok(challenges);
         }
 
+        function saveSolution() {            
+            return ok(true);
+        }
+
         function getChallengeById(challengeId : number) {            
             const challenge = challenges.find(x => x.id === challengeId);            
             return ok(challenge);
+        }
+
+        function compileSolution() {            
+            return ok(compileResult)            
+        }
+
+        function runAllTests() {            
+            return ok(runAllTestsResult)            
         }
 
         function getIdFromUrl(url : string, urlLocation : number) {            

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Alert, AlertType } from './alert-model';
+import { AlertType } from './alert-model';
 import { AlertService } from './alert-service.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 

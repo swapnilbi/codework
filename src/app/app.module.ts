@@ -29,6 +29,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoaderComponent } from './component/common/loader/loader.component';
 import { LoaderService } from './component/common/loader/loader.service';
 import { ChallengeInstructionComponent } from './component/challenge/live-challenge/challenge-instruction/challenge-instruction.component';
+import { CompileResultComponent } from './component/challenge/live-challenge/compile-result/compile-result.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { AccordionModule } from 'ngx-bootstrap/accordion';
+import { CustomInputComponent } from './component/challenge/live-challenge/custom-input/custom-input.component';
+import { TestResultComponent } from './component/challenge/live-challenge/test-result/test-result.component';
 
 export const isMock = environment.mock;
 
@@ -47,7 +52,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CodeEditorComponent,
     AlertComponent,
     LoaderComponent,
-    ChallengeInstructionComponent        
+    ChallengeInstructionComponent,
+    CompileResultComponent,
+    CustomInputComponent,
+    TestResultComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +68,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MonacoEditorModule.forRoot(CodeEditorConfig), // use forRoot() in main app module only.  
     HttpClientModule,
     SweetAlert2Module.forRoot(),
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ModalModule.forRoot(),
+    AccordionModule.forRoot(),
+    
+    
   ],
   providers: [
     {

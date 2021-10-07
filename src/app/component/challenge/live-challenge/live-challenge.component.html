@@ -12,23 +12,24 @@
           </div>
           <div class="problem-details" *ngIf="selectedProblem">
             <div class="title">Problem Statement</div>
-            <div class="description">              
+            <div class="description mt-2">              
               <div [innerHTML]="selectedProblem.problemStatement"></div>
             </div>
           </div>        
       </as-split-area>
       <as-split-area class="challenge-editor" [size]="70" [minSize]="60" [maxSize]="90">        
-        <code-editor *ngIf="selectedProblem" [problem]="selectedProblem"></code-editor>      
+
+        <code-editor (saveSolutionEvent)="saveSolution()" (finishChallengeEvent)="finishChallenge()" #codeEditor *ngIf="selectedProblem" [problem]="selectedProblem"></code-editor>      
+        
         <div class="editor-footer">
-          <div class="test-result">Test Result</div>      
-          <div class="custom-input">Custom Input</div>              
-          <div class="btn-group" role="group">
-            <button type="button" class="btn btn-primary">Compile</button>
-            <button type="button" class="btn btn-secondary">Run Tests</button>
-            <button type="button" class="btn btn-success">Submit</button>
-          </div>        
+          <div class="test-result" [ngClass]="{'not-allowed': !problemSolutionResult}" (click)="showTestResult()">Test Result</div>
+          <div class="custom-input" (click)="provideCustomInput()">Custom Input</div>              
+          
+            <button type="button" (click)="compileSolution()" class="btn btn-sm btn-primary ml-2"> <i class="fas fa-code"></i> Compile</button>
+            <button type="button" (click)="runAllTests()" class="btn btn-sm btn-info ml-2"><i class="fas fa-tasks"></i> Run Tests</button>
+            <button type="button" (click)="submitSolution()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-check"></i> Submit</button>
+          
         </div>
       </as-split-area>
     </as-split>
 </div>
-  

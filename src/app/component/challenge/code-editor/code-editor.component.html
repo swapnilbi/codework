@@ -1,26 +1,21 @@
 <div *ngIf="selectedProblem">
-  <div class="editor-header">  
+  
+  <div class="editor-header" *ngIf="selectedProblem">  
     <span class="language">Language : </span>      
-    <select [(ngModel)]="language" class="editor-header-select">
-      <option *ngFor="let lang of selectedProblem.languagesAllowed" [value]="lang.id">
+    <select [(ngModel)]="language" class="editor-header-select" (change)="onLanguageChange(language)">
+      <option *ngFor="let lang of selectedProblem.languagesAllowed" [ngValue]="lang">
         {{lang.description}}
       </option>
-    </select>
+    </select>      
+    <button type="button" class="btn btn-success btn-sm float-right ml-2" (click)="finishChallenge()"> <i class="far fa-clock"></i> Finish</button>    
+    <button type="button" class="btn btn-primary btn-sm float-right" (click)="saveSolution()"><i class="far fa-save"></i> Save</button>        
   </div>
 
   <ngx-monaco-editor
+    *ngIf="showEditor"
     class="template-editor"
     [options]="editorOptions"  
-    [(ngModel)]="code"  
+    [(ngModel)]="code"     
   ></ngx-monaco-editor>
-
-  <div class="editor-footer">
-      <div class="test-result">Test Result</div>
-      <div class="custom-input">Custom Input</div>        
-      <div class="btn-group" role="group">
-        <button type="button" class="btn btn-primary">Compile</button>
-        <button type="button" class="btn btn-secondary">Run Tests</button>
-        <button type="button" class="btn btn-success">Submit</button>
-      </div>  
-  </div>
+  
 </div>

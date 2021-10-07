@@ -1,0 +1,75 @@
+<div class="modal-content" *ngIf="compileResult">
+	<div class="modal-header">
+		<h6 class="font-weight-bold">Compile Result</h6>
+		<button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="hideModal()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+	</div>
+	<div class="modal-body">
+      <div class="vl">
+          <div>  
+            <span class="font-weight-bold">Result : </span>   
+            <span *ngIf="compileResult.result" class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Compiled Successfully</span>        
+            <span *ngIf="!compileResult.result && compileResult.compilationStatus" class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Wrong Answer</span>        
+            <span *ngIf="!compileResult.result && !compileResult.compilationStatus" class="text-danger"><i class="fa fa-exclamation-circle"></i> Compilation Error</span>        
+          </div>
+          <hr/>
+
+        <div class="result-section" *ngIf="compileResult.compilationStatus">
+          <div>
+            <span class="font-weight-bold">  Sample Test Cases : </span>
+          </div>
+          <accordion class="accordion" [isAnimated]="true" [closeOthers]="true">
+            <accordion-group [panelClass]="customClass" *ngFor="let testCase of compileResult.testCaseResults;  let i = index " [isOpen]="i==0">
+              <button
+              class="btn btn-link btn-block justify-content-between d-flex w-100  shadow-none"
+              accordion-heading type="button">
+              <div [ngClass]="{'text-success': testCase.status, 'text-danger': !testCase.status }" class="pull-left float-left">Test Case #{{i+1}}  
+                   <i [ngClass]="{'fa-check-circle': testCase.status, 'fa-exclamation-circle': !testCase.status }" class="fa" aria-hidden="true"></i> 
+              </div>                 
+              <span class="float-right text-secondary pull-right">Time(sec) : {{testCase.time}} &nbsp; Memory(KB) : {{testCase.memory}}</span>            
+            </button>                          
+              <table class="table table-borderless" style="width : 100%">
+                <thead>
+                  <tr>      
+                    <th>Input</th>
+                    <th>Expected Output</th>
+                    <th>Your Output</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="text-secondary">      
+                    <td>{{testCase.input}}</td>
+                    <td>{{testCase.expectedOutput}}</td>
+                    <td>{{testCase.actualOutput}}</td>
+                  </tr>   
+                </tbody>
+            </table>            
+            </accordion-group>                              
+          </accordion>        
+        </div>
+
+        <div class="result-section" *ngIf="!compileResult.compilationStatus">        
+          <p>
+            <span class="font-weight-bold">  Compilation Log : </span>
+          </p>
+          <p class="text-white compilation-log">          
+            <small>              
+              {{compileResult.compilationLog}}
+            </small>          
+          </p>
+        </div>
+
+      </div> 
+	</div>
+
+  <div class="modal-footer">    
+    <button type="button" class="btn btn-primary" (click)="hideModal()">Close</button>
+  </div>
+
+</div>
