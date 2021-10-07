@@ -7,6 +7,7 @@ import { HttpHelper } from 'src/app/common/utility/utility';
 import { ProblemSolutionResult } from 'src/app/model/problem-solution-result.model';
 import { ProblemSolution } from 'src/app/model/problem-solution.model';
 import { Problem } from 'src/app/model/problem.model';
+import { Response } from 'src/app/model/response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +21,10 @@ export class LiveChallengeService {
       'challengeId' : challengeId
     } 
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_PROBLEMS_URL,queryParams);
-    return this.httpClient.get<Array<Problem>>(serviceUrl)
+    return this.httpClient.get<Response>(serviceUrl)
     .pipe(
       map((data) => {
-        return data;
+        return data.data;
       }),
       tap(event => {})
     );
@@ -31,10 +32,10 @@ export class LiveChallengeService {
 
   public compileSolution(problemSolution : ProblemSolution): Observable<ProblemSolutionResult>{        
     const serviceUrl = AppConfig.SERVICE_URL.COMPILE_SOLUTION_URL;
-    return this.httpClient.post<ProblemSolutionResult>(serviceUrl,problemSolution)
+    return this.httpClient.post<Response>(serviceUrl,problemSolution)
     .pipe(
       map((data) => {
-        return data;
+        return data.data;
       }),
       tap(event => {})
     );
@@ -42,10 +43,10 @@ export class LiveChallengeService {
 
   public runAllTests(problemSolution : ProblemSolution): Observable<ProblemSolutionResult>{        
     const serviceUrl = AppConfig.SERVICE_URL.RUN_ALL_TEST_CASES_URL;
-    return this.httpClient.post<ProblemSolutionResult>(serviceUrl,problemSolution)
+    return this.httpClient.post<Response>(serviceUrl,problemSolution)
     .pipe(
       map((data) => {
-        return data;
+        return data.data;
       }),
       tap(event => {})
     );
@@ -53,10 +54,10 @@ export class LiveChallengeService {
 
   public saveProblemSolution(problemSolution : ProblemSolution): Observable<boolean>{        
     const serviceUrl = AppConfig.SERVICE_URL.SAVE_SOLUTION_URL;
-    return this.httpClient.post<boolean>(serviceUrl,problemSolution)
+    return this.httpClient.post<Response>(serviceUrl,problemSolution)
     .pipe(
       map((data) => {
-        return data;
+        return data.data;
       }),
       tap(event => {})
     );

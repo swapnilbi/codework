@@ -5,6 +5,7 @@ import { map,tap } from 'rxjs/operators';
 import { AppConfig } from 'src/app/common/app.config';
 import { HttpHelper } from 'src/app/common/utility/utility';
 import { Challenge } from 'src/app/model/challenge.model';
+import { Response } from 'src/app/model/response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +17,10 @@ export class ChallengeService {
   public getActiveChallenges(): Observable<Array<Challenge>>{
     
     const serviceUrl = AppConfig.SERVICE_URL.GET_CHALLENGE_URL;
-    return this.httpClient.get<Array<Challenge>>(serviceUrl)
+    return this.httpClient.get<Response>(serviceUrl)
     .pipe(
       map((data) => {
-        return data;
+        return data.data;
       }),
       tap(event => {})
     );
@@ -30,10 +31,10 @@ export class ChallengeService {
       'challengeId' : challengeId
     }    
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_CHALLENGE_DETAILS_URL,queryParams);
-    return this.httpClient.get<Challenge>(serviceUrl)
+    return this.httpClient.get<Response>(serviceUrl)
     .pipe(
       map((data) => {
-        return data;
+        return data.data;
       }),
       tap(event => {})
     );
@@ -45,10 +46,10 @@ export class ChallengeService {
       'challengeId' : challengeId
     }        
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.REGISTER_CHALLENGE_URL,queryParams);
-    return this.httpClient.get<Challenge>(serviceUrl)
+    return this.httpClient.get<Response>(serviceUrl)
     .pipe(
       map((data) => {
-        return data;
+        return data.data;
       }),
       tap(event => {})
     );

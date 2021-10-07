@@ -1,25 +1,28 @@
 package com.codework.entity;
 
-import java.sql.Date;
-
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import java.util.Date;
 
 @Data
 @Document(collection = "Challenge")
 public class Challenge {
+
+	@Transient
+	public static final String SEQUENCE_NAME = "challenge_sequence";
+
 	@Id
-	private Integer id;
-	private String  name;
+	private long id;
+	private String name;
 	private String shortDescription;
 	private String longDescription;
 	private Date startDate;
 	private Date endDate;
 	private String bannerImage;
 	private ChallengeStatus status;
+	private Date createdAt;
+	private Long createdBy;
 }

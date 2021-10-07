@@ -4,12 +4,12 @@ import com.codework.entity.Challenge;
 import com.codework.entity.ChallengeStatus;
 import lombok.Data;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 public class ChallengeDetails {
 
-	private Integer id;
+	private Long id;
 	private String  name;
 	private String shortDescription;
 	private String longDescription;
@@ -19,11 +19,11 @@ public class ChallengeDetails {
 	private boolean isRegistered;
 	private ChallengeStatus status;
 
-	ChallengeDetails(){
+	public ChallengeDetails(){
 
 	}
 
-	ChallengeDetails(Challenge challenge){
+	public ChallengeDetails(Challenge challenge){
 		this.id = challenge.getId();
 		this.name = challenge.getName();
 		this.shortDescription = challenge.getShortDescription();

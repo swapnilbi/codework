@@ -20,22 +20,22 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // wrap in delayed observable to simulate server api call
         return of(null)
             .pipe(mergeMap(handleRoute))
-            .pipe(materialize()) 
+            .pipe(materialize())
             .pipe(delay(1000))
             .pipe(dematerialize());
 
         function handleRoute() {
             switch (true) {
                 case url.endsWith('/api/user/authenticate'):
-                    return authenticate();                
-                case url.endsWith('/api/challenges'):
+                    return authenticate();
+                case url.endsWith('/api/challenge/list'):
                     return getChallenges();
-                case url.match(/\/api\/challenge\/\d+$/) && true:                    
+                case url.match(/\/api\/challenge\/\d+$/) && true:
                     return getChallengeById(getIdFromUrl(url,1));
                 case url.match(/\/api\/challenge\/\d+\/register$/) && true:
-                    return registerChallenge(getIdFromUrl(url,2));                
+                    return registerChallenge(getIdFromUrl(url,2));
                 case url.match(/\/api\/challenge\/\d+\/problems$/) && true:
-                    return getProblems(getIdFromUrl(url,2));                
+                    return getProblems(getIdFromUrl(url,2));
                 case url.endsWith('/api/challenge/solution/compile'):
                     return compileSolution();
                 case url.endsWith('/api/challenge/solution/run'):
@@ -45,12 +45,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
-            }    
+            }
         }
 
         // route functions
 
-        function authenticate() {                        
+        function authenticate() {
             return ok({
                 id: 100,
                 firstName: 'Swapnil',
@@ -59,41 +59,41 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             })
         }
 
-        function getChallenges() {            
+        function getChallenges() {
             return ok(challenges);
         }
 
-        function saveSolution() {            
+        function saveSolution() {
             return ok(true);
         }
 
-        function getChallengeById(challengeId : number) {            
-            const challenge = challenges.find(x => x.id === challengeId);            
+        function getChallengeById(challengeId : number) {
+            const challenge = challenges.find(x => x.id === challengeId);
             return ok(challenge);
         }
 
-        function compileSolution() {            
-            return ok(compileResult)            
+        function compileSolution() {
+            return ok(compileResult)
         }
 
-        function runAllTests() {            
-            return ok(runAllTestsResult)            
+        function runAllTests() {
+            return ok(runAllTestsResult)
         }
 
-        function getIdFromUrl(url : string, urlLocation : number) {            
-            let urlParts = url.split('/');            
-            return parseInt(urlParts[urlParts.length - urlLocation]);      
+        function getIdFromUrl(url : string, urlLocation : number) {
+            let urlParts = url.split('/');
+            return parseInt(urlParts[urlParts.length - urlLocation]);
         }
 
-        function registerChallenge(challengeId : number) {                
+        function registerChallenge(challengeId : number) {
             let challenge = challenges.find(x => x.id === challengeId);
-            if(challenge){                                
-                challenge.isRegistered = true;                   
-            }                                    
+            if(challenge){
+                challenge.isRegistered = true;
+            }
             return ok(challenge);
         }
 
-        function getProblems(challengeId : number) {                                        
+        function getProblems(challengeId : number) {
             return ok(problems);
         }
 
@@ -110,6 +110,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function unauthorized() {
             return throwError({ status: 401, error: { message: 'Unauthorised' } });
         }
-        
+
     }
 }

@@ -1,20 +1,23 @@
 package com.codework.model;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class Response<T> {
 
 	T data;
 	List<Remark> remarks;
 
-	Response(){
+	public Response(){
 	}
 
-	Response(T data){
+	public Response(T data){
 		this.data = data;
 	}
 
-	Response(List<Remark> remarks){
+	public Response(List<Remark> remarks){
 		this.data = data;
 	}
 
