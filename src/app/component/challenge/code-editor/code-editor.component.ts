@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Language, Problem } from 'src/app/model/problem.model';
 import { AlertService } from '../../common/alert/alert-service.service';
-import { LoaderService } from '../../common/loader/loader.service';
 
 @Component({
   selector: 'code-editor',
