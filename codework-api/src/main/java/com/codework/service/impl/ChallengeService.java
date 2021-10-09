@@ -2,6 +2,8 @@ package com.codework.service.impl;
 
 import com.codework.entity.Challenge;
 import com.codework.entity.ChallengeStatus;
+import com.codework.entity.ChallengeSubscription;
+import com.codework.entity.SUBSCRIPTION_STATUS;
 import com.codework.model.ChallengeDetails;
 import com.codework.repository.ChallengeRepository;
 import com.codework.repository.SequenceGenerator;
@@ -18,7 +20,10 @@ import java.util.Optional;
 public class ChallengeService implements IChallengeService {
 
 	@Autowired
-	ChallengeRepository repository;
+	ChallengeRepository challengeRepository;
+
+	@Autowired
+	ChallengeSubscriptionRepository challengeSubscriptionRepository;
 
 	@Autowired
 	SequenceGenerator sequenceGenerator;
@@ -58,6 +63,16 @@ public class ChallengeService implements IChallengeService {
 		challenge.setCreatedAt(Calendar.getInstance().getTime());
 		//challenge.setCreatedBy();
 		return Optional.of(new ChallengeDetails(repository.save(challenge)));
+	}
+
+	@Override
+	public Optional<ChallengeDetails> registerChallenge(long id, SUBSCRIPTION_STATUS register) {
+		ChallengeSubscription challengeSubscription = new ChallengeSubscription();
+		challengeSubscription.setSubId(sequenceGenerator.generateSequence(ChallengeSubscription.SEQUENCE_NAME));
+		challengeSubscription.setChallengeId(id);
+		challengeSubscription.setStatus(register);
+		challengeSubscription.setUserId("1");
+		return Optional.of(new ChallengeDetails(repository.save(challengeSubscription)));
 	}
 
 }

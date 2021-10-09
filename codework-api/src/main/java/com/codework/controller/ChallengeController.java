@@ -1,5 +1,6 @@
 package com.codework.controller;
 
+import com.codework.entity.SUBSCRIPTION_STATUS;
 import com.codework.model.ChallengeDetails;
 import com.codework.model.Response;
 import com.codework.service.impl.ChallengeService;
@@ -14,6 +15,9 @@ public class ChallengeController {
 
 	@Autowired
 	ChallengeService challengeService;
+
+	@Autowired
+	ChallengeSubscriptionService challengeSubscriptionService;
 
 	/**
 	 * Get challenge details
@@ -49,9 +53,9 @@ public class ChallengeController {
 	 * @param id
 	 * @return Challenge
 	 */
-	@PostMapping(value = "/{id}/register")
-	public Response<ChallengeDetails> registerChallenge(@PathVariable String id) {
-		return null;
+	@PostMapping(value = "/{id}/{register}")
+	public Response<ChallengeDetails> registerChallenge(@PathVariable Long id, @PathVariable SUBSCRIPTION_STATUS register) {
+		return new Response<>(challengeSubscriptionService.registerChallenge(id, register).get());
 	}
 	
 }
