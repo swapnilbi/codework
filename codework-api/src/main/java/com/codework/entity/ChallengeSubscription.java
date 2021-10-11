@@ -21,5 +21,5 @@ public class ChallengeSubscription {
 	private Date createdAt;
 	private long challengeId;
 	private String userId;
-	private SUBSCRIPTION_STATUS status;
+	private ChallengeSubscriptionStatus status;
 }

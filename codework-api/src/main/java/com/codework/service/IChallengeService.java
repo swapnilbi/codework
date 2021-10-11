@@ -1,10 +1,9 @@
 package com.codework.service;
 
-import com.codework.entity.SUBSCRIPTION_STATUS;
-import com.codework.model.ChallengeDetails;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.codework.model.ChallengeDetails;
 
 public interface IChallengeService {
 
@@ -13,7 +12,5 @@ public interface IChallengeService {
     List<ChallengeDetails> getChallenges();
 
     Optional<ChallengeDetails> createChallenge(ChallengeDetails challengeInput);
-
-    Optional<ChallengeDetails> registerChallenge(long id, SUBSCRIPTION_STATUS register);
 
 }

@@ -1,9 +1,12 @@
 package com.codework.controller;
 
-import com.codework.entity.SUBSCRIPTION_STATUS;
+import com.codework.entity.ChallengeSubscription;
+import com.codework.entity.ChallengeSubscriptionStatus;
 import com.codework.model.ChallengeDetails;
 import com.codework.model.Response;
 import com.codework.service.impl.ChallengeService;
+import com.codework.service.impl.ChallengeSubscriptionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,8 +56,8 @@ public class ChallengeController {
 	 * @param id
 	 * @return Challenge
 	 */
-	@PostMapping(value = "/{id}/{register}")
-	public Response<ChallengeDetails> registerChallenge(@PathVariable Long id, @PathVariable SUBSCRIPTION_STATUS register) {
+	@PostMapping(value = "/{id}/register")
+	public Response<ChallengeSubscription> registerChallenge(@PathVariable Long id, @PathVariable ChallengeSubscriptionStatus register) {
 		return new Response<>(challengeSubscriptionService.registerChallenge(id, register).get());
 	}
 	
