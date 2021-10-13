@@ -21,7 +21,7 @@ export class LiveChallengeService {
       'challengeId' : challengeId
     } 
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_PROBLEMS_URL,queryParams);
-    return this.httpClient.get<Response>(serviceUrl)
+    return this.httpClient.get<Response<Array<Problem>>>(serviceUrl)
     .pipe(
       map((data) => {
         return data.data;
@@ -32,7 +32,7 @@ export class LiveChallengeService {
 
   public compileSolution(problemSolution : ProblemSolution): Observable<ProblemSolutionResult>{        
     const serviceUrl = AppConfig.SERVICE_URL.COMPILE_SOLUTION_URL;
-    return this.httpClient.post<Response>(serviceUrl,problemSolution)
+    return this.httpClient.post<Response<ProblemSolutionResult>>(serviceUrl,problemSolution)
     .pipe(
       map((data) => {
         return data.data;
@@ -43,7 +43,7 @@ export class LiveChallengeService {
 
   public runAllTests(problemSolution : ProblemSolution): Observable<ProblemSolutionResult>{        
     const serviceUrl = AppConfig.SERVICE_URL.RUN_ALL_TEST_CASES_URL;
-    return this.httpClient.post<Response>(serviceUrl,problemSolution)
+    return this.httpClient.post<Response<ProblemSolutionResult>>(serviceUrl,problemSolution)
     .pipe(
       map((data) => {
         return data.data;
@@ -54,7 +54,7 @@ export class LiveChallengeService {
 
   public saveProblemSolution(problemSolution : ProblemSolution): Observable<boolean>{        
     const serviceUrl = AppConfig.SERVICE_URL.SAVE_SOLUTION_URL;
-    return this.httpClient.post<Response>(serviceUrl,problemSolution)
+    return this.httpClient.post<Response<boolean>>(serviceUrl,problemSolution)
     .pipe(
       map((data) => {
         return data.data;

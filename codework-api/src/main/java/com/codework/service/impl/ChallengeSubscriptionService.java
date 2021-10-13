@@ -5,11 +5,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.codework.entity.ChallengeSubscription;
-import com.codework.entity.ChallengeSubscriptionStatus;
+import com.codework.enums.ChallengeSubscriptionStatus;
 import com.codework.repository.ChallengeSubscriptionRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.IChallengeSubscriptionService;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ChallengeSubscriptionService implements IChallengeSubscriptionService{
 
 	@Autowired

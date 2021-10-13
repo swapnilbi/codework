@@ -7,10 +7,11 @@ import { challengeList } from '../mock-data/challenges';
 import { Problem } from 'src/app/model/problem.model';
 import { problemList } from '../mock-data/problems';
 import { compileResult, runAllTestsResult } from '../mock-data/compile-result';
+import { Response } from 'src/app/model/response.model';
 
 // array in local storage for registered users
-let challenges : Array<Challenge> = challengeList;
-let problems : Array<Problem> = problemList;
+let challenges : Response<Array<Challenge>> = challengeList;
+let problems : Response<Array<Problem>> = problemList;
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -59,17 +60,28 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             })
         }
 
-        function getChallenges() {
+        function getChallenges() {            
             return ok(challenges);
         }
 
         function saveSolution() {
-            return ok(true);
+            let saveSolution : Response<boolean> = {
+                data : true
+            }
+            return ok(saveSolution);
         }
 
         function getChallengeById(challengeId : number) {
-            const challenge = challenges.find(x => x.id === challengeId);
-            return ok(challenge);
+            if(challenges.data){
+                const challenge = challenges.data.find(x => x.id === challengeId);
+                if(challenge){
+                    let getChallenge : Response<Challenge> = {
+                        data : challenge
+                    }
+                    return ok(getChallenge);
+                }                
+            } 
+            return ok(null);                       
         }
 
         function compileSolution() {
@@ -86,11 +98,17 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         function registerChallenge(challengeId : number) {
-            let challenge = challenges.find(x => x.id === challengeId);
-            if(challenge){
-                challenge.isRegistered = true;
-            }
-            return ok(challenge);
+            if(challenges.data){
+                let challenge = challenges.data.find(x => x.id === challengeId);
+                if(challenge){
+                    challenge.isRegistered = true;
+                    let getChallenge : Response<Challenge> = {
+                        data : challenge
+                    }
+                    return ok(getChallenge);
+                }                
+            }            
+            return ok(null);
         }
 
         function getProblems(challengeId : number) {

@@ -21,13 +21,18 @@
 
         <code-editor (saveSolutionEvent)="saveSolution()" (finishChallengeEvent)="finishChallenge()" #codeEditor *ngIf="selectedProblem" [problem]="selectedProblem"></code-editor>      
         
-        <div class="editor-footer">
-          <div class="test-result" [ngClass]="{'not-allowed': !problemSolutionResult}" (click)="showTestResult()">Test Result</div>
-          <div class="custom-input" (click)="provideCustomInput()">Custom Input</div>              
+        <div class="editor-footer">          
+
+            <div class="mr-5">
+              <button type="button" (click)="compileSolution()" class="btn btn-sm btn-primary ml-2"> <i class="fas fa-code"></i> Compile</button>
+              <button type="button" [disabled]="!problemSolutionResult" (click)="showCompilationResult()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-poll"></i> Test Result </button>
+              <button type="button" (click)="provideCustomInput()" class="btn btn-sm btn-secondary ml-2"> <i class="far fa-keyboard"></i> Custom Input</button>
+            </div>
           
-            <button type="button" (click)="compileSolution()" class="btn btn-sm btn-primary ml-2"> <i class="fas fa-code"></i> Compile</button>
-            <button type="button" (click)="runAllTests()" class="btn btn-sm btn-info ml-2"><i class="fas fa-tasks"></i> Run Tests</button>
-            <button type="button" (click)="submitSolution()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-check"></i> Submit</button>
+            <div class="ml-5 float right">              
+              <button type="button" (click)="runAllTests()" class="btn btn-sm btn-info ml-2"><i class="fas fa-tasks"></i> Run Tests</button>
+              <button type="button" (click)="submitSolution()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-check"></i> Submit</button>
+            </div>            
           
         </div>
       </as-split-area>

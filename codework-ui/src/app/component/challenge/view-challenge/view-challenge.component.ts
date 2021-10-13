@@ -17,14 +17,13 @@ export class ViewChallengeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loaderService.show();
-    this.challengeService.getActiveChallenges().subscribe(response => {
+    this.challengeService.getActiveChallenges().subscribe(response => {      
       this.loaderService.hide();
       this.challengeList = response;      
     }, error => {
        // hide loader
     }
-    );
-
+  );
   }
 
 

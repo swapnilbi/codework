@@ -17,7 +17,7 @@ export class ChallengeService {
   public getActiveChallenges(): Observable<Array<Challenge>>{
     
     const serviceUrl = AppConfig.SERVICE_URL.GET_CHALLENGE_URL;
-    return this.httpClient.get<Response>(serviceUrl)
+    return this.httpClient.get<Response<Array<Challenge>>>(serviceUrl)
     .pipe(
       map((data) => {
         return data.data;
@@ -31,7 +31,7 @@ export class ChallengeService {
       'challengeId' : challengeId
     }    
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_CHALLENGE_DETAILS_URL,queryParams);
-    return this.httpClient.get<Response>(serviceUrl)
+    return this.httpClient.get<Response<Challenge>>(serviceUrl)
     .pipe(
       map((data) => {
         return data.data;
@@ -46,7 +46,7 @@ export class ChallengeService {
       'challengeId' : challengeId
     }        
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.REGISTER_CHALLENGE_URL,queryParams);
-    return this.httpClient.get<Response>(serviceUrl)
+    return this.httpClient.get<any>(serviceUrl)
     .pipe(
       map((data) => {
         return data.data;

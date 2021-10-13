@@ -2,13 +2,11 @@ package com.codework.entity;
 
 import java.util.Date;
 
+import com.codework.enums.ChallengeSubscriptionStatus;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 @Document(collection = "ChallengeSubscription")

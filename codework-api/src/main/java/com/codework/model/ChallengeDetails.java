@@ -1,7 +1,7 @@
 package com.codework.model;
 
 import com.codework.entity.Challenge;
-import com.codework.entity.ChallengeStatus;
+import com.codework.enums.ChallengeStatus;
 import lombok.Data;
 
 import java.util.Date;

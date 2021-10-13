@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.codework.entity.Challenge;
-import com.codework.entity.ChallengeStatus;
+import com.codework.enums.ChallengeStatus;
 import com.codework.model.ChallengeDetails;
 import com.codework.repository.ChallengeRepository;
 import com.codework.repository.SequenceGenerator;

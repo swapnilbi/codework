@@ -1,7 +1,7 @@
-import { ChallengeService } from "src/app/component/challenge/view-challenge/challenge.service";
 import { Challenge, ChallengeStatus, ParticipationStatus } from "src/app/model/challenge.model";
+import { Response } from "src/app/model/response.model";
 
-let challengeList : Array<Challenge> = [
+let challenges : Array<Challenge> = [
     {
         id : 1,
         name : 'Code Challenge 1',
@@ -39,6 +39,10 @@ let challengeList : Array<Challenge> = [
         participationStatus : ParticipationStatus.NOT_STARTED
     }
 ]
+
+let challengeList : Response<Array<Challenge>> = {
+    data : challenges
+}
 
 export { challengeList }
 

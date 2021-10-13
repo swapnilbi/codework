@@ -1,4 +1,4 @@
-package com.codework.entity;
+package com.codework.enums;
 
 public enum SubscriptionStatus {
 	REGISTERED, CANCELLED

@@ -1,6 +1,7 @@
 import { ProblemSolutionResult } from "src/app/model/problem-solution-result.model";
+import { Response } from "src/app/model/response.model";
 
-let compileResult : ProblemSolutionResult = {
+let compileResultObj : ProblemSolutionResult = {
     result: false,
     compilationStatus : true,
     compilationLog : "asdasdasd sdasd",
@@ -29,10 +30,14 @@ let compileResult : ProblemSolutionResult = {
     ]
 }
 
+let compileResult : Response<ProblemSolutionResult> = {
+    data : compileResultObj
+}
+
 export { compileResult }
 
 
-let runAllTestsResult : ProblemSolutionResult = {
+let runAllTestsResultObj : ProblemSolutionResult = {
     result: false,
     compilationStatus : true,
     compilationLog : "asdasdasd sdasd",
@@ -123,6 +128,10 @@ let runAllTestsResult : ProblemSolutionResult = {
             status : false
         }
     ]
+}
+
+let runAllTestsResult : Response<ProblemSolutionResult> = {
+    data : runAllTestsResultObj
 }
 
 export { runAllTestsResult }

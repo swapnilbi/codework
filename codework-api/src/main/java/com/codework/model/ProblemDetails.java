@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.codework.entity.Problem;
-import com.codework.entity.ProblemType;
+import com.codework.enums.ProblemType;
 import com.codework.entity.TestCase;
 
 import lombok.Data;

@@ -10,18 +10,25 @@
       <span class="user-role">Admin</span>      
     </div>
   </div>
-  <nav class="dashboard-nav-list">   
-    <a href="/challenges" class="dashboard-nav-item active">
-      <i class="fas fa-code"></i> Challenges
-    </a>    
-    <!--
-    <div class='dashboard-nav-dropdown'><a href="#!" class="dashboard-nav-item dashboard-nav-dropdown-toggle"><i
-          class="fas fa-photo-video"></i> Media </a>
-      <div class='dashboard-nav-dropdown-menu'><a href="#" class="dashboard-nav-dropdown-item">All</a><a href="#"
-          class="dashboard-nav-dropdown-item">Recent</a><a href="#" class="dashboard-nav-dropdown-item">Images</a><a
-          href="#" class="dashboard-nav-dropdown-item">Video</a></div>
-    </div>
-    -->        
+  <nav class="dashboard-nav-list"> 
+    
+    <ng-template ngFor let-menu [ngForOf]="menus | async">
+      <a *ngIf="!menu.subMenus" (click)="nevigate(menu)" [ngClass]="{'active':isSelected(menu) }" class="dashboard-nav-item active">
+        <i class="{{menu.icon}}"></i> {{menu.title}}
+      </a>      
+
+      <div *ngIf="menu.subMenus" class='dashboard-nav-dropdown' [ngClass]="{'show':menu.showDropdown}">
+        <a (click)="nevigate(menu)" (click)="toggleDropdown(menu)" [ngClass]="{'active':isSelected(menu)}" class="dashboard-nav-item dashboard-nav-dropdown-toggle">
+          <i class="{{menu.icon}}"></i> {{menu.title}}
+        </a>      
+        <div class='dashboard-nav-dropdown-menu'>
+          <a *ngFor="let subMenu of menu.subMenus" class="dashboard-nav-dropdown-item" (click)="nevigate(subMenu)" [ngClass]="{'active':isSelected(subMenu)}">
+            <i class="{{subMenu.icon}}"></i> &nbsp; {{subMenu.title}}
+          </a>                
+        </div>
+      </div> 
+
+    </ng-template>                 
     <div class="nav-item-divider"></div>
     <a href="#" class="dashboard-nav-item"><i class="fas fa-sign-out-alt"></i> Logout </a>
   </nav>

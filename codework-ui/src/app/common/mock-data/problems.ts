@@ -1,6 +1,7 @@
 import { Problem, ProblemType } from "src/app/model/problem.model";
+import { Response } from "src/app/model/response.model";
 
-let problemList : Array<Problem> = [
+let problems : Array<Problem> = [
     {
         id : 1,
         name : 'Problem 1',        
@@ -44,6 +45,10 @@ let problemList : Array<Problem> = [
         endDate : new Date("2021-10-16T00:00:00"),                        
     }    
 ]
+
+let problemList : Response<Array<Problem>> = {
+    data : problems
+}
 
 export { problemList }
 

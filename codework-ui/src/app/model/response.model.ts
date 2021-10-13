@@ -1,5 +1,5 @@
-export interface Response {
-    data : any,
+export interface Response<T> {
+    data : T,
     remarks? : Array<Remark>,       
 }
 

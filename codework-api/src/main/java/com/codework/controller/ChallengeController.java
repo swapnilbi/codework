@@ -1,12 +1,11 @@
 package com.codework.controller;
 
 import com.codework.entity.ChallengeSubscription;
-import com.codework.entity.ChallengeSubscriptionStatus;
+import com.codework.enums.ChallengeSubscriptionStatus;
 import com.codework.model.ChallengeDetails;
 import com.codework.model.Response;
-import com.codework.service.impl.ChallengeService;
-import com.codework.service.impl.ChallengeSubscriptionService;
-
+import com.codework.service.IChallengeService;
+import com.codework.service.IChallengeSubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +16,10 @@ import java.util.List;
 public class ChallengeController {
 
 	@Autowired
-	ChallengeService challengeService;
+	IChallengeService challengeService;
 
 	@Autowired
-	ChallengeSubscriptionService challengeSubscriptionService;
+	IChallengeSubscriptionService challengeSubscriptionService;
 
 	/**
 	 * Get challenge details
