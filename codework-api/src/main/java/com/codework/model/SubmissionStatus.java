@@ -1,44 +1,46 @@
 package com.codework.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Data
+@ToString
 public class SubmissionStatus {
 
-    @JsonProperty("source_code")
+    @SerializedName("source_code")
     private String sourceCode;
-    @JsonProperty("language_id")
+    @SerializedName("language_id")
     private String languageId;
     private String stdin;
-    @JsonProperty("expected_output")
+    @SerializedName("expected_output")
     private String expectedOutput;
     private String stdout;
-    @JsonProperty("status_id")
+    @SerializedName("status_id")
     private String statusId;
-    @JsonProperty("created_at")
+    @SerializedName("created_at")
     private Date createdAt;
-    @JsonProperty("finished_at")
+    @SerializedName("finished_at")
     private Date finishedAt;
     private String time;
     private String memory;
     private String stderr;
     private String token;
-    @JsonProperty("cpu_time_limit")
-    private String cpuTimeLimit;
-    @JsonProperty("memory_limit")
-    private String memoryLimit;
-    @JsonProperty("stack_limit")
+    @SerializedName("cpu_time_limit")
+    private Float cpuTimeLimit;
+    @SerializedName("memory_limit")
+    private Float memoryLimit;
+    @SerializedName("stack_limit")
     private String stackLimit;
-    @JsonProperty("compile_output")
+    @SerializedName("compile_output")
     private String compileOutput;
-    @JsonProperty("exit_code")
+    @SerializedName("exit_code")
     private String exitCode;
-    @JsonProperty("exit_signal")
+    @SerializedName("exit_signal")
     private String exitSignal;
-    @JsonProperty("command_line_arguments")
+    @SerializedName("command_line_arguments")
     private String commandLineArgument;
     private String message;
     private Status status;

@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.codework.entity.Problem;
 import com.codework.enums.ProblemType;
-import com.codework.entity.TestCase;
 
 import lombok.Data;
 
@@ -17,11 +16,13 @@ public class ProblemDetails {
 	private String name;
 	private String problemStatement;
 	private ProblemType type;
-	private List<String> languagesAllowed;
+	private List<Integer> languagesAllowed;
 	private Date startDate;
 	private Date endDate;
-	private Map<String,String> placeHolderSolution;
+	private Map<Integer,String> placeHolderSolution;
 	private List<TestCase> testcases;
+	private Float memoryLimit;
+	private Float cpuLimit;
 	private Date createdAt;
 	private String createdBy;
 	
@@ -34,8 +35,10 @@ public class ProblemDetails {
 		this.languagesAllowed = problem.getLanguagesAllowed();
 		this.startDate = problem.getStartDate();
 		this.endDate = problem.getEndDate();
+		this.memoryLimit = problem.getMemoryLimit();
+		this.cpuLimit = problem.getCpuLimit();
 		this.placeHolderSolution = problem.getPlaceHolderSolution();
-		this.testcases = problem.getTestcases();
+		this.testcases = problem.getTestCases();
 		this.createdAt = problem.getCreatedAt();
 		this.createdBy = problem.getCreatedBy();
 	}

@@ -6,9 +6,7 @@ import lombok.Data;
 public class ProblemSolution {
 
 	private Long problemId;
-	private String languageId;
+	private Integer languageId;
 	private String solution;
-	private String stdIn;
-
-
+	private String customInput;
 }

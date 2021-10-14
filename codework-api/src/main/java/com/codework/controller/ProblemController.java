@@ -2,6 +2,7 @@ package com.codework.controller;
 
 import java.util.List;
 
+import com.codework.exception.SystemException;
 import com.codework.model.ProblemSolution;
 import com.codework.model.ProblemSolutionResult;
 import com.codework.service.impl.ProblemSolutionService;
@@ -61,7 +62,7 @@ public class ProblemController {
 	 *
 	 */
 	@PostMapping(value = "/problem/solution/compile")
-	public Response<ProblemSolutionResult> compileSolution(@RequestBody ProblemSolution problemSolution) {
+	public Response<ProblemSolutionResult> compileSolution(@RequestBody ProblemSolution problemSolution) throws SystemException {
 		return new Response<>(problemSolutionService.compileSolution(problemSolution));
 	}
 

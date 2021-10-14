@@ -1,16 +1,18 @@
 package com.codework.service;
 
-import com.codework.model.SubmissionResult;
-import com.codework.model.SubmissionStatus;
+import com.codework.model.*;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface ICodeExecutorService {
 
 
-    SubmissionResult createSubmission(String program, String stdin, Integer language) throws IOException;
+    SubmissionStatus evaluateSubmission(SubmissionRequest submissionRequest) throws IOException;
+
+    List<SubmissionResult> createSubmissionBatch(SubmissionBatch submissionBatch) throws IOException;
 
     SubmissionStatus getSubmissionStatus(String token) throws IOException;
 
-
+    SubmissionBatchStatus getSubmissionBatchStatus(List<String> token) throws IOException;
 }

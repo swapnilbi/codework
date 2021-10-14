@@ -1,4 +1,4 @@
-package com.codework.entity;
+package com.codework.model;
 
 import lombok.Data;
 

@@ -1,15 +1,20 @@
 package com.codework.service.impl;
 
-import com.codework.model.ProblemSolution;
-import com.codework.model.ProblemSolutionResult;
-import com.codework.model.SubmissionResult;
-import com.codework.model.SubmissionStatus;
+import com.codework.entity.Problem;
+import com.codework.exception.SystemException;
+import com.codework.model.*;
 import com.codework.service.ICodeExecutorService;
+import com.codework.service.IProblemService;
 import com.codework.service.IProblemSolutionService;
+import com.codework.utility.ChallengeUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProblemSolutionService implements IProblemSolutionService {
@@ -17,27 +22,101 @@ public class ProblemSolutionService implements IProblemSolutionService {
     @Autowired
     private ICodeExecutorService codeExecutorService;
 
+    @Autowired
+    private IProblemService problemService;
+
+
     @Override
-    public ProblemSolutionResult compileSolution(ProblemSolution problemSolution) {
+    public ProblemSolutionResult compileSolution(ProblemSolution problemSolution) throws SystemException {
         try{
-            SubmissionResult submissionResult = codeExecutorService.createSubmission(problemSolution.getSolution(),problemSolution.getStdIn(),62);
             ProblemSolutionResult problemSolutionResult = new ProblemSolutionResult();
-            if(submissionResult!=null){
-                ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-                Future future = executorService.schedule(getCompileResult(submissionResult.getToken()), 10, TimeUnit.SECONDS);
-                SubmissionStatus submissionStatus = (SubmissionStatus) future.get();
-                if(submissionStatus.getStatus().getId() == 3){
-                    problemSolutionResult.setResult(true);
-                    problemSolutionResult.setCompilationLog(submissionStatus.getCompileOutput());
-                    problemSolutionResult.setCompilationStatus(true);
-                }
+            ProblemDetails problem = problemService.getProblem(problemSolution.getProblemId()).get();
+            problemSolutionResult.setTimeLimit(problem.getCpuLimit());
+            problemSolutionResult.setMemoryLimit(problem.getMemoryLimit());
+            if(problemSolution.getCustomInput()!=null && !problemSolution.getCustomInput().trim().equals("")){
+                evaluateCustomInput(problemSolution,problemSolutionResult);
+            }else{
+                evaluateSampleTestCases(problemSolution,problem,problemSolutionResult);
+            }
+            return problemSolutionResult;
+        }catch(Exception e){
+            throw new SystemException("Exception in compile solution");
+        }
+    }
+
+    private ProblemSolutionResult evaluateCustomInput(ProblemSolution problemSolution, ProblemSolutionResult problemSolutionResult) throws IOException {
+        SubmissionRequest submissionRequest = new SubmissionRequest(problemSolution.getLanguageId(),problemSolution.getSolution(),problemSolution.getCustomInput());
+        SubmissionStatus submissionStatus = codeExecutorService.evaluateSubmission(submissionRequest);
+        problemSolutionResult.setStatusCode(submissionStatus.getStatus().getId());
+        problemSolutionResult.setCustomInput(problemSolution.getCustomInput());
+        problemSolutionResult.setStandardOutput(submissionStatus.getStdout());
+        problemSolutionResult.setCompilationLog(submissionStatus.getCompileOutput());
+        problemSolutionResult.setCompilationStatus(ChallengeUtility.getCompilationStatus(submissionStatus.getStatus().getId()));
+        problemSolutionResult.setResult(submissionStatus.getStatus().getId() == 3);
+        return problemSolutionResult;
+    }
+
+    private ProblemSolutionResult evaluateSampleTestCases(ProblemSolution problemSolution, ProblemDetails problem, ProblemSolutionResult problemSolutionResult) throws IOException {
+        List<TestCase> sampleTestCases = problem.getTestcases().stream().filter( t-> t.getIsSample()).collect(Collectors.toList());
+        int testResult = 0;
+        for(TestCase testCase : sampleTestCases){
+            SubmissionRequest submissionRequest = new SubmissionRequest(problemSolution.getLanguageId(),problemSolution.getSolution(),testCase.getInput(),testCase.getExpectedOutput());
+            submissionRequest.setMemoryLimit(problem.getMemoryLimit());
+            submissionRequest.setCpuTimeLimit(problem.getCpuLimit());
+            SubmissionStatus submissionStatus = codeExecutorService.evaluateSubmission(submissionRequest);
+            TestCaseResult testCaseResult = getTestCaseResult(submissionStatus,testCase, Boolean.TRUE);
+            if(testCaseResult.isStatus()){
+                testResult++;
+            }
+            if(submissionStatus.getStatus().getId() == 6){
                 problemSolutionResult.setStandardOutput(submissionStatus.getStdout());
-                return problemSolutionResult;
+                problemSolutionResult.setCompilationLog(submissionStatus.getCompileOutput());
+                break; // no need to execute remaining sample test cases
+            }else{
+                problemSolutionResult.getTestCaseResults().add(testCaseResult);
+            }
+        }
+        problemSolutionResult.setCompilationStatus(!problemSolutionResult.getTestCaseResults().isEmpty());
+        problemSolutionResult.setResult(testResult == sampleTestCases.size());
+        return problemSolutionResult;
+    }
+
+    private TestCaseResult getTestCaseResult(SubmissionStatus submissionStatus, TestCase testCase, boolean isSample){
+        TestCaseResult testCaseResult = new TestCaseResult();
+        testCaseResult.setId(testCase.getId());
+        testCaseResult.setActualOutput(submissionStatus.getStdout());
+        testCaseResult.setMemory(submissionStatus.getMemory());
+        testCaseResult.setTime(submissionStatus.getTime());
+        testCaseResult.setStatus(submissionStatus.getStatus().getId() == 3);
+        if(submissionStatus.getStatus().getId() != 3){
+            testCaseResult.setRemark(ChallengeUtility.getSubmissionStatusDescription(submissionStatus.getStatus().getId()));
+        }
+        if(isSample){
+            testCaseResult.setInput(testCase.getInput());
+            testCaseResult.setExpectedOutput(testCase.getExpectedOutput());
+        }
+        return testCaseResult;
+    }
+
+    @Override
+    public ProblemSolutionResult runAllTests(ProblemSolution problemSolution) {
+        try{
+            ProblemSolutionResult problemSolutionResult = new ProblemSolutionResult();
+            SubmissionRequest submissionRequest = new SubmissionRequest();
+            SubmissionBatch submissionBatch = new SubmissionBatch(Arrays.asList(submissionRequest));
+            List<SubmissionResult> submissionResult = codeExecutorService.createSubmissionBatch(submissionBatch);
+            if(submissionResult!=null){
+
             }
         }catch(Exception e){
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void evaluateSolution(ProblemSolution problemSolution) {
+
     }
 
     public Callable getCompileResult(String token){

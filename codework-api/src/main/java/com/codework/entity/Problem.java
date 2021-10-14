@@ -1,15 +1,16 @@
 package com.codework.entity;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.codework.enums.ProblemType;
+import com.codework.model.ProblemPointSystem;
+import com.codework.model.TestCase;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.Data;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @Document(collection = "Problem")
@@ -23,11 +24,15 @@ public class Problem {
 	private String name;
 	private String problemStatement;
 	private ProblemType type;
-	private List<String> languagesAllowed;
+	private List<Integer> languagesAllowed;
 	private Date startDate;
 	private Date endDate;
-	private Map<String,String> placeHolderSolution;
-	private List<TestCase> testcases;
+	private Float memoryLimit;
+	private Float cpuLimit;
+	private Map<Integer,String> placeHolderSolution;
+	private List<TestCase> testCases;
 	private Date createdAt;
 	private String createdBy;
+	private ProblemPointSystem pointSystem;
+
 }
