@@ -1,21 +1,23 @@
 export interface Problem {
     id : number,
-    name : string,
+    challengeId : number,
+    name : string,    
     problemStatement : string,    
     type : ProblemType,    
     languagesAllowed? : Array<Language>,
     startDate : Date,
     endDate : Date,    
-    isSubmitted : boolean,
+    memoryLimit? : number,
+    cpuLimit?: number,
+    isSubmitted? : boolean,
     createdAt? : Date,
-    placeHolderSolution? : string,
+    placeHolderSolution? : Record<number,string>,
     solution?: string,
-    noOfTestCases?: number,
-    sampleTestCase? : TestCase
+    testCases?: Array<TestCase>    
 }
 
 export interface TestCase {
-    id? : number,
+    id : number,
     input : string,
     expectedOutput : string
 }
@@ -27,7 +29,7 @@ export enum ProblemType {
 }
 
 export interface Language {    
-    id : string,
-    description : string,
+    id : number,
+    name : string,
     editorCode : string
 }

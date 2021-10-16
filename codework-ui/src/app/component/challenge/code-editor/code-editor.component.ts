@@ -45,8 +45,6 @@ export class CodeEditorComponent implements OnInit {
     if(this.selectedProblem){
       if(this.selectedProblem.solution && this.selectedProblem.solution.trim().length > 0){
         this.code = this.selectedProblem.solution;
-      }else if(this.selectedProblem.placeHolderSolution){
-        this.code = this.selectedProblem.placeHolderSolution;
       } 
       if(this.selectedProblem.languagesAllowed){
         this.language = this.selectedProblem.languagesAllowed[0];  
@@ -57,8 +55,13 @@ export class CodeEditorComponent implements OnInit {
 
   onLanguageChange(language? : Language){    
     if(language){
-      this.language = language;
-      this.editorOptions.language = language.editorCode;        
+      this.language = language;      
+      if(this.selectedProblem && this.selectedProblem.placeHolderSolution && this.selectedProblem.placeHolderSolution[language.id]){
+        this.code = this.selectedProblem.placeHolderSolution[language.id];        
+      }else{
+        this.code = '';        
+      }
+      this.editorOptions.language = language.editorCode;              
       this.showEditor = false;    
       setTimeout(() =>{
         this.showEditor = true;      

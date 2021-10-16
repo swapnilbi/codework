@@ -4,7 +4,7 @@
     <span class="language">Language : </span>      
     <select [(ngModel)]="language" class="editor-header-select" (change)="onLanguageChange(language)">
       <option *ngFor="let lang of selectedProblem.languagesAllowed" [ngValue]="lang">
-        {{lang.description}}
+        {{lang.name}}
       </option>
     </select>      
     <button type="button" class="btn btn-success btn-sm float-right ml-2" (click)="finishChallenge()"> <i class="far fa-clock"></i> Finish</button>    

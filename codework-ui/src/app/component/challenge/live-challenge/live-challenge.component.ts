@@ -152,9 +152,9 @@ export class LiveChallengeComponent implements OnInit {
     this.showCompilationResult();
   }
 
-  provideCustomInput(){            
+  provideCustomInput(){                
     const initialState = {
-      input : this.selectedProblem?.sampleTestCase?.input
+      input : this.selectedProblem?.testCases ? this.selectedProblem?.testCases[0].input: ''
     };
     this.customInputModalRef = this.modalService.show(CustomInputComponent, {initialState});
     this.customInputModalRef.content.onClose.subscribe((result : any) => {
