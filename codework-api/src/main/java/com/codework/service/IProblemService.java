@@ -8,10 +8,10 @@ import com.codework.model.ProblemDetails;
 
 public interface IProblemService {
 
-    Optional<ProblemDetails> getProblem(long id);
+    Optional<ProblemDetails> getProblem(Long id);
 
     List<ProblemDetails> getProblems();
 
-    Optional<ProblemDetails> createProblem(ProblemDetails problem);
+    Problem createProblem(ProblemDetails problem);
 
 }

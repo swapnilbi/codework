@@ -1,16 +1,16 @@
 package com.codework.service.impl;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.codework.entity.ChallengeSubscription;
 import com.codework.enums.ChallengeSubscriptionStatus;
 import com.codework.repository.ChallengeSubscriptionRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.IChallengeSubscriptionService;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ChallengeSubscriptionService implements IChallengeSubscriptionService{
@@ -29,4 +29,28 @@ public class ChallengeSubscriptionService implements IChallengeSubscriptionServi
 		challengeSubscription.setUserId("1");
 		return Optional.of(challengeSubscriptionRepository.save(challengeSubscription));
 	}
+
+	@Override
+	public Optional<ChallengeSubscription> getChallengeSubscription(long challengeId, String userId) {
+		return challengeSubscriptionRepository.findByChallengeIdAndUserId(challengeId, userId);
+	}
+
+	@Override
+	public Optional<ChallengeSubscription> startChallenge(Long challengeId) {
+		ChallengeSubscription challengeSubscription = challengeSubscriptionRepository.findByChallengeIdAndUserId(challengeId, "1").get();
+		challengeSubscription.setStatus(ChallengeSubscriptionStatus.STARTED);
+		challengeSubscription.setStartDate(new Date());
+		challengeSubscriptionRepository.save(challengeSubscription);
+		return Optional.of(challengeSubscription);
+	}
+
+	@Override
+	public Optional<ChallengeSubscription> submitChallenge(Long challengeId) {
+		ChallengeSubscription challengeSubscription = challengeSubscriptionRepository.findByChallengeIdAndUserId(challengeId, "1").get();
+		challengeSubscription.setStatus(ChallengeSubscriptionStatus.SUBMITTED);
+		challengeSubscription.setEndDate(new Date());
+		challengeSubscriptionRepository.save(challengeSubscription);
+		return Optional.of(challengeSubscription);
+	}
+	
 }

@@ -20,4 +20,6 @@ public class ChallengeSubscription {
 	private long challengeId;
 	private String userId;
 	private ChallengeSubscriptionStatus status;
+	private Date startDate;
+	private Date endDate;
 }

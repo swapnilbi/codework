@@ -2,6 +2,7 @@ package com.codework.controller;
 
 import java.util.List;
 
+import com.codework.entity.Problem;
 import com.codework.exception.SystemException;
 import com.codework.model.ProblemSolution;
 import com.codework.model.ProblemSolutionResult;
@@ -53,8 +54,8 @@ public class ProblemController {
 	 * @return ProblemDetails
 	 */
 	@PostMapping(value = "/problem")
-	public Response<ProblemDetails> createProblem(@RequestBody ProblemDetails problemDetails) {
-		return new Response<>(problemService.createProblem(problemDetails).get());
+	public Response<Problem> createProblem(@RequestBody ProblemDetails problemDetails) {
+		return new Response<>(problemService.createProblem(problemDetails));
 	}
 
 	/**

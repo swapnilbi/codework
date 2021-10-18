@@ -56,8 +56,27 @@ public class ChallengeController {
 	 * @return Challenge
 	 */
 	@PostMapping(value = "/{id}/register")
-	public Response<ChallengeSubscription> registerChallenge(@PathVariable Long id, @PathVariable ChallengeSubscriptionStatus register) {
-		return new Response<>(challengeSubscriptionService.registerChallenge(id, register).get());
+	public Response<ChallengeSubscription> registerChallenge(@PathVariable Long id) {
+		return new Response<>(challengeSubscriptionService.registerChallenge(id, ChallengeSubscriptionStatus.REGISTERED).get());
 	}
 	
+	/**
+	 * start challenge
+	 * @param id
+	 * @return Challenge
+	 */
+	@PostMapping(value = "/{id}/start")
+	public Response<ChallengeSubscription> startChallenge(@PathVariable Long challengeId) {
+		return new Response<>(challengeSubscriptionService.startChallenge(challengeId).get());
+	}
+	
+	/**
+	 * submit challenge
+	 * @param id
+	 * @return Challenge
+	 */
+	@PostMapping(value = "/{id}/")
+	public Response<ChallengeSubscription> submitChallenge(@PathVariable Long challengeId) {
+		return new Response<>(challengeSubscriptionService.submitChallenge(challengeId).get());
+	}
 }

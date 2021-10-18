@@ -1,15 +1,19 @@
 package com.codework.model;
 
 import com.codework.entity.Challenge;
+import com.codework.entity.ChallengeSubscription;
 import com.codework.enums.ChallengeStatus;
 import lombok.Data;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 public class ChallengeDetails {
 
 	private Long id;
+	@NotBlank
 	private String  name;
 	private String shortDescription;
 	private String longDescription;
@@ -18,6 +22,7 @@ public class ChallengeDetails {
 	private String bannerImage;
 	private boolean isRegistered;
 	private ChallengeStatus status;
+	private ChallengeSubscription challengeSubscription;
 
 	public ChallengeDetails(){
 
@@ -32,6 +37,10 @@ public class ChallengeDetails {
 		this.endDate = challenge.getEndDate();
 		this.bannerImage = challenge.getBannerImage();
 		this.status = challenge.getStatus();
+	}
+
+	public void setChallengeSubscription(ChallengeSubscription challengeSubscription) {
+		this.challengeSubscription = challengeSubscription;
 	}
 
 

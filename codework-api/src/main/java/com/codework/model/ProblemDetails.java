@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.codework.entity.Language;
 import com.codework.entity.Problem;
 import com.codework.enums.ProblemType;
 
@@ -16,7 +17,7 @@ public class ProblemDetails {
 	private String name;
 	private String problemStatement;
 	private ProblemType type;
-	private List<Integer> languagesAllowed;
+	private List<Language> languagesAllowed;
 	private Date startDate;
 	private Date endDate;
 	private Map<Integer,String> placeHolderSolution;
@@ -32,7 +33,6 @@ public class ProblemDetails {
 		this.name = problem.getName();
 		this.problemStatement = problem.getProblemStatement();
 		this.type = problem.getType();
-		this.languagesAllowed = problem.getLanguagesAllowed();
 		this.startDate = problem.getStartDate();
 		this.endDate = problem.getEndDate();
 		this.memoryLimit = problem.getMemoryLimit();

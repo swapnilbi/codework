@@ -1,20 +1,14 @@
 package com.codework.service.impl;
 
-import com.codework.entity.Language;
-import com.codework.entity.Problem;
-import com.codework.model.LanguageBatch;
-import com.codework.model.ProblemDetails;
-import com.codework.repository.LanguageRepository;
-import com.codework.repository.ProblemRepository;
-import com.codework.repository.SequenceGenerator;
-import com.codework.service.ILanguageService;
-import com.codework.service.IProblemService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.codework.entity.Language;
+import com.codework.model.LanguageBatch;
+import com.codework.repository.LanguageRepository;
+import com.codework.service.ILanguageService;
 
 @Service
 public class LanguageService implements ILanguageService {
@@ -38,12 +32,12 @@ public class LanguageService implements ILanguageService {
 	}
 
 	@Override
-	public Language getLanguage(String id) {
+	public Language getLanguage(Integer id) {
 		return languageRepository.findById(id).get();
 	}
 
 	@Override
-	public void deleteLanguage(String id) {
+	public void deleteLanguage(Integer id) {
 		Language language = getLanguage(id);
 		languageRepository.delete(language);
 	}
@@ -55,5 +49,10 @@ public class LanguageService implements ILanguageService {
 		}
 		languageList = languageRepository.findAll();
 		return languageList;
+	}
+
+	@Override
+	public List<Language> getLanguages(List<Integer> languages) {
+		return languageRepository.findByIds(languages);
 	}
 }

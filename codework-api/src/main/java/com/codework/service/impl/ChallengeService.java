@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.codework.entity.Challenge;
+import com.codework.entity.ChallengeSubscription;
 import com.codework.enums.ChallengeStatus;
 import com.codework.model.ChallengeDetails;
 import com.codework.repository.ChallengeRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.IChallengeService;
+import com.codework.service.IChallengeSubscriptionService;
 
 @Service
 public class ChallengeService implements IChallengeService {
@@ -23,6 +25,9 @@ public class ChallengeService implements IChallengeService {
 
 	@Autowired
 	SequenceGenerator sequenceGenerator;
+	
+	@Autowired
+	IChallengeSubscriptionService challengeSubscriptionService;
 
 	@Override
 	public Optional<ChallengeDetails> getChallenge(long id) {
@@ -39,7 +44,10 @@ public class ChallengeService implements IChallengeService {
 		List<Challenge> challengeList = challengeRepository.findAll();
 		if(challengeList!= null && challengeList.size() > 0){
 			for(Challenge challenge : challengeList){
-				challengeDetailsList.add(new ChallengeDetails(challenge));
+				ChallengeSubscription challengeSubscription = challengeSubscriptionService.getChallengeSubscription(challenge.getId(), "1").get();
+				ChallengeDetails challengeDetails = new ChallengeDetails(challenge);
+				challengeDetails.setChallengeSubscription(challengeSubscription);
+				challengeDetailsList.add(challengeDetails);
 			}
 		}
 		return challengeDetailsList;

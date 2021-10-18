@@ -11,9 +11,11 @@ public interface ILanguageService {
 
     Language updateLanguage(Language language);
 
-    Language getLanguage(String id);
+    Language getLanguage(Integer id);
 
-    void deleteLanguage(String id);
+    void deleteLanguage(Integer id);
 
     List<Language> getActiveLanguages();
+
+	List<Language> getLanguages(List<Integer> languages);
 }
