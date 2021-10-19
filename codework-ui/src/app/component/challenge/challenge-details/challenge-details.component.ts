@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ChallengeSubscriptionStatus } from 'src/app/model/challenge-subscription.modal';
 import { Challenge, ChallengeStatus } from 'src/app/model/challenge.model';
 import { AlertService } from '../../common/alert/alert-service.service';
 import { LoaderService } from '../../common/loader/loader.service';
@@ -32,14 +33,19 @@ export class ChallengeDetailsComponent implements OnInit {
     if(this.challenge){
       this.loaderService.show();
       this.challengeService.registerChallenge(this.challenge?.id).subscribe(response => {
-        console.log('registered');
-        this.alertService.success("You have been successfully registered");        
-        this.challenge = response;          
+        this.challenge = response;
+        if(response.challengeSubscription?.status == ChallengeSubscriptionStatus.REGISTERED){
+          this.alertService.success("You have been successfully registered");    
+        }              
         this.loaderService.hide();
       }, error => {
         this.loaderService.hide();         
       });
     }    
+  }
+
+  isRegistered(challenge : Challenge){
+    return challenge.challengeSubscription;
   }
 
   isLiveChallenge(){

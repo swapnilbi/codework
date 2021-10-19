@@ -23,9 +23,9 @@ export interface TestCase {
 }
 
 export enum ProblemType {
-    PROGRAM,
-    PUZZLE,
-    QUIZ
+    PROGRAM = "PROGRAM",
+    PUZZLE = "PUZZLE",
+    QUIZ = "QUIZ"
 }
 
 export interface Language {    

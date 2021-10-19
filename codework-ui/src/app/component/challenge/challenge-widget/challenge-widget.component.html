@@ -19,8 +19,8 @@
         </div>
     </div>    
     <div class="card-footer text-center">        
-        <button *ngIf="!challenge.isRegistered" class="btn btn-info btn-sm" (click)="viewChallenge()">Register</button>
-        <button *ngIf="challenge.isRegistered && !isLiveChallenge()" class="btn btn-success btn-sm">Registered</button>
-        <button *ngIf="challenge.isRegistered && isLiveChallenge()" (click)="startChallenge()" class="btn btn-success btn-sm">Start</button>        
+        <button *ngIf="!isRegistered(challenge)" class="btn btn-info btn-sm" (click)="viewChallenge()">Register</button>
+        <button *ngIf="isRegistered(challenge) && !isLiveChallenge()" class="btn btn-success btn-sm">Registered</button>
+        <button *ngIf="isRegistered(challenge) && isLiveChallenge()" (click)="startChallenge()" class="btn btn-success btn-sm">Start</button>        
     </div>
 </div>

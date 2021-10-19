@@ -33,9 +33,18 @@ public class ChallengeService implements IChallengeService {
 	public Optional<ChallengeDetails> getChallenge(long id) {
 		 Optional<Challenge> challenge = challengeRepository.findById(id);
 		 if(challenge.isPresent()){
-		 	return Optional.of(new ChallengeDetails(challenge.get()));
+		 	return Optional.of(getChallengeDetails(challenge.get()));
 		 }
 		 return Optional.empty();
+	}
+	
+	private ChallengeDetails getChallengeDetails(Challenge challenge) {
+		Optional<ChallengeSubscription> challengeSubscription = challengeSubscriptionService.getChallengeSubscription(challenge.getId(), "1");
+		ChallengeDetails challengeDetails = new ChallengeDetails(challenge);
+		if(challengeSubscription.isPresent()) {
+			challengeDetails.setChallengeSubscription(challengeSubscription.get());
+		}
+		return challengeDetails;
 	}
 
 	@Override
@@ -44,10 +53,7 @@ public class ChallengeService implements IChallengeService {
 		List<Challenge> challengeList = challengeRepository.findAll();
 		if(challengeList!= null && challengeList.size() > 0){
 			for(Challenge challenge : challengeList){
-				ChallengeSubscription challengeSubscription = challengeSubscriptionService.getChallengeSubscription(challenge.getId(), "1").get();
-				ChallengeDetails challengeDetails = new ChallengeDetails(challenge);
-				challengeDetails.setChallengeSubscription(challengeSubscription);
-				challengeDetailsList.add(challengeDetails);
+				challengeDetailsList.add(getChallengeDetails(challenge));
 			}
 		}
 		return challengeDetailsList;

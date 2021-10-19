@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map,tap } from 'rxjs/operators';
 import { AppConfig } from 'src/app/common/app.config';
 import { HttpHelper } from 'src/app/common/utility/utility';
+import { ChallengeSubscription } from 'src/app/model/challenge-subscription.modal';
 import { Challenge } from 'src/app/model/challenge.model';
 import { Response } from 'src/app/model/response.model';
 
@@ -46,7 +47,23 @@ export class ChallengeService {
       'challengeId' : challengeId
     }        
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.REGISTER_CHALLENGE_URL,queryParams);
-    return this.httpClient.get<any>(serviceUrl)
+    return this.httpClient.get<Response<Challenge>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+
+  public startChallenge(challengeId : number): Observable<Challenge>{        
+    let queryParams: any = {
+      'challengeId' : challengeId
+    } 
+    console.log(queryParams);
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.START_CHALLENGE_URL,queryParams);
+    return this.httpClient.get<Response<Challenge>>(serviceUrl)
     .pipe(
       map((data) => {
         return data.data;

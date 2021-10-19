@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { AppConfig } from 'src/app/common/app.config';
 import { HttpHelper } from 'src/app/common/utility/utility';
+import { ChallengeSubscription } from 'src/app/model/challenge-subscription.modal';
 import { ProblemSolutionResult } from 'src/app/model/problem-solution-result.model';
 import { ProblemSolution } from 'src/app/model/problem-solution.model';
 import { Problem } from 'src/app/model/problem.model';

@@ -17,8 +17,8 @@ let problems : Array<Problem> = [
             { id: 5, editorCode : 'c', name: 'C++ (g++ 5.4.0)' }            
         ],        
         placeHolderSolution : {
-            1 : "class Simple{\r\n\r\n  public static void main(String args[]){\r\n \t System.out.println(\"Hello Java\"); \r\n  } \r\n\r\n }",
-            2 : "class Simple1{\r\n\r\n  public static void main(String args[]){\r\n \t System.out.println(\"Hello Java\"); \r\n  } \r\n\r\n }"
+            "1" : "class Simple{\r\n\r\n  public static void main(String args[]){\r\n \t System.out.println(\"Hello Java\"); \r\n  } \r\n\r\n }",
+            "2" : "class Simple1{\r\n\r\n  public static void main(String args[]){\r\n \t System.out.println(\"Hello Java\"); \r\n  } \r\n\r\n }"
         },         
         testCases : [{
             id : 1,

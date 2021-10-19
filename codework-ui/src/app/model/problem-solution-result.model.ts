@@ -1,8 +1,10 @@
 
 export interface ProblemSolutionResult {
     result : boolean,    
-    compilationStatus : boolean,    
+    compilationError : boolean,   
+    runTimeError : boolean,   
     compilationLog: string,
+    customInput? : string,
     standardOutput?: string,
     timeLimit? : number,
     memoryLimit? : number,
@@ -11,7 +13,7 @@ export interface ProblemSolutionResult {
 
 export interface TestCaseResult{
     id : number,
-    name : string,
+    name? : string,
     status : boolean
     input : string,
     time : number,

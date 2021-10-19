@@ -29,23 +29,14 @@ public class ProblemController {
 	@Autowired
 	ProblemSolutionService problemSolutionService;
 
-	/**
-	 * Get problem details
-	 * @param id
-	 * @return ProblemDetails
-	 */
-	@GetMapping(value = "/problem/{id}")
-	public Response<List<ProblemDetails>> getProblems(@PathVariable Long id) {
-		return new Response<>(problemService.getProblems(id));
-	}
 
 	/**
 	 * Returns all active Problems
 	 * @return List<ProblemDetails>
 	 */
-	@GetMapping(value = "/problem/list")
-	public Response<List<ProblemDetails>> getProblems() {
-		return new Response<>(problemService.getProblems());
+	@GetMapping(value = "/{challengeId}/problems")
+	public Response<List<ProblemDetails>> getProblems(@PathVariable Long challengeId) {
+		return new Response<>(problemService.getProblems(challengeId));
 	}
 
 	/**
@@ -62,7 +53,7 @@ public class ProblemController {
 	 * Compile solution
 	 *
 	 */
-	@PostMapping(value = "/problem/solution/compile")
+	@PostMapping(value = "/solution/compile")
 	public Response<ProblemSolutionResult> compileSolution(@RequestBody ProblemSolution problemSolution) throws SystemException {
 		return new Response<>(problemSolutionService.compileSolution(problemSolution));
 	}

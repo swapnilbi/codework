@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ChallengeSubscriptionStatus } from 'src/app/model/challenge-subscription.modal';
 import { Challenge, ChallengeStatus } from 'src/app/model/challenge.model';
 
 @Component({
@@ -27,6 +28,10 @@ export class ChallengeWidgetComponent implements OnInit {
       return this.challenge.status ==  ChallengeStatus.LIVE;
     }
     return false;
+  }
+
+  isRegistered(challenge : Challenge){
+    return challenge.challengeSubscription;
   }
 
   startChallenge(){    

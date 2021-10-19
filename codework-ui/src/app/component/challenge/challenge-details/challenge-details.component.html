@@ -10,9 +10,9 @@
     <div class="jumbotron details-container-body">
         <div [innerHTML]="challenge.longDescription"></div>        
         <p class="lead">
-            <a *ngIf="!challenge.isRegistered" class="btn btn-primary btn-lg ml-3" (click)="registerChallenge()" role="button">Register</a>
-            <a *ngIf="challenge.isRegistered && isLiveChallenge()" class="btn btn-success btn-lg ml-3" (click)="startChallenge()" role="button">Start</a>
-            <a *ngIf="challenge.isRegistered && !isLiveChallenge()" class="btn btn-success btn-lg ml-3" role="button">Registered</a>
+            <a *ngIf="!isRegistered(challenge)" class="btn btn-primary btn-lg ml-3" (click)="registerChallenge()" role="button">Register</a>
+            <a *ngIf="isRegistered(challenge) && isLiveChallenge()" class="btn btn-success btn-lg ml-3" (click)="startChallenge()" role="button">Start</a>
+            <a *ngIf="isRegistered(challenge) && !isLiveChallenge()" class="btn btn-success btn-lg ml-3" role="button">Registered</a>
         </p>
     </div>  
 </div>

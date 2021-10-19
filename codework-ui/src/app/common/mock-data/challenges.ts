@@ -1,3 +1,4 @@
+import { ChallengeSubscriptionStatus } from "src/app/model/challenge-subscription.modal";
 import { Challenge, ChallengeStatus, ParticipationStatus } from "src/app/model/challenge.model";
 import { Response } from "src/app/model/response.model";
 
@@ -9,10 +10,14 @@ let challenges : Array<Challenge> = [
         startDate : new Date("2021-10-01T00:00:00"),
         endDate : new Date("2021-10-16T00:00:00"),
         bannerImage : 'https://picsum.photos/200/150/?random',   
-        isRegistered : false,
         longDescription : '<h1 class="display-5">Hello, world!</h1> <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p><p>It uses utility classes for typography and spacing to space content out within the larger container.</p>',
-        status : ChallengeStatus.SCHEDULED,
-        participationStatus : ParticipationStatus.NOT_STARTED
+        status : ChallengeStatus.LIVE,
+        challengeSubscription : {
+            id : 1,
+            challengeId : 1,
+            userId : "1",
+            status : ChallengeSubscriptionStatus.STARTED
+        }
     },
     {
         id : 2,
@@ -21,10 +26,14 @@ let challenges : Array<Challenge> = [
         startDate : new Date("2021-10-03T00:00:00"),
         endDate : new Date("2021-12-03T00:00:00"),
         bannerImage : 'https://picsum.photos/200/150/?random',
-        isRegistered : true,
         longDescription : '<h1 class="display-5">Hello, world!</h1> <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p><p>It uses utility classes for typography and spacing to space content out within the larger container.</p>',
         status : ChallengeStatus.LIVE,
-        participationStatus : ParticipationStatus.STARTED
+        challengeSubscription : {
+            id : 1,
+            challengeId : 2,
+            userId : "1",
+            status : ChallengeSubscriptionStatus.REGISTERED
+        }
     },
     {
         id : 3,
@@ -33,10 +42,8 @@ let challenges : Array<Challenge> = [
         startDate : new Date("2021-11-01T00:00:00"),
         endDate : new Date("2021-11-30T00:00:00"),
         bannerImage : 'https://picsum.photos/200/150/?random',
-        isRegistered : false,
         longDescription : '<h1 class="display-5">Hello, world!</h1> <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p><p>It uses utility classes for typography and spacing to space content out within the larger container.</p>',
-        status : ChallengeStatus.LIVE,
-        participationStatus : ParticipationStatus.NOT_STARTED
+        status : ChallengeStatus.LIVE
     }
 ]
 

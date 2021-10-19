@@ -14,6 +14,7 @@ import { CompileResultComponent } from './compile-result/compile-result.componen
 import { CustomInputComponent } from './custom-input/custom-input.component';
 import { TestResultComponent } from './test-result/test-result.component';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
+import { ChallengeSubscriptionStatus } from 'src/app/model/challenge-subscription.modal';
 
 @Component({
   selector: 'app-live-challenge',
@@ -45,7 +46,7 @@ export class LiveChallengeComponent implements OnInit {
     this.challengeService.getChallengeDetails(challengeId).subscribe(response => {
       this.loaderService.hide();
       this.challenge = response;
-      if(!this.challenge.isRegistered){
+      if(!this.challenge.challengeSubscription){
         this.alertService.warn('Sorry! You are not registered for this challenge. Please register and try again');  
         this.nevigateToChallenges();
       }else if(this.challenge.status == ChallengeStatus.SCHEDULED){
@@ -54,13 +55,13 @@ export class LiveChallengeComponent implements OnInit {
       }else if(this.challenge.status == ChallengeStatus.EXPIRED){
         this.alertService.info('Sorry! This Challenge is expired');
         this.nevigateToChallenges();
-      }else if(this.challenge.participationStatus == ParticipationStatus.FINISHED){
+      }else if(this.challenge.challengeSubscription.status == ChallengeSubscriptionStatus.SUBMITTED){
         this.alertService.warn('Sorry! You have already attempted this challenge');
         this.nevigateToChallenges();
-      }else if(this.challenge.participationStatus == ParticipationStatus.NOT_STARTED){  
+      }else if(this.challenge.challengeSubscription.status == ChallengeSubscriptionStatus.REGISTERED){  
         this.showInstruction = true;
-      }else if(this.challenge.participationStatus == ParticipationStatus.STARTED){  
-        this.startChallenge();
+      }else if(this.challenge.challengeSubscription.status == ChallengeSubscriptionStatus.STARTED){  
+        this.resumeChallenge();
       }
     }, error => {
       this.loaderService.hide();       
@@ -72,6 +73,21 @@ export class LiveChallengeComponent implements OnInit {
   }
 
   startChallenge(){    
+    if(this.challenge){      
+      this.loaderService.show();
+      this.challengeService.startChallenge(this.challenge.id).subscribe(response => {
+        this.challenge = response;
+        this.loaderService.hide(); 
+        if(response.challengeSubscription?.status ==  ChallengeSubscriptionStatus.STARTED){
+          this.resumeChallenge();
+        }       
+      }, error => {
+        this.loaderService.hide();       
+      });
+    }    
+  }
+
+  resumeChallenge(){    
     if(this.challenge){      
       this.loaderService.show();
       this.liveChallengeService.getProblems(this.challenge.id).subscribe(response => {
@@ -108,6 +124,7 @@ export class LiveChallengeComponent implements OnInit {
       this.loaderService.show();
       this.liveChallengeService.compileSolution(challengeSolution).subscribe(response => {    
         this.problemSolutionResult = response;
+        console.log(response);
         this.showCompilationResult();
         this.loaderService.hide();        
       }, error => {

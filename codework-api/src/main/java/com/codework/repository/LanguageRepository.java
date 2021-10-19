@@ -8,6 +8,6 @@ import org.springframework.data.mongodb.repository.Query;
 import com.codework.entity.Language;
 
 public interface LanguageRepository extends MongoRepository<Language, Integer>{
-	@Query("{_id: { $in: ?0 } })")
+	@Query("{ '_id' : { '$in': ?0 } })")
     List<Language> findByIds(List<Integer> ids);
 }

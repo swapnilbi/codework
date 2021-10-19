@@ -2,6 +2,7 @@ package com.codework.controller;
 
 import com.codework.entity.ChallengeSubscription;
 import com.codework.enums.ChallengeSubscriptionStatus;
+import com.codework.exception.BusinessException;
 import com.codework.model.ChallengeDetails;
 import com.codework.model.Response;
 import com.codework.service.IChallengeService;
@@ -26,9 +27,9 @@ public class ChallengeController {
 	 * @param id
 	 * @return ChallengeDetails
 	 */
-	@GetMapping(value = "/{id}")
-	public Response<ChallengeDetails> getChallenge(@PathVariable Long id) {
-		return new Response<>(challengeService.getChallenge(id).get());
+	@GetMapping(value = "/{challengeId}")
+	public Response<ChallengeDetails> getChallenge(@PathVariable Long challengeId) {
+		return new Response<>(challengeService.getChallenge(challengeId).get());
 	}
 
 	/**
@@ -54,10 +55,14 @@ public class ChallengeController {
 	 * register challenge
 	 * @param id
 	 * @return Challenge
+	 * @throws BusinessException 
 	 */
-	@PostMapping(value = "/{id}/register")
-	public Response<ChallengeSubscription> registerChallenge(@PathVariable Long id) {
-		return new Response<>(challengeSubscriptionService.registerChallenge(id, ChallengeSubscriptionStatus.REGISTERED).get());
+	@GetMapping(value = "/{challengeId}/register")
+	public Response<ChallengeDetails> registerChallenge(@PathVariable Long challengeId) throws BusinessException {
+		ChallengeSubscription challengeSubscription = challengeSubscriptionService.registerChallenge(challengeId).get();
+		ChallengeDetails challengeDetails = challengeService.getChallenge(challengeId).get();
+		challengeDetails.setChallengeSubscription(challengeSubscription);
+		return new Response<>(challengeDetails);
 	}
 	
 	/**
@@ -65,9 +70,12 @@ public class ChallengeController {
 	 * @param id
 	 * @return Challenge
 	 */
-	@PostMapping(value = "/{id}/start")
-	public Response<ChallengeSubscription> startChallenge(@PathVariable Long challengeId) {
-		return new Response<>(challengeSubscriptionService.startChallenge(challengeId).get());
+	@GetMapping(value = "/{challengeId}/start")
+	public Response<ChallengeDetails> startChallenge(@PathVariable Long challengeId) {
+		ChallengeSubscription challengeSubscription = challengeSubscriptionService.startChallenge(challengeId).get();
+		ChallengeDetails challengeDetails = challengeService.getChallenge(challengeId).get();
+		challengeDetails.setChallengeSubscription(challengeSubscription);
+		return new Response<>(challengeDetails);
 	}
 	
 	/**
@@ -75,7 +83,7 @@ public class ChallengeController {
 	 * @param id
 	 * @return Challenge
 	 */
-	@PostMapping(value = "/{id}/")
+	@PostMapping(value = "/{challengeId}/")
 	public Response<ChallengeSubscription> submitChallenge(@PathVariable Long challengeId) {
 		return new Response<>(challengeSubscriptionService.submitChallenge(challengeId).get());
 	}

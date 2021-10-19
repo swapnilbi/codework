@@ -39,9 +39,4 @@ public class ChallengeDetails {
 		this.status = challenge.getStatus();
 	}
 
-	public void setChallengeSubscription(ChallengeSubscription challengeSubscription) {
-		this.challengeSubscription = challengeSubscription;
-	}
-
-
 }

@@ -1,5 +1,7 @@
 package com.codework.model;
 
+import java.util.Base64;
+
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,13 +26,13 @@ public class SubmissionRequest {
 
 	public SubmissionRequest(Integer languageId,String sourceCode,String stdin){
 		this.languageId = languageId;
-		this.sourceCode = sourceCode;
-		this.stdin = stdin;
+		this.sourceCode = Base64.getEncoder().encodeToString(sourceCode.getBytes());
+		this.stdin = Base64.getEncoder().encodeToString(stdin.getBytes());
 	}
 
 	public SubmissionRequest(Integer languageId,String sourceCode,String stdin,String expectedOutput){
-		this(languageId,sourceCode,expectedOutput);
-		this.expectedOutput =  expectedOutput;
+		this(languageId,sourceCode,stdin);
+		this.expectedOutput = Base64.getEncoder().encodeToString(expectedOutput.getBytes());
 	}
 
 }

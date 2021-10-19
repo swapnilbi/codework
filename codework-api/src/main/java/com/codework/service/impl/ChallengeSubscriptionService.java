@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.codework.entity.ChallengeSubscription;
 import com.codework.enums.ChallengeSubscriptionStatus;
+import com.codework.exception.BusinessException;
 import com.codework.repository.ChallengeSubscriptionRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.IChallengeSubscriptionService;
@@ -17,21 +18,26 @@ public class ChallengeSubscriptionService implements IChallengeSubscriptionServi
 
 	@Autowired
 	ChallengeSubscriptionRepository challengeSubscriptionRepository;
+	
 	@Autowired
 	SequenceGenerator sequenceGenerator;
 	
 	@Override
-	public Optional<ChallengeSubscription> registerChallenge(long id, ChallengeSubscriptionStatus register) {
+	public Optional<ChallengeSubscription> registerChallenge(Long challengeId) throws BusinessException {
+		Optional<ChallengeSubscription> existingSubscription = getChallengeSubscription(challengeId, "1");
+		if(existingSubscription.isPresent()) {
+			throw new BusinessException("You have been already registered");
+		}
 		ChallengeSubscription challengeSubscription = new ChallengeSubscription();
-		challengeSubscription.setSubId(sequenceGenerator.generateSequence(ChallengeSubscription.SEQUENCE_NAME));
-		challengeSubscription.setChallengeId(id);
-		challengeSubscription.setStatus(register);
+		challengeSubscription.setId(sequenceGenerator.generateSequence(ChallengeSubscription.SEQUENCE_NAME));
+		challengeSubscription.setChallengeId(challengeId);
+		challengeSubscription.setStatus(ChallengeSubscriptionStatus.REGISTERED);
 		challengeSubscription.setUserId("1");
 		return Optional.of(challengeSubscriptionRepository.save(challengeSubscription));
 	}
 
 	@Override
-	public Optional<ChallengeSubscription> getChallengeSubscription(long challengeId, String userId) {
+	public Optional<ChallengeSubscription> getChallengeSubscription(Long challengeId, String userId) {
 		return challengeSubscriptionRepository.findByChallengeIdAndUserId(challengeId, userId);
 	}
 

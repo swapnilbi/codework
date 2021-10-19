@@ -9,7 +9,8 @@ import java.util.List;
 public class ProblemSolutionResult {
 
 	private boolean result;
-	private boolean compilationStatus;
+	private boolean compilationError;
+	private boolean runTimeError;
 	private Integer statusCode;
 	private String compilationLog;
 	private String customInput;
@@ -17,5 +18,6 @@ public class ProblemSolutionResult {
 	private Float timeLimit;
 	private Float memoryLimit;
 	private List<TestCaseResult> testCaseResults = new ArrayList<>();
+	
 
 }

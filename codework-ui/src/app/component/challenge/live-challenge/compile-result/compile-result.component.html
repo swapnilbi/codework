@@ -15,12 +15,13 @@
           <div>  
             <span class="font-weight-bold">Result : </span>   
             <span *ngIf="compileResult.result" class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Compiled Successfully</span>        
-            <span *ngIf="!compileResult.result && compileResult.compilationStatus" class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Wrong Answer</span>        
-            <span *ngIf="!compileResult.result && !compileResult.compilationStatus" class="text-danger"><i class="fa fa-exclamation-circle"></i> Compilation Error</span>        
+            <span *ngIf="!compileResult.result && !compileResult.compilationError && !compileResult.runTimeError" class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Wrong Answer</span>        
+            <span *ngIf="!compileResult.result && compileResult.compilationError" class="text-danger"><i class="fa fa-exclamation-circle"></i> Compilation Error</span>        
+            <span *ngIf="!compileResult.result && compileResult.runTimeError" class="text-danger"><i class="fa fa-exclamation-circle"></i> Runtime Error</span>        
           </div>
           <hr/>
 
-        <div class="result-section" *ngIf="compileResult.compilationStatus">
+        <div class="result-section" *ngIf="!compileResult.compilationError">
           <div>
             <span class="font-weight-bold">  Sample Test Cases : </span>
           </div>
@@ -44,9 +45,9 @@
                 </thead>
                 <tbody>
                   <tr class="text-secondary">      
-                    <td>{{testCase.input}}</td>
-                    <td>{{testCase.expectedOutput}}</td>
-                    <td>{{testCase.actualOutput}}</td>
+                    <td style="white-space: pre-line">{{testCase.input}}</td>
+                    <td style="white-space: pre-line">{{testCase.expectedOutput}}</td>
+                    <td style="white-space: pre-line">{{testCase.actualOutput}}</td>
                   </tr>   
                 </tbody>
             </table>            
@@ -54,13 +55,25 @@
           </accordion>        
         </div>
 
-        <div class="result-section" *ngIf="!compileResult.compilationStatus">        
+        <div class="result-section" *ngIf="compileResult.compilationLog">        
           <p>
-            <span class="font-weight-bold">  Compilation Log : </span>
+            <span class="font-weight-bold" *ngIf="compileResult.compilationError">  Compilation Log : </span>
+            <span class="font-weight-bold" *ngIf="compileResult.runTimeError">  Error Log : </span>
           </p>
-          <p class="text-white compilation-log">          
+          <p class="text-white compilation-log" style="white-space: pre-line">          
             <small>              
               {{compileResult.compilationLog}}
+            </small>          
+          </p>
+        </div>
+
+        <div class="result-section" *ngIf="compileResult.standardOutput">        
+          <p>
+            <span class="font-weight-bold">  Execution Log : </span>
+          </p>
+          <p class="text-white compilation-log" style="white-space: pre-line">          
+            <small>              
+              {{compileResult.standardOutput}}
             </small>          
           </p>
         </div>

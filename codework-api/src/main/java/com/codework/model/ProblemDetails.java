@@ -9,8 +9,10 @@ import com.codework.entity.Problem;
 import com.codework.enums.ProblemType;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ProblemDetails {
 	private long id;
 	private long challengeId;
@@ -21,7 +23,7 @@ public class ProblemDetails {
 	private Date startDate;
 	private Date endDate;
 	private Map<Integer,String> placeHolderSolution;
-	private List<TestCase> testcases;
+	private List<TestCase> testCases;
 	private Float memoryLimit;
 	private Float cpuLimit;
 	private Date createdAt;
@@ -38,7 +40,7 @@ public class ProblemDetails {
 		this.memoryLimit = problem.getMemoryLimit();
 		this.cpuLimit = problem.getCpuLimit();
 		this.placeHolderSolution = problem.getPlaceHolderSolution();
-		this.testcases = problem.getTestCases();
+		this.testCases = problem.getTestCases();
 		this.createdAt = problem.getCreatedAt();
 		this.createdBy = problem.getCreatedBy();
 	}

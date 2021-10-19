@@ -40,6 +40,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
             }
             return problemSolutionResult;
         }catch(Exception e){
+        	e.printStackTrace();
             throw new SystemException("Exception in compile solution");
         }
     }
@@ -51,40 +52,53 @@ public class ProblemSolutionService implements IProblemSolutionService {
         problemSolutionResult.setCustomInput(problemSolution.getCustomInput());
         problemSolutionResult.setStandardOutput(submissionStatus.getStdout());
         problemSolutionResult.setCompilationLog(submissionStatus.getCompileOutput());
-        problemSolutionResult.setCompilationStatus(ChallengeUtility.getCompilationStatus(submissionStatus.getStatus().getId()));
+        problemSolutionResult.setCompilationError(!ChallengeUtility.isCompilationError(submissionStatus.getStatus().getId()));
         problemSolutionResult.setResult(submissionStatus.getStatus().getId() == 3);
         return problemSolutionResult;
     }
 
     private ProblemSolutionResult evaluateSampleTestCases(ProblemSolution problemSolution, ProblemDetails problem, ProblemSolutionResult problemSolutionResult) throws IOException {
-        List<TestCase> sampleTestCases = problem.getTestcases().stream().filter( t-> t.getIsSample()).collect(Collectors.toList());
-        int testResult = 0;
+        List<TestCase> sampleTestCases = problem.getTestCases().stream().filter( t-> t.getIsSample()).collect(Collectors.toList());
+        int passedTestCases = 0;
         for(TestCase testCase : sampleTestCases){
             SubmissionRequest submissionRequest = new SubmissionRequest(problemSolution.getLanguageId(),problemSolution.getSolution(),testCase.getInput(),testCase.getExpectedOutput());
             submissionRequest.setMemoryLimit(problem.getMemoryLimit());
             submissionRequest.setCpuTimeLimit(problem.getCpuLimit());
             SubmissionStatus submissionStatus = codeExecutorService.evaluateSubmission(submissionRequest);
+            System.out.println(submissionStatus);
             TestCaseResult testCaseResult = getTestCaseResult(submissionStatus,testCase, Boolean.TRUE);
             if(testCaseResult.isStatus()){
-                testResult++;
+            	passedTestCases++;
             }
-            if(submissionStatus.getStatus().getId() == 6){
-                problemSolutionResult.setStandardOutput(submissionStatus.getStdout());
-                problemSolutionResult.setCompilationLog(submissionStatus.getCompileOutput());
+            if(ChallengeUtility.isCompilationError(submissionStatus.getStatus().getId())){
+            	if(ChallengeUtility.isCompilationError(submissionStatus.getStatus().getId())) {
+            		problemSolutionResult.setCompilationLog(submissionStatus.getCompileOutput());
+            		problemSolutionResult.setCompilationError(Boolean.TRUE);
+            	}
+            	problemSolutionResult.setStandardOutput(submissionStatus.getStdout());
                 break; // no need to execute remaining sample test cases
             }else{
                 problemSolutionResult.getTestCaseResults().add(testCaseResult);
             }
         }
-        problemSolutionResult.setCompilationStatus(!problemSolutionResult.getTestCaseResults().isEmpty());
-        problemSolutionResult.setResult(testResult == sampleTestCases.size());
+        problemSolutionResult.setResult(passedTestCases == sampleTestCases.size());
+        if(!problemSolutionResult.isResult() && !problemSolutionResult.getTestCaseResults().isEmpty()) {
+        	List<TestCaseResult> testCaseResults = problemSolutionResult.getTestCaseResults().stream().filter( t-> !t.isStatus()).collect(Collectors.toList());
+        	for(TestCaseResult testCaseResult : testCaseResults) {
+        		if(ChallengeUtility.isRuntimeError(testCaseResult.getStatusCode())) {
+            		problemSolutionResult.setCompilationLog(testCaseResult.getStandardError());
+            		problemSolutionResult.setRunTimeError(Boolean.TRUE);
+            		break;
+            	}
+        	}
+        }
+        problemSolutionResult.setCompilationError(problemSolutionResult.getTestCaseResults().isEmpty());
         return problemSolutionResult;
     }
 
     private TestCaseResult getTestCaseResult(SubmissionStatus submissionStatus, TestCase testCase, boolean isSample){
         TestCaseResult testCaseResult = new TestCaseResult();
         testCaseResult.setId(testCase.getId());
-        testCaseResult.setActualOutput(submissionStatus.getStdout());
         testCaseResult.setMemory(submissionStatus.getMemory());
         testCaseResult.setTime(submissionStatus.getTime());
         testCaseResult.setStatus(submissionStatus.getStatus().getId() == 3);
@@ -92,6 +106,9 @@ public class ProblemSolutionService implements IProblemSolutionService {
             testCaseResult.setRemark(ChallengeUtility.getSubmissionStatusDescription(submissionStatus.getStatus().getId()));
         }
         if(isSample){
+        	testCaseResult.setStatusCode(submissionStatus.getStatus().getId());
+        	testCaseResult.setActualOutput(submissionStatus.getStdout());
+        	testCaseResult.setStandardError(submissionStatus.getStderr());
             testCaseResult.setInput(testCase.getInput());
             testCaseResult.setExpectedOutput(testCase.getExpectedOutput());
         }

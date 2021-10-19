@@ -8,6 +8,7 @@ import { Problem } from 'src/app/model/problem.model';
 import { problemList } from '../mock-data/problems';
 import { compileResult, runAllTestsResult } from '../mock-data/compile-result';
 import { Response } from 'src/app/model/response.model';
+import { ChallengeSubscriptionStatus } from 'src/app/model/challenge-subscription.modal';
 
 // array in local storage for registered users
 let challenges : Response<Array<Challenge>> = challengeList;
@@ -35,6 +36,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return getChallengeById(getIdFromUrl(url,1));
                 case url.match(/\/api\/challenge\/\d+\/register$/) && true:
                     return registerChallenge(getIdFromUrl(url,2));
+                case url.match(/\/api\/challenge\/\d+\/start$/) && true:
+                    return startChallenge(getIdFromUrl(url,2));
                 case url.match(/\/api\/challenge\/\d+\/problems$/) && true:
                     return getProblems(getIdFromUrl(url,2));
                 case url.endsWith('/api/challenge/solution/compile'):
@@ -101,7 +104,31 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             if(challenges.data){
                 let challenge = challenges.data.find(x => x.id === challengeId);
                 if(challenge){
-                    challenge.isRegistered = true;
+                    challenge.challengeSubscription = {
+                      challengeId :  challenge.id,
+                      id : 1,
+                      status : ChallengeSubscriptionStatus.REGISTERED,
+                      userId : "1"
+                    };
+                    let getChallenge : Response<Challenge> = {
+                        data : challenge
+                    }
+                    return ok(getChallenge);
+                }                
+            }            
+            return ok(null);
+        }
+
+        function startChallenge(challengeId : number) {
+            if(challenges.data){
+                let challenge = challenges.data.find(x => x.id === challengeId);
+                if(challenge){
+                    challenge.challengeSubscription = {
+                        challengeId :  challenge.id,
+                        id : 1,
+                        status : ChallengeSubscriptionStatus.STARTED,
+                        userId : "1"
+                    };
                     let getChallenge : Response<Challenge> = {
                         data : challenge
                     }

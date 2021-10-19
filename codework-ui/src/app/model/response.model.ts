@@ -9,7 +9,7 @@ export interface Remark {
   }
 
 export enum RemarkType {
-    INFO,
-    WARNING,
-    ERROR,
+    INFO = "INFO",
+    WARNING = "WARNING",
+    ERROR = "ERROR",
 }

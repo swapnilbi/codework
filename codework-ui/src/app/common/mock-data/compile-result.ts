@@ -3,13 +3,13 @@ import { Response } from "src/app/model/response.model";
 
 let compileResultObj : ProblemSolutionResult = {
     result: false,
-    compilationStatus : true,
+    compilationError : true,
+    runTimeError : false,
     compilationLog : "asdasdasd sdasd",
     standardOutput : "",    
     testCaseResults: [
         {
             id : 1,
-            name : "Test Case 1",
             input : "10",
             expectedOutput : "20",
             actualOutput : "30",
@@ -19,7 +19,6 @@ let compileResultObj : ProblemSolutionResult = {
         },
         {
             id : 2,
-            name : "Test Case 2",
             input : "10",
             expectedOutput : "40",
             actualOutput : "65",
@@ -39,7 +38,8 @@ export { compileResult }
 
 let runAllTestsResultObj : ProblemSolutionResult = {
     result: false,
-    compilationStatus : true,
+    compilationError : true,
+    runTimeError : false,
     compilationLog : "asdasdasd sdasd",
     standardOutput : "",  
     timeLimit : 5,  

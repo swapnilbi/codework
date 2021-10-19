@@ -1,5 +1,9 @@
 package com.codework.utility;
 
+import java.io.UnsupportedEncodingException;
+
+import org.apache.commons.codec.binary.Base64;
+
 public class ChallengeUtility {
 
     public static String getSubmissionStatusDescription(int status){
@@ -24,14 +28,37 @@ public class ChallengeUtility {
         }
     }
 
-    public static boolean getCompilationStatus(int status){
+    public static boolean isCompilationError(int status){
+        return status == 6;
+    }
+    
+    public static boolean isRuntimeError(int status){
         switch(status){
-            case 3 :
-            case 4 :
-            case 5 :
+	        case 7 :
+	        case 8 :
+	        case 9 :
+	        case 10 :
+	        case 11 :
+	        case 12 :
                 return true;
             default : return false;
         }
+    }
+    
+    public static String encodeToBase64(String input) {
+    	if(input!=null) {
+			System.out.println(input);
+			return new String(Base64.encodeBase64(input.trim().getBytes()));
+    	}
+    	return null;
+    }
+    
+    public static String decodeFromBase64(String encodedString) {
+    	if(encodedString!=null) {
+    		System.out.println(encodedString);
+			return new String(Base64.decodeBase64(encodedString.trim().getBytes()));
+    	}
+    	return null;
     }
 
 }
