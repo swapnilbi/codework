@@ -205,7 +205,7 @@ public class SubmissionStatus {
 	}
 
 	public String getMessage() {
-		return message;
+		return ChallengeUtility.decodeFromBase64(message);
 	}
 
 	public void setMessage(String message) {

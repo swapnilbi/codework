@@ -48,11 +48,18 @@ public class ProblemSolutionService implements IProblemSolutionService {
     private ProblemSolutionResult evaluateCustomInput(ProblemSolution problemSolution, ProblemSolutionResult problemSolutionResult) throws IOException {
         SubmissionRequest submissionRequest = new SubmissionRequest(problemSolution.getLanguageId(),problemSolution.getSolution(),problemSolution.getCustomInput());
         SubmissionStatus submissionStatus = codeExecutorService.evaluateSubmission(submissionRequest);
+        System.out.println(submissionStatus);
         problemSolutionResult.setStatusCode(submissionStatus.getStatus().getId());
         problemSolutionResult.setCustomInput(problemSolution.getCustomInput());
+        if(ChallengeUtility.isCompilationError(submissionStatus.getStatus().getId())) {
+        	problemSolutionResult.setCompilationLog(submissionStatus.getCompileOutput());
+        	problemSolutionResult.setCompilationError(Boolean.TRUE);
+        }else if(ChallengeUtility.isRuntimeError(submissionStatus.getStatus().getId())) {
+        	problemSolutionResult.setCompilationLog(submissionStatus.getStderr());
+        	problemSolutionResult.setStandardOutput(submissionStatus.getStdout());
+        	problemSolutionResult.setRunTimeError(Boolean.TRUE);
+        }
         problemSolutionResult.setStandardOutput(submissionStatus.getStdout());
-        problemSolutionResult.setCompilationLog(submissionStatus.getCompileOutput());
-        problemSolutionResult.setCompilationError(!ChallengeUtility.isCompilationError(submissionStatus.getStatus().getId()));
         problemSolutionResult.setResult(submissionStatus.getStatus().getId() == 3);
         return problemSolutionResult;
     }
@@ -87,6 +94,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
         	for(TestCaseResult testCaseResult : testCaseResults) {
         		if(ChallengeUtility.isRuntimeError(testCaseResult.getStatusCode())) {
             		problemSolutionResult.setCompilationLog(testCaseResult.getStandardError());
+            		problemSolutionResult.setStandardOutput(testCaseResult.getActualOutput());
             		problemSolutionResult.setRunTimeError(Boolean.TRUE);
             		break;
             	}

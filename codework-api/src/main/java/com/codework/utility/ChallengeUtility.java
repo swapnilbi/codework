@@ -1,7 +1,5 @@
 package com.codework.utility;
 
-import java.io.UnsupportedEncodingException;
-
 import org.apache.commons.codec.binary.Base64;
 
 public class ChallengeUtility {
@@ -47,7 +45,6 @@ public class ChallengeUtility {
     
     public static String encodeToBase64(String input) {
     	if(input!=null) {
-			System.out.println(input);
 			return new String(Base64.encodeBase64(input.trim().getBytes()));
     	}
     	return null;
@@ -55,7 +52,6 @@ public class ChallengeUtility {
     
     public static String decodeFromBase64(String encodedString) {
     	if(encodedString!=null) {
-    		System.out.println(encodedString);
 			return new String(Base64.decodeBase64(encodedString.trim().getBytes()));
     	}
     	return null;

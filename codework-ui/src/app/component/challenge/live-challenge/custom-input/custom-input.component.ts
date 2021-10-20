@@ -9,15 +9,15 @@ import { Subject } from 'rxjs';
 })
 export class CustomInputComponent {
 
-  public onClose: Subject<string>;
+  public onSubmit: Subject<string>;
   public input?:string;
 
   constructor(private _bsModalRef: BsModalRef) { 
-    this.onClose = new Subject();
+    this.onSubmit = new Subject();
   }
 
   public onConfirm(): void {
-      this.onClose.next(this.input);
+      this.onSubmit.next(this.input);
       this._bsModalRef.hide();
   }
 

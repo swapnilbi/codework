@@ -40,9 +40,14 @@
     .compilation-log{
         padding: 5px;
         font-size: 14px;
-        background-color:Tomato; 
         line-height: 100%;
         max-height: 200px;
+        overflow: scroll;
+    }
+
+    .error-log {
+        background-color:Tomato; 
+        color: white;
     }
     
     p{

@@ -21,7 +21,7 @@
           </div>
           <hr/>
 
-        <div class="result-section" *ngIf="!compileResult.compilationError">
+        <div class="result-section" *ngIf="!compileResult.compilationError && !compileResult.customInput">
           <div>
             <span class="font-weight-bold">  Sample Test Cases : </span>
           </div>
@@ -55,23 +55,34 @@
           </accordion>        
         </div>
 
+        <div class="result-section" *ngIf="!compileResult.compilationError && compileResult.customInput">        
+          <p>
+            <span class="font-weight-bold">  Input : </span>
+          </p>
+          <p style="white-space: pre-line">          
+            <small>              
+              {{compileResult.customInput}}
+            </small>          
+          </p>
+        </div>
+
         <div class="result-section" *ngIf="compileResult.compilationLog">        
           <p>
             <span class="font-weight-bold" *ngIf="compileResult.compilationError">  Compilation Log : </span>
             <span class="font-weight-bold" *ngIf="compileResult.runTimeError">  Error Log : </span>
           </p>
-          <p class="text-white compilation-log" style="white-space: pre-line">          
+          <p class="error-log compilation-log" style="white-space: pre-line">          
             <small>              
               {{compileResult.compilationLog}}
             </small>          
           </p>
         </div>
 
-        <div class="result-section" *ngIf="compileResult.standardOutput">        
+        <div class="result-section" *ngIf="compileResult.standardOutput && compileResult.customInput">        
           <p>
-            <span class="font-weight-bold">  Execution Log : </span>
+            <span class="font-weight-bold">  Output : </span>
           </p>
-          <p class="text-white compilation-log" style="white-space: pre-line">          
+          <p class="compilation-log" style="white-space: pre-line">          
             <small>              
               {{compileResult.standardOutput}}
             </small>          

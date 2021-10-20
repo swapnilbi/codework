@@ -24,6 +24,7 @@ import { ChallengeSubscriptionStatus } from 'src/app/model/challenge-subscriptio
 export class LiveChallengeComponent implements OnInit {
 
   selectedProblem? : Problem;  
+  customInput? : string | null;
   showInstruction: boolean = false;
   showLiveChallenge: boolean = false;
   public challenge?: Challenge;   
@@ -111,6 +112,7 @@ export class LiveChallengeComponent implements OnInit {
           challengeId : this.challenge.id,
           languageId : this.codeEditor.getLanguage()?.id,
           problemId : this.selectedProblem.id,
+          customInput : this.customInput,
           solution : unescape(this.codeEditor.getSolution())
       }
       return challengeSolution;
@@ -124,7 +126,7 @@ export class LiveChallengeComponent implements OnInit {
       this.loaderService.show();
       this.liveChallengeService.compileSolution(challengeSolution).subscribe(response => {    
         this.problemSolutionResult = response;
-        console.log(response);
+        this.customInput = null;
         this.showCompilationResult();
         this.loaderService.hide();        
       }, error => {
@@ -139,6 +141,7 @@ export class LiveChallengeComponent implements OnInit {
       this.loaderService.show();
       this.liveChallengeService.runAllTests(challengeSolution).subscribe(response => {    
         this.runAllTestsResult = response;
+        this.customInput = null;
         this.showAllTestsResult();
         this.loaderService.hide();        
       }, error => {
@@ -174,12 +177,9 @@ export class LiveChallengeComponent implements OnInit {
       input : this.selectedProblem?.testCases ? this.selectedProblem?.testCases[0].input: ''
     };
     this.customInputModalRef = this.modalService.show(CustomInputComponent, {initialState});
-    this.customInputModalRef.content.onClose.subscribe((result : any) => {
-      console.log('results', result);
-      /*
-        set custom input
-        send while compilation
-      */
+    this.customInputModalRef.content.onSubmit.subscribe((result : any) => {
+       this.customInput = result;
+       this.compileSolution();
     })
   }
 
