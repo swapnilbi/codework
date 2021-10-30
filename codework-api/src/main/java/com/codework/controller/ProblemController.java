@@ -21,6 +21,8 @@ import com.codework.model.ProblemDetails;
 import com.codework.model.Response;
 import com.codework.service.IProblemService;
 
+import javax.validation.Valid;
+
 @RequestMapping(value = "api/challenge")
 @RestController
 public class ProblemController {
@@ -47,7 +49,7 @@ public class ProblemController {
 	 * @return ProblemDetails
 	 */
 	@PostMapping(value = "/problem")
-	public Response<Problem> createProblem(@RequestBody ProblemDetails problemDetails) {
+	public Response<Problem> createProblem(@Valid @RequestBody ProblemDetails problemDetails) {
 		return new Response<>(problemService.createProblem(problemDetails));
 	}
 
@@ -56,7 +58,7 @@ public class ProblemController {
 	 *
 	 */
 	@PostMapping(value = "/solution/compile")
-	public Response<ProblemSolutionResult> compileSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException {
+	public Response<ProblemSolutionResult> compileSolution(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException {
 		return new Response<>(problemSolutionService.compileSolution(problemSolution));
 	}
 

@@ -12,14 +12,22 @@ import com.codework.enums.ProblemType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.*;
+
 @Data
 @NoArgsConstructor
 public class ProblemDetails {
 	private long id;
+	@NotNull(message = "challengeId is required")
+	@Digits(message = "challengeId is invalid", fraction = 0, integer = 10)
 	private long challengeId;
+	@NotBlank(message = "name is required")
 	private String name;
+	@NotBlank(message = "problemStatement is required")
 	private String problemStatement;
+	@NotNull(message = "type is required")
 	private ProblemType type;
+	@NotNull
 	private List<Language> languagesAllowed;
 	private Date startDate;
 	private Date endDate;
