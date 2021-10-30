@@ -87,4 +87,14 @@ public class ChallengeController {
 	public Response<ChallengeSubscription> submitChallenge(@PathVariable Long challengeId) {
 		return new Response<>(challengeSubscriptionService.submitChallenge(challengeId).get());
 	}
+
+	/**
+	 * submit challenge
+	 * @param id
+	 * @return Challenge
+	 */
+	@PostMapping(value = "/solution/run")
+	public Response<ChallengeSubscription> runSolution(@PathVariable Long challengeId) {
+		return new Response<>(challengeSubscriptionService.submitChallenge(challengeId).get());
+	}
 }
