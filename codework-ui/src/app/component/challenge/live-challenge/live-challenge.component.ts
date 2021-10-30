@@ -15,6 +15,8 @@ import { CustomInputComponent } from './custom-input/custom-input.component';
 import { TestResultComponent } from './test-result/test-result.component';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { ChallengeSubscriptionStatus } from 'src/app/model/challenge-subscription.modal';
+import { Utility } from 'src/app/common/utility/utility';
+import { ChallengeSubmitInput } from 'src/app/model/challenge-submit.model';
 
 @Component({
   selector: 'app-live-challenge',
@@ -28,6 +30,7 @@ export class LiveChallengeComponent implements OnInit {
   showInstruction: boolean = false;
   showLiveChallenge: boolean = false;
   public challenge?: Challenge;   
+  lastSavedSolution? : ProblemSolution;
   problemSolutionResult?: ProblemSolutionResult; 
   runAllTestsResult?: ProblemSolutionResult;  
   compileResultModalRef!: BsModalRef;   
@@ -120,7 +123,26 @@ export class LiveChallengeComponent implements OnInit {
     return null;
   }
 
+  getAllProblemSolutions(){
+    if(this.challenge && this.selectedProblem){   
+      let challengeSolution: ProblemSolution = {
+          challengeId : this.challenge.id,
+          languageId : this.codeEditor.getLanguage()?.id,
+          problemId : this.selectedProblem.id,
+          customInput : this.customInput,
+          solution : unescape(this.codeEditor.getSolution())
+      }
+      let solutions : ChallengeSubmitInput = {
+        challengeId : this.challenge.id,
+        solutions : [challengeSolution]
+      }
+      return solutions;
+    }
+    return null;
+  }
+
   compileSolution(){    
+    this.saveSolution(false);
     let challengeSolution = this.getProblemSolution();
     if(challengeSolution){         
       this.loaderService.show();
@@ -135,7 +157,8 @@ export class LiveChallengeComponent implements OnInit {
     }    
   }
 
-  runAllTests(){    
+  runAllTests(){
+    this.saveSolution(false);    
     let challengeSolution = this.getProblemSolution();
     if(challengeSolution){                   
       this.loaderService.show();
@@ -183,13 +206,12 @@ export class LiveChallengeComponent implements OnInit {
     })
   }
 
-  saveSolution(){    
+  saveSolution(showMessage : boolean){    
     let challengeSolution = this.getProblemSolution();
-    if(challengeSolution){                         
-      this.loaderService.show();
+    if(challengeSolution && ( Utility.getHashCode(JSON.stringify(challengeSolution)) != Utility.getHashCode(JSON.stringify(this.lastSavedSolution)))){                         
+      this.lastSavedSolution = Object.assign({}, challengeSolution);
       this.liveChallengeService.saveProblemSolution(challengeSolution).subscribe(response => {    
-        this.loaderService.hide();        
-        if(response){
+        if(response && showMessage){
           Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -216,11 +238,29 @@ export class LiveChallengeComponent implements OnInit {
      confirmButtonText: 'Yes'
    }).then((result) => {
      if (result.isConfirmed) {
-       
-     }
+        let challengeSolution = this.getProblemSolution();
+        if(challengeSolution){
+          this.loaderService.show();
+          this.liveChallengeService.submitProblemSolution(challengeSolution).subscribe(response => {    
+          if(response){
+            if(this.selectedProblem){
+              this.selectedProblem.problemSolution = response;
+            }
+            this.loaderService.hide();       
+            this.alertService.success('Your Solution has been submitted successfully');
+            }                
+          }, error => {
+            this.loaderService.hide();       
+          });      
+        }
+      }    
    })
  }
 
+  isSolutionSubmitted(problem? : Problem){
+    return problem && problem.problemSolution && problem.problemSolution.submitted;
+  }
+ 
   finishChallenge(){        
      Swal.fire({
       title: 'Are you sure?',
@@ -232,7 +272,16 @@ export class LiveChallengeComponent implements OnInit {
       confirmButtonText: 'Yes'
     }).then((result) => {
       if (result.isConfirmed) {
-        
+        let challengeSolution = this.getAllProblemSolutions();
+        if(challengeSolution){
+          this.loaderService.show();
+          this.liveChallengeService.finishChallenge(challengeSolution).subscribe(response => {    
+            this.loaderService.hide();       
+            this.nevigateToChallenges();
+          }, error => {
+            this.loaderService.hide();       
+          });      
+        }
       }
     })
   }

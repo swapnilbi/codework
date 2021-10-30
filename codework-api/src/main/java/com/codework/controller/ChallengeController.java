@@ -3,7 +3,9 @@ package com.codework.controller;
 import com.codework.entity.ChallengeSubscription;
 import com.codework.enums.ChallengeSubscriptionStatus;
 import com.codework.exception.BusinessException;
+import com.codework.exception.SystemException;
 import com.codework.model.ChallengeDetails;
+import com.codework.model.ChallengeSubmitInput;
 import com.codework.model.Response;
 import com.codework.service.IChallengeService;
 import com.codework.service.IChallengeSubscriptionService;
@@ -24,7 +26,7 @@ public class ChallengeController {
 
 	/**
 	 * Get challenge details
-	 * @param id
+	 * @param challengeId
 	 * @return ChallengeDetails
 	 */
 	@GetMapping(value = "/{challengeId}")
@@ -53,7 +55,7 @@ public class ChallengeController {
 
 	/**
 	 * register challenge
-	 * @param id
+	 * @param challengeId
 	 * @return Challenge
 	 * @throws BusinessException 
 	 */
@@ -67,24 +69,27 @@ public class ChallengeController {
 	
 	/**
 	 * start challenge
-	 * @param id
+	 * @param challengeId
 	 * @return Challenge
 	 */
 	@GetMapping(value = "/{challengeId}/start")
 	public Response<ChallengeDetails> startChallenge(@PathVariable Long challengeId) {
-		ChallengeSubscription challengeSubscription = challengeSubscriptionService.startChallenge(challengeId).get();
+		ChallengeSubscription challengeSubscription = challengeSubscriptionService.startChallenge(challengeId);
 		ChallengeDetails challengeDetails = challengeService.getChallenge(challengeId).get();
 		challengeDetails.setChallengeSubscription(challengeSubscription);
 		return new Response<>(challengeDetails);
 	}
-	
+
 	/**
 	 * submit challenge
-	 * @param id
+	 * @param submitInput
 	 * @return Challenge
 	 */
-	@PostMapping(value = "/{challengeId}/")
-	public Response<ChallengeSubscription> submitChallenge(@PathVariable Long challengeId) {
-		return new Response<>(challengeSubscriptionService.submitChallenge(challengeId).get());
+	@PostMapping(value = "/{challengeId}/submit")
+	public Response<ChallengeDetails> submitChallenge(@RequestBody ChallengeSubmitInput submitInput) throws SystemException {
+		ChallengeSubscription challengeSubscription = challengeSubscriptionService.submitChallenge(submitInput);
+		ChallengeDetails challengeDetails = challengeService.getChallenge(submitInput.getChallengeId()).get();
+		challengeDetails.setChallengeSubscription(challengeSubscription);
+		return new Response<>(challengeDetails);
 	}
 }

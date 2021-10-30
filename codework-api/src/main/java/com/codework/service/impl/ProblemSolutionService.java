@@ -1,19 +1,24 @@
 package com.codework.service.impl;
 
-import com.codework.entity.Problem;
+import com.codework.entity.ProblemSolution;
+import com.codework.exception.BusinessException;
 import com.codework.exception.SystemException;
 import com.codework.model.*;
+import com.codework.repository.ProblemSolutionRepository;
+import com.codework.repository.SequenceGenerator;
 import com.codework.service.ICodeExecutorService;
 import com.codework.service.IProblemService;
 import com.codework.service.IProblemSolutionService;
 import com.codework.utility.ChallengeUtility;
+import com.codework.utility.DateUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,9 +30,15 @@ public class ProblemSolutionService implements IProblemSolutionService {
     @Autowired
     private IProblemService problemService;
 
+    @Autowired
+    private ProblemSolutionRepository problemSolutionRepository;
+
+    @Autowired
+    SequenceGenerator sequenceGenerator;
+
 
     @Override
-    public ProblemSolutionResult compileSolution(ProblemSolution problemSolution) throws SystemException {
+    public ProblemSolutionResult compileSolution(ProblemSolutionInput problemSolution) throws SystemException {
         try{
             ProblemSolutionResult problemSolutionResult = new ProblemSolutionResult();
             ProblemDetails problem = problemService.getProblem(problemSolution.getProblemId()).get();
@@ -45,7 +56,46 @@ public class ProblemSolutionService implements IProblemSolutionService {
         }
     }
 
-    private ProblemSolutionResult evaluateCustomInput(ProblemSolution problemSolution, ProblemSolutionResult problemSolutionResult) throws IOException {
+    @Override
+    public ProblemSolution saveSolution(ProblemSolutionInput problemSolutionInput) throws SystemException {
+        try{
+            Optional<ProblemSolution> savedSolution = problemSolutionRepository.findByUserIdAndProblemId("1", problemSolutionInput.getProblemId());
+            ProblemSolution problemSolution = null;
+            if(savedSolution.isPresent()){
+                problemSolution = savedSolution.get();
+            }else{
+                problemSolution = new ProblemSolution();
+                problemSolution.setId(sequenceGenerator.generateSequence(ProblemSolution.SEQUENCE_NAME));
+                problemSolution.setCreatedAt(DateUtility.currentDate());
+                problemSolution.setProblemId(problemSolutionInput.getProblemId());
+                problemSolution.setUserId("1"); // temp
+            }
+            problemSolution.setSolution(problemSolutionInput.getSolution());
+            problemSolution.setLanguageId(problemSolutionInput.getLanguageId());
+            problemSolution.setSubmitted(problemSolutionInput.isSubmitted());
+            if(problemSolutionInput.isSubmitted()){
+                problemSolution.setSubmittedAt(DateUtility.currentDate());
+            }
+            problemSolution.setUpdatedAt(DateUtility.currentDate());
+            problemSolutionRepository.save(problemSolution);
+            return problemSolution;
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new SystemException("Exception in compile solution");
+        }
+    }
+
+    @Override
+    public ProblemSolution submitSolution(ProblemSolutionInput problemSolutionInput) throws SystemException, BusinessException {
+        Optional<ProblemSolution> savedSolution = problemSolutionRepository.findByUserIdAndProblemId("1", problemSolutionInput.getProblemId());
+        if(savedSolution.isPresent() && savedSolution.get().isSubmitted()){
+            throw new BusinessException("Solution has been already submitted");
+        }
+        problemSolutionInput.setSubmitted(Boolean.TRUE);
+        return saveSolution(problemSolutionInput);
+    }
+
+    private ProblemSolutionResult evaluateCustomInput(ProblemSolutionInput problemSolution, ProblemSolutionResult problemSolutionResult) throws IOException {
         SubmissionRequest submissionRequest = new SubmissionRequest(problemSolution.getLanguageId(),problemSolution.getSolution(),problemSolution.getCustomInput());
         SubmissionStatus submissionStatus = codeExecutorService.evaluateSubmission(submissionRequest);
         System.out.println(submissionStatus);
@@ -64,7 +114,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
         return problemSolutionResult;
     }
 
-    private ProblemSolutionResult evaluateSampleTestCases(ProblemSolution problemSolution, ProblemDetails problem, ProblemSolutionResult problemSolutionResult) throws IOException {
+    private ProblemSolutionResult evaluateSampleTestCases(ProblemSolutionInput problemSolution, ProblemDetails problem, ProblemSolutionResult problemSolutionResult) throws IOException {
         List<TestCase> sampleTestCases = problem.getTestCases().stream().filter( t-> t.getIsSample()).collect(Collectors.toList());
         int passedTestCases = 0;
         for(TestCase testCase : sampleTestCases){
@@ -124,7 +174,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
     }
 
     @Override
-    public ProblemSolutionResult runAllTests(ProblemSolution problemSolution) {
+    public ProblemSolutionResult runAllTests(ProblemSolutionInput problemSolution) {
         try{
             ProblemSolutionResult problemSolutionResult = new ProblemSolutionResult();
             SubmissionRequest submissionRequest = new SubmissionRequest();
@@ -140,8 +190,13 @@ public class ProblemSolutionService implements IProblemSolutionService {
     }
 
     @Override
-    public void evaluateSolution(ProblemSolution problemSolution) {
+    public void evaluateSolution(ProblemSolutionInput problemSolution) {
 
+    }
+
+    @Override
+    public Optional<ProblemSolution> getProblemSolution(String userId, Long problemId) {
+        return problemSolutionRepository.findByUserIdAndProblemId(userId,problemId);
     }
 
     public Callable getCompileResult(String token){

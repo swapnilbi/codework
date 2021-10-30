@@ -3,6 +3,10 @@ package com.codework.service.impl;
 import java.util.Date;
 import java.util.Optional;
 
+import com.codework.exception.SystemException;
+import com.codework.model.ChallengeSubmitInput;
+import com.codework.model.ProblemSolutionInput;
+import com.codework.service.IProblemSolutionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +22,9 @@ public class ChallengeSubscriptionService implements IChallengeSubscriptionServi
 
 	@Autowired
 	ChallengeSubscriptionRepository challengeSubscriptionRepository;
+
+	@Autowired
+	IProblemSolutionService problemSolutionService;
 	
 	@Autowired
 	SequenceGenerator sequenceGenerator;
@@ -42,21 +49,27 @@ public class ChallengeSubscriptionService implements IChallengeSubscriptionServi
 	}
 
 	@Override
-	public Optional<ChallengeSubscription> startChallenge(Long challengeId) {
+	public ChallengeSubscription startChallenge(Long challengeId) {
 		ChallengeSubscription challengeSubscription = challengeSubscriptionRepository.findByChallengeIdAndUserId(challengeId, "1").get();
 		challengeSubscription.setStatus(ChallengeSubscriptionStatus.STARTED);
 		challengeSubscription.setStartDate(new Date());
 		challengeSubscriptionRepository.save(challengeSubscription);
-		return Optional.of(challengeSubscription);
+		return challengeSubscription;
 	}
 
 	@Override
-	public Optional<ChallengeSubscription> submitChallenge(Long challengeId) {
-		ChallengeSubscription challengeSubscription = challengeSubscriptionRepository.findByChallengeIdAndUserId(challengeId, "1").get();
+	public ChallengeSubscription submitChallenge(ChallengeSubmitInput submitInput) throws SystemException {
+		if(submitInput.getSolutionList()!=null){
+			for(ProblemSolutionInput solutionInput : submitInput.getSolutionList()){
+				solutionInput.setSubmitted(Boolean.TRUE);
+				problemSolutionService.saveSolution(solutionInput);
+			}
+		}
+		ChallengeSubscription challengeSubscription = challengeSubscriptionRepository.findByChallengeIdAndUserId(submitInput.getChallengeId(), "1").get();
 		challengeSubscription.setStatus(ChallengeSubscriptionStatus.SUBMITTED);
 		challengeSubscription.setEndDate(new Date());
 		challengeSubscriptionRepository.save(challengeSubscription);
-		return Optional.of(challengeSubscription);
+		return challengeSubscription;
 	}
 	
 }

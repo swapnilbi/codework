@@ -3,5 +3,6 @@ export interface ProblemSolution {
     problemId : number,
     solution : string,
     customInput? : string | null,
-    languageId? : number
+    languageId? : number,
+    submitted? : boolean
 }

@@ -1,39 +1,39 @@
 <app-challenge-instruction (challengeStartEvent)="startChallenge()" *ngIf="showInstruction"></app-challenge-instruction>
 <div class="challenge-live" *ngIf="showLiveChallenge">
     <as-split direction="horizontal">
-      <as-split-area class="problem-details-wrapper" [size]="30" [minSize]="10" [maxSize]="40">        
-          <div class="problem-select-header">  
-            <span class="language">Problem : </span>                
+      <as-split-area class="problem-details-wrapper" [size]="30" [minSize]="10" [maxSize]="40">
+          <div class="problem-select-header">
+            <span class="language">Problem : </span>
             <select [(ngModel)]="selectedProblem" class="problem-select">
               <option *ngFor="let problem of problems; let i = index" [ngValue]="problem">
                 {{problem.name}}
               </option>
-            </select>          
+            </select>
           </div>
           <div class="problem-details" *ngIf="selectedProblem">
             <div class="title">Problem Statement</div>
-            <div class="description mt-2">              
+            <div class="description mt-2">
               <div [innerHTML]="selectedProblem.problemStatement"></div>
             </div>
-          </div>        
+          </div>
       </as-split-area>
-      <as-split-area class="challenge-editor" [size]="70" [minSize]="60" [maxSize]="90">        
+      <as-split-area class="challenge-editor" [size]="70" [minSize]="60" [maxSize]="90">
 
-        <code-editor (saveSolutionEvent)="saveSolution()" (finishChallengeEvent)="finishChallenge()" #codeEditor *ngIf="selectedProblem" [problem]="selectedProblem"></code-editor>      
-        
-        <div class="editor-footer">          
+        <code-editor (saveSolutionEvent)="saveSolution($event)" (finishChallengeEvent)="finishChallenge()" #codeEditor *ngIf="selectedProblem" [problem]="selectedProblem"></code-editor>
+
+        <div class="editor-footer">
 
             <div class="mr-5">
-              <button type="button" (click)="compileSolution()" class="btn btn-sm btn-primary ml-2"> <i class="fas fa-code"></i> Compile</button>
-              <button type="button" [disabled]="!problemSolutionResult" (click)="showCompilationResult()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-poll"></i> Test Result </button>
-              <button type="button" (click)="provideCustomInput()" class="btn btn-sm btn-secondary ml-2"> <i class="far fa-keyboard"></i> Custom Input</button>
+              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="compileSolution()" class="btn btn-sm btn-primary ml-2"> <i class="fas fa-code"></i> Compile</button>
+              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem) || !problemSolutionResult" (click)="showCompilationResult()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-poll"></i> Test Result </button>
+              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="provideCustomInput()" class="btn btn-sm btn-secondary ml-2"> <i class="far fa-keyboard"></i> Custom Input</button>
             </div>
-          
-            <div class="ml-5 float right">              
-              <button type="button" (click)="runAllTests()" class="btn btn-sm btn-info ml-2"><i class="fas fa-tasks"></i> Run Tests</button>
-              <button type="button" (click)="submitSolution()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-check"></i> Submit</button>
-            </div>            
-          
+
+            <div class="ml-5 float right">
+              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="runAllTests()" class="btn btn-sm btn-info ml-2"><i class="fas fa-tasks"></i> Run Tests</button>
+              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="submitSolution()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-check"></i> Submit</button>
+            </div>
+
         </div>
       </as-split-area>
     </as-split>

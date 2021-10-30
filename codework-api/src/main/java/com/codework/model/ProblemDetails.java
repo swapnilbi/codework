@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.codework.entity.Language;
 import com.codework.entity.Problem;
+import com.codework.entity.ProblemSolution;
 import com.codework.enums.ProblemType;
 
 import lombok.Data;
@@ -28,6 +29,7 @@ public class ProblemDetails {
 	private Float cpuLimit;
 	private Date createdAt;
 	private String createdBy;
+	private ProblemSolution problemSolution;
 	
 	public ProblemDetails(Problem problem){
 		this.id = problem.getId();

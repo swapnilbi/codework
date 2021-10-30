@@ -16,51 +16,87 @@ export class CodeEditorComponent implements OnInit {
   loader = true;
   code: string= '';
   language?: Language;
+  lastSelectedLanguage?: Language;
   selectedProblem?: Problem;
   showEditor: boolean = true;
+  editor : any;
   @Output() saveSolutionEvent = new EventEmitter<boolean>();
   @Output() finishChallengeEvent = new EventEmitter<boolean>();
 
+  constructor(protected alertService: AlertService) {
+    
+  }
+  ngOnInit(): void {
+    
+  }
+
   saveSolution() {
     this.saveSolutionEvent.emit(true);
+  }
+
+  onEditorInit(editor : any) {
+    this.editor = editor;
+    let counter = 0;
+    let codeLength = 0;
+    let saveSolutionEvent = this.saveSolutionEvent;
+    if(editor){
+      editor.onKeyUp(function (e : any) {
+        counter++;
+        if(counter % 30 == 0){
+          console.log('Save solution');
+          saveSolutionEvent.emit(false);
+        }
+      });
+    }
+  }
+
+  isSolutionSubmitted(){
+    return this.selectedProblem && this.selectedProblem.problemSolution && this.selectedProblem.problemSolution.submitted;
   }
 
   finishChallenge() {
     this.finishChallengeEvent.emit(true);
   }
 
-  constructor(protected alertService: AlertService) {
-    
-  }
-
-  ngOnInit(): void {    
-  }
-
   @Input() set problem(problem: Problem) {      
     this.selectedProblem  = problem;
-    this.updateSolution();    
-  }
-
-  updateSolution(){        
     if(this.selectedProblem){
-      if(this.selectedProblem.solution && this.selectedProblem.solution.trim().length > 0){
-        this.code = this.selectedProblem.solution;
+      if(this.selectedProblem.problemSolution && this.selectedProblem.problemSolution.languageId){
+        if(this.selectedProblem.problemSolution && this.selectedProblem.problemSolution.solution){
+          if(!this.selectedProblem.placeHolderSolution){
+            this.selectedProblem.placeHolderSolution = {};
+          } 
+          this.selectedProblem.placeHolderSolution[this.selectedProblem.problemSolution.languageId] = this.selectedProblem.problemSolution.solution;
+        }
+        let selectedLanguage = this.selectedProblem.languagesAllowed?.find( l => this.selectedProblem && l.id ===  this.selectedProblem.problemSolution?.languageId);
+        if(selectedLanguage){
+          this.onLanguageChange(selectedLanguage);
+        }
       } 
-      if(this.selectedProblem.languagesAllowed){
-        this.language = this.selectedProblem.languagesAllowed[0];  
-        this.onLanguageChange(this.language);
+      if(!this.language && this.selectedProblem.languagesAllowed){
+        this.onLanguageChange(this.selectedProblem.languagesAllowed[0]);
       }      
     }
   }
 
-  onLanguageChange(language? : Language){    
-    if(language){
-      this.language = language;      
-      if(this.selectedProblem && this.selectedProblem.placeHolderSolution && this.selectedProblem.placeHolderSolution[language.id]){
+  updateSolution(language : Language){
+    if(this.selectedProblem){
+      if(this.selectedProblem.placeHolderSolution && this.selectedProblem.placeHolderSolution[language.id]){
         this.code = this.selectedProblem.placeHolderSolution[language.id];        
       }else{
         this.code = '';        
       }
+    } 
+  }
+
+  onLanguageChange(language? : Language){    
+    if(language){
+      if(this.lastSelectedLanguage && this.selectedProblem && this.selectedProblem.placeHolderSolution){
+        this.selectedProblem.placeHolderSolution[this.lastSelectedLanguage.id] = this.code; 
+      }
+      this.lastSelectedLanguage = language;  
+      this.language =  language;
+      this.updateSolution(language);    
       this.editorOptions.language = language.editorCode;              
       this.showEditor = false;    
       setTimeout(() =>{

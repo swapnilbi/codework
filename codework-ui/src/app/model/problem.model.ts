@@ -1,3 +1,5 @@
+import { ProblemSolution } from "./problem-solution.model";
+
 export interface Problem {
     id : number,
     challengeId : number,
@@ -12,8 +14,8 @@ export interface Problem {
     isSubmitted? : boolean,
     createdAt? : Date,
     placeHolderSolution? : Record<number,string>,
-    solution?: string,
-    testCases?: Array<TestCase>    
+    testCases?: Array<TestCase>,
+    problemSolution?: ProblemSolution    
 }
 
 export interface TestCase {

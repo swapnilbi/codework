@@ -45,12 +45,23 @@ export class ChallengeDetailsComponent implements OnInit {
   }
 
   isRegistered(challenge : Challenge){
-    return challenge.challengeSubscription;
+    return this.challenge && this.challenge.challengeSubscription;
+  }
+
+  isChallengeSubmitted(){
+    return this.challenge && this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.SUBMITTED;
+  }
+
+  isChallengeStarted(){
+    return this.challenge && this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.STARTED;
   }
 
   isLiveChallenge(){
-    if(this.challenge){
-      return this.challenge.status ==  ChallengeStatus.LIVE;
+    if(this.challenge && this.challenge.status ==  ChallengeStatus.LIVE){
+      if(this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.SUBMITTED){
+        return false;
+      }
+      return true;
     }
     return false;
   }
