@@ -86,7 +86,7 @@ public class ChallengeController {
 	 * @return Challenge
 	 */
 	@PostMapping(value = "/{challengeId}/submit")
-	public Response<ChallengeDetails> submitChallenge(@RequestBody ChallengeSubmitInput submitInput) throws SystemException {
+	public Response<ChallengeDetails> submitChallenge(@RequestBody ChallengeSubmitInput submitInput) throws SystemException, BusinessException {
 		ChallengeSubscription challengeSubscription = challengeSubscriptionService.submitChallenge(submitInput);
 		ChallengeDetails challengeDetails = challengeService.getChallenge(submitInput.getChallengeId()).get();
 		challengeDetails.setChallengeSubscription(challengeSubscription);

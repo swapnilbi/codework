@@ -76,6 +76,27 @@ public class ProblemService implements IProblemService {
 	}
 
 	@Override
+	public Problem updateProblem(ProblemDetails problemDetails) {
+		Problem problem = problemRepository.findById(problemDetails.getId()).get();
+		List<Integer> languages = new ArrayList<>();
+		problem.setName(problemDetails.getName());
+		problem.setProblemStatement(problemDetails.getProblemStatement());
+		problem.setType(problemDetails.getType());
+		if(problemDetails.getLanguagesAllowed()!=null) {
+			languages = problemDetails.getLanguagesAllowed().stream().map(Language::getId).collect(Collectors.toList());
+		}
+		problem.setLanguagesAllowed(languages);
+		problem.setTestCases(problemDetails.getTestCases());
+		problem.setStartDate(problemDetails.getStartDate());
+		problem.setEndDate(problemDetails.getEndDate());
+		problem.setMemoryLimit(problemDetails.getMemoryLimit());
+		problem.setCpuLimit(problemDetails.getCpuLimit());
+		problem.setPlaceHolderSolution(problemDetails.getPlaceHolderSolution());
+		problemRepository.save(problem);
+		return problem;
+	}
+
+	@Override
 	public List<ProblemDetails> getProblems(Long challengeId) {
 		List<Problem> problemList = problemRepository.findByChallengeId(challengeId);
 		Optional<ChallengeSubscription> challengeSubscription = challengeSubscriptionService.getChallengeSubscription(challengeId,"1");

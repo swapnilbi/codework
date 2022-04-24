@@ -30,7 +30,7 @@ public class ChallengeUtility {
         return status == 6;
     }
     
-    public static boolean isRuntimeError(int status){
+    public static boolean isRuntimeError(Integer status){
         switch(status){
 	        case 7 :
 	        case 8 :

@@ -3,6 +3,7 @@ package com.codework.service.impl;
 import java.util.Date;
 import java.util.Optional;
 
+import com.codework.entity.ProblemSolution;
 import com.codework.exception.SystemException;
 import com.codework.model.ChallengeSubmitInput;
 import com.codework.model.ProblemSolutionInput;
@@ -58,7 +59,7 @@ public class ChallengeSubscriptionService implements IChallengeSubscriptionServi
 	}
 
 	@Override
-	public ChallengeSubscription submitChallenge(ChallengeSubmitInput submitInput) throws SystemException {
+	public ChallengeSubscription submitChallenge(ChallengeSubmitInput submitInput) throws SystemException, BusinessException {
 		if(submitInput.getSolutionList()!=null){
 			for(ProblemSolutionInput solutionInput : submitInput.getSolutionList()){
 				solutionInput.setSubmitted(Boolean.TRUE);

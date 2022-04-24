@@ -15,19 +15,31 @@
           <div>  
             <span class="font-weight-bold">Result : </span>   
             <span *ngIf="compileResult.result" class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Compiled & Run Successfully</span>        
-            <span *ngIf="!compileResult.result && !compileResult.compilationError" class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Wrong Answer</span>        
+            <span *ngIf="!compileResult.result && !compileResult.runTimeError && !compileResult.compilationError" class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Wrong Answer</span>        
             <span *ngIf="!compileResult.result && compileResult.compilationError" class="text-danger"><i class="fa fa-exclamation-circle"></i> Compilation Error</span>        
             <span *ngIf="!compileResult.result && compileResult.runTimeError" class="text-danger"><i class="fa fa-exclamation-circle"></i> Runtime Error</span>        
           </div>
           <hr/>
 
-        <div class="result-section">        
+        <div class="result-section" *ngIf="!compileResult.compilationError">        
             <p>
                 <span class="font-weight-bold">  Limits : </span>
             </p>
             <p class="text-secondary">          
                 <small> Time(sec) : {{ compileResult.timeLimit }}, &nbsp; Memory(KB) :  {{ compileResult.memoryLimit }}  </small>
             </p>            
+        </div>
+
+        <div class="result-section" *ngIf="compileResult.compilationLog">        
+          <p>
+            <span class="font-weight-bold" *ngIf="compileResult.compilationError">  Compilation Log : </span>
+            <span class="font-weight-bold" *ngIf="compileResult.runTimeError">  Error Log : </span>
+          </p>
+          <p class="error-log compilation-log" style="white-space: pre-line">          
+            <small>              
+              {{compileResult.compilationLog}}
+            </small>          
+          </p>
         </div>
 
         <div class="result-section" *ngIf="!compileResult.compilationError">

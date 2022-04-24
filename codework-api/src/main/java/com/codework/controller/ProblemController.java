@@ -1,5 +1,6 @@
 package com.codework.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.codework.entity.Problem;
@@ -10,12 +11,7 @@ import com.codework.model.ProblemSolutionInput;
 import com.codework.model.ProblemSolutionResult;
 import com.codework.service.IProblemSolutionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.codework.model.ProblemDetails;
 import com.codework.model.Response;
@@ -54,12 +50,31 @@ public class ProblemController {
 	}
 
 	/**
+	 * updates existing problem
+	 * @param problemDetails
+	 * @return ProblemDetails
+	 */
+	@PutMapping(value = "/problem")
+	public Response<Problem> updateProblem(@Valid @RequestBody ProblemDetails problemDetails) {
+		return new Response<>(problemService.updateProblem(problemDetails));
+	}
+
+	/**
 	 * Compile solution
 	 *
 	 */
 	@PostMapping(value = "/solution/compile")
-	public Response<ProblemSolutionResult> compileSolution(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException {
+	public Response<ProblemSolutionResult> compileSolution(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
 		return new Response<>(problemSolutionService.compileSolution(problemSolution));
+	}
+
+	/**
+	 * Run All test cases
+	 *
+	 */
+	@PostMapping(value = "/solution/run")
+	public Response<ProblemSolutionResult> runAllTests(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
+		return new Response<>(problemSolutionService.runAllTests(problemSolution));
 	}
 
 	/**
@@ -67,7 +82,7 @@ public class ProblemController {
 	 *
 	 */
 	@PostMapping(value = "/solution/save")
-	public Response<ProblemSolution> saveSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException {
+	public Response<ProblemSolution> saveSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException {
 		return new Response<ProblemSolution>(problemSolutionService.saveSolution(problemSolution));
 	}
 

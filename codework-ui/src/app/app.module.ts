@@ -70,9 +70,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SweetAlert2Module.forRoot(),
     MatProgressSpinnerModule,
     ModalModule.forRoot(),
-    AccordionModule.forRoot(),
-    
-    
+    AccordionModule.forRoot(),        
   ],
   providers: [
     {

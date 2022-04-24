@@ -10,6 +10,8 @@ public interface IProblemService {
 
     Optional<ProblemDetails> getProblem(Long id);
 
+    Problem updateProblem(ProblemDetails problemDetails);
+
     List<ProblemDetails> getProblems(Long challengeId);
 
     Problem createProblem(ProblemDetails problem);

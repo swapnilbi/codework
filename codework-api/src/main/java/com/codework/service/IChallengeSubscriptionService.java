@@ -17,6 +17,6 @@ public interface IChallengeSubscriptionService {
 
 	ChallengeSubscription startChallenge(Long challengeId);
 
-    ChallengeSubscription submitChallenge(ChallengeSubmitInput submitInput) throws SystemException;
+    ChallengeSubscription submitChallenge(ChallengeSubmitInput submitInput) throws SystemException, BusinessException;
 
 }

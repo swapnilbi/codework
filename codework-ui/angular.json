@@ -37,7 +37,10 @@
 							"./node_modules/sweetalert2/src/sweetalert2.scss",
 							"src/styles.scss"
 						],
-						"scripts": []
+						"scripts": [
+              "./node_modules/jquery/dist/jquery.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
 					},
 					"configurations": {
 						"production": {

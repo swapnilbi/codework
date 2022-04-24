@@ -31,7 +31,7 @@
 
             <div class="ml-5 float right">
               <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="runAllTests()" class="btn btn-sm btn-info ml-2"><i class="fas fa-tasks"></i> Run Tests</button>
-              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="submitSolution()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-check"></i> Submit</button>
+              <button type="button" [hidden]="!hasMultipleProblems()" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="submitSolution()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-check"></i> Submit</button>
             </div>
 
         </div>

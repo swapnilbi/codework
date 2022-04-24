@@ -260,6 +260,10 @@ export class LiveChallengeComponent implements OnInit {
   isSolutionSubmitted(problem? : Problem){
     return problem && problem.problemSolution && problem.problemSolution.submitted;
   }
+
+  hasMultipleProblems(problem? : Problem){
+    return this.problems && this.problems.length > 1;
+  }
  
   finishChallenge(){        
      Swal.fire({
