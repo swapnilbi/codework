@@ -18,23 +18,13 @@
           </div>
       </as-split-area>
       <as-split-area class="challenge-editor" [size]="70" [minSize]="60" [maxSize]="90">
+        <div *ngIf="selectedProblem && liveChallenge">
 
-        <code-editor (saveSolutionEvent)="saveSolution($event)" (finishChallengeEvent)="finishChallenge()" #codeEditor *ngIf="selectedProblem" [problem]="selectedProblem"></code-editor>
+          <code-editor *ngIf="selectedProblem.type == 'PROGRAM'" (finishChallengeEvent)="finishChallenge($event)" #codeEditor [problem]="selectedProblem" [liveChallenge]="liveChallenge"></code-editor>
 
-        <div class="editor-footer">
-
-            <div class="mr-5">
-              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="compileSolution()" class="btn btn-sm btn-primary ml-2"> <i class="fas fa-code"></i> Compile</button>
-              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem) || !problemSolutionResult" (click)="showCompilationResult()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-poll"></i> Test Result </button>
-              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="provideCustomInput()" class="btn btn-sm btn-secondary ml-2"> <i class="far fa-keyboard"></i> Custom Input</button>
-            </div>
-
-            <div class="ml-5 float right">
-              <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="runAllTests()" class="btn btn-sm btn-info ml-2"><i class="fas fa-tasks"></i> Run Tests</button>
-              <button type="button" [hidden]="!hasMultipleProblems()" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="submitSolution()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-check"></i> Submit</button>
-            </div>
-
-        </div>
+          <free-text-editor *ngIf="selectedProblem.type == 'PUZZLE'" (finishChallengeEvent)="finishChallenge($event)" #freeTextEditor [problem]="selectedProblem"  [liveChallenge]="liveChallenge"></free-text-editor>
+          
+        </div>              
       </as-split-area>
     </as-split>
 </div>

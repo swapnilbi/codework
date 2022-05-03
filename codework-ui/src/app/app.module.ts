@@ -34,6 +34,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { CustomInputComponent } from './component/challenge/live-challenge/custom-input/custom-input.component';
 import { TestResultComponent } from './component/challenge/live-challenge/test-result/test-result.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FreeTextEditorComponent } from './component/challenge/free-text-editor/free-text-editor.component';
 
 export const isMock = environment.mock;
 
@@ -55,7 +57,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ChallengeInstructionComponent,
     CompileResultComponent,
     CustomInputComponent,
-    TestResultComponent
+    TestResultComponent,
+    FreeTextEditorComponent,    
   ],
   imports: [
     BrowserModule,
@@ -63,6 +66,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AppRoutingModule,
     CommonModule,    
     PerfectScrollbarModule,
+    NgbModule,
     AngularSplitModule,
     FormsModule,
     MonacoEditorModule.forRoot(CodeEditorConfig), // use forRoot() in main app module only.  

@@ -11,12 +11,7 @@ import com.codework.model.ChallengeSubmitInput;
 
 public interface IChallengeSubscriptionService {
 	
-    Optional<ChallengeSubscription> registerChallenge(Long id) throws BusinessException;
+    Optional<ChallengeSubscription> registerChallenge(Long id, Long userId) throws BusinessException;
     
-    Optional<ChallengeSubscription> getChallengeSubscription(Long challengeId, String userId);
-
-	ChallengeSubscription startChallenge(Long challengeId);
-
-    ChallengeSubscription submitChallenge(ChallengeSubmitInput submitInput) throws SystemException, BusinessException;
-
+    Optional<ChallengeSubscription> getChallengeSubscription(Long challengeId, Long userId);
 }

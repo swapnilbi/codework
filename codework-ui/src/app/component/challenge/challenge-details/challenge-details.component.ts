@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChallengeSubscriptionStatus } from 'src/app/model/challenge-subscription.modal';
 import { Challenge, ChallengeStatus } from 'src/app/model/challenge.model';
+import { UserSubmission } from 'src/app/model/user-submission.model';
 import { AlertService } from '../../common/alert/alert-service.service';
 import { LoaderService } from '../../common/loader/loader.service';
 import { ChallengeService } from '../view-challenge/challenge.service';
@@ -48,27 +49,13 @@ export class ChallengeDetailsComponent implements OnInit {
     return this.challenge && this.challenge.challengeSubscription;
   }
 
-  isChallengeSubmitted(){
-    return this.challenge && this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.SUBMITTED;
-  }
-
-  isChallengeStarted(){
-    return this.challenge && this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.STARTED;
-  }
-
   isLiveChallenge(){
-    if(this.challenge && this.challenge.status ==  ChallengeStatus.LIVE){
-      if(this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.SUBMITTED){
-        return false;
-      }
-      return true;
-    }
-    return false;
+    return this.challenge && this.challenge.status == ChallengeStatus.LIVE && this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.REGISTERED;
   }
 
-  startChallenge(){    
-    if(this.challenge){
-      var url = '/challenge/'+this.challenge.id+'/live';
+  startChallenge(userSubmission:  UserSubmission){    
+    if(userSubmission){
+      var url = '/challenge/'+userSubmission.challengeInstanceId+'/live';
       this.router.navigateByUrl(url);    
     }    
   }

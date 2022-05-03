@@ -5,21 +5,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.codework.entity.ChallengeSubscription;
-import com.codework.entity.ProblemSolution;
+import com.codework.entity.*;
 import com.codework.enums.ChallengeSubscriptionStatus;
-import com.codework.service.IChallengeSubscriptionService;
-import com.codework.service.ILanguageService;
-import com.codework.service.IProblemSolutionService;
+import com.codework.enums.SubmissionStatus;
+import com.codework.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.codework.entity.Language;
-import com.codework.entity.Problem;
 import com.codework.model.ProblemDetails;
 import com.codework.repository.ProblemRepository;
 import com.codework.repository.SequenceGenerator;
-import com.codework.service.IProblemService;
 
 @Service
 public class ProblemService implements IProblemService {
@@ -37,7 +32,7 @@ public class ProblemService implements IProblemService {
 	ILanguageService languageService;
 
 	@Autowired
-	IChallengeSubscriptionService challengeSubscriptionService;
+	IChallengeInstanceService challengeInstanceService;
 	
 	
 	@Override
@@ -64,8 +59,7 @@ public class ProblemService implements IProblemService {
 		}
 		problem.setLanguagesAllowed(languages);
 		problem.setTestCases(problemDetails.getTestCases());
-		problem.setStartDate(problemDetails.getStartDate());
-		problem.setEndDate(problemDetails.getEndDate());
+		problem.setChallengeInstanceId(problemDetails.getChallengeInstanceId());
 		problem.setMemoryLimit(problemDetails.getMemoryLimit());
 		problem.setCpuLimit(problemDetails.getCpuLimit());
 		problem.setPlaceHolderSolution(problemDetails.getPlaceHolderSolution());
@@ -86,9 +80,8 @@ public class ProblemService implements IProblemService {
 			languages = problemDetails.getLanguagesAllowed().stream().map(Language::getId).collect(Collectors.toList());
 		}
 		problem.setLanguagesAllowed(languages);
+		problem.setChallengeInstanceId(problemDetails.getChallengeInstanceId());
 		problem.setTestCases(problemDetails.getTestCases());
-		problem.setStartDate(problemDetails.getStartDate());
-		problem.setEndDate(problemDetails.getEndDate());
 		problem.setMemoryLimit(problemDetails.getMemoryLimit());
 		problem.setCpuLimit(problemDetails.getCpuLimit());
 		problem.setPlaceHolderSolution(problemDetails.getPlaceHolderSolution());
@@ -97,10 +90,10 @@ public class ProblemService implements IProblemService {
 	}
 
 	@Override
-	public List<ProblemDetails> getProblems(Long challengeId) {
-		List<Problem> problemList = problemRepository.findByChallengeId(challengeId);
-		Optional<ChallengeSubscription> challengeSubscription = challengeSubscriptionService.getChallengeSubscription(challengeId,"1");
-		boolean isChallengeStarted = challengeSubscription.isPresent() ? challengeSubscription.get().getStatus().equals(ChallengeSubscriptionStatus.STARTED) : false;
+	public List<ProblemDetails> getProblems(Long challengeInstanceId, Long userId) {
+		List<Problem> problemList = problemRepository.findByChallengeInstanceId(challengeInstanceId);
+		Optional<ChallengeInstanceSubmission> challengeInstanceSubmission = challengeInstanceService.getChallengeInstanceSubmission(challengeInstanceId,userId);
+		boolean isChallengeStarted = challengeInstanceSubmission.isPresent() ? challengeInstanceSubmission.get().getSubmissionStatus().equals(SubmissionStatus.IN_PROGRESS) : false;
 		List<ProblemDetails> problemDetailsList = new ArrayList<>();
 		for(Problem problem : problemList) {
 			ProblemDetails problemDetails = new ProblemDetails(problem);
@@ -108,7 +101,7 @@ public class ProblemService implements IProblemService {
 				problemDetails.setLanguagesAllowed(languageService.getLanguages(problem.getLanguagesAllowed()));
 			}
 			if(isChallengeStarted){
-				Optional<ProblemSolution> problemSolution = problemSolutionService.getProblemSolution("1",problem.getId());
+				Optional<ProblemSolution> problemSolution = problemSolutionService.getProblemSolution(userId,problem.getId());
 				if(problemSolution.isPresent()){
 					problemDetails.setProblemSolution(problemSolution.get());
 				}

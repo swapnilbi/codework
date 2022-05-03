@@ -19,10 +19,7 @@
         </div>
     </div>    
     <div class="card-footer text-right">        
-        <button *ngIf="!isRegistered(challenge)" class="btn btn-info btn-sm" (click)="viewChallenge()">Register</button>
-        <button *ngIf="isRegistered(challenge) && isLiveChallenge() && !isChallengeStarted()" class="btn btn-success btn-sm" (click)="startChallenge()" role="button">Start</button>
-        <button *ngIf="isRegistered(challenge) && isLiveChallenge() && isChallengeStarted()" class="btn btn-success btn-sm" (click)="startChallenge()" role="button">Resume</button>
-        <span *ngIf="isRegistered(challenge) && isChallengeSubmitted()" class="text-success"> <i class="far fa-check-circle"></i> Submitted</span>                
-        <span *ngIf="isRegistered(challenge) && !isLiveChallenge() && !isChallengeSubmitted()" class="text-primary"> <i class="far fa-calendar-check"></i> Registered</span>        
+        <button *ngIf="!isRegistered(challenge)" class="btn btn-info btn-sm" (click)="viewChallenge()">Register</button>        
+        <span *ngIf="isRegistered(challenge)" class="text-primary"> <i class="far fa-calendar-check"></i> Registered</span>        
     </div>
 </div>

@@ -5,64 +5,68 @@
             <div class="regular light">STARTS ON:  {{ challenge.startDate | date: 'MMM d, y h:mm a' }} </div>
             <div class="regular light">ENDS ON:  {{ challenge.endDate | date: 'MMM d, y h:mm a' }} </div>
         </div>
+        <p class="lead text-right">
+          <a *ngIf="!isRegistered(challenge)" class="btn btn-primary btn-lg ml-3" (click)="registerChallenge()" role="button">Register</a>                        
+          <span *ngIf="isRegistered(challenge)" class="text-primary" role="button"> <i class="far fa-calendar-check"></i> Registered</span>
+        </p>
         <div class="clear"></div>
     </div>
     <div class="jumbotron details-container-body">
-        <div [innerHTML]="challenge.longDescription"></div>        
-        <p class="lead text-right">
-            <a *ngIf="!isRegistered(challenge)" class="btn btn-primary btn-lg ml-3" (click)="registerChallenge()" role="button">Register</a>
-            <a *ngIf="isRegistered(challenge) && isLiveChallenge() && !isChallengeStarted()" class="btn btn-success btn-lg ml-3" (click)="startChallenge()" role="button">Start</a>
-            <a *ngIf="isRegistered(challenge) && isLiveChallenge() && isChallengeStarted()" class="btn btn-success btn-lg ml-3" (click)="startChallenge()" role="button">Resume</a>
-            <span *ngIf="isChallengeSubmitted()" class="text-success" role="button"> <i class="far fa-check-circle"></i> Solution Submitted</span>
-            <span *ngIf="isRegistered(challenge) && !isLiveChallenge() && !isChallengeSubmitted()" class="text-primary" role="button"> <i class="far fa-calendar-check"></i> Registered</span>
-        </p>
-
-        <ul ngbNav #nav="ngbNav" [activeId]="2" class="nav-tabs justify-content-center">
-            <li [ngbNavItem]="1">
-              <a ngbNavLink>Simple</a>
-              <ng-template ngbNavContent>
-                <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth
-                  master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro
-                  keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat
-                  salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
-              </ng-template>
-            </li>
-            <li [ngbNavItem]="2">
-              <a ngbNavLink><b>Fancy</b> title</a>
-              <ng-template ngbNavContent>
-                <p>Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
-                  farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
-                  ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar
-                  helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson
-                  8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester
-                  stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
-              </ng-template>
-            </li>
-            <li ngbDropdown class="nav-item">
-              <a href (click)="false" class="nav-link" ngbDropdownToggle>Dropdown</a>
-              <div ngbDropdownMenu>
-                <button ngbDropdownItem>Action</button>
-                <button ngbDropdownItem>Another action</button>
-                <button ngbDropdownItem>Something else here</button>
-                <div class="dropdown-divider"></div>
-                <button ngbDropdownItem>Separated link</button>
-              </div>
-            </li>
-            <li ngbNavItem [disabled]="true" class="ms-auto">
-              <a ngbNavLink>Disabled</a>
-              <ng-template ngbNavContent>
-                <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id diam. Nulla facilisi.
-                  Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis, luctus eget tincidunt eu, congue et odio.
-                  Duis pharetra et nisl at faucibus. Quisque luctus pulvinar arcu, et molestie lectus ultrices et. Sed diam urna,
-                  egestas ut ipsum vel, volutpat volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec
-                  tristique ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque penatibus et
-                  magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac lorem aliquet ultricies in eget
-                  neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
-              </ng-template>
-            </li>
-          </ul>
-          
-          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        <div [innerHTML]="challenge.longDescription"></div>                
+        <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav-tabs justify-content-left">
+          <li [ngbNavItem]="1">
+            <a ngbNavLink>My Submission</a>
+            <ng-template ngbNavContent>              
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Problem</th>
+                      <th scope="col">Type</th>                                            
+                      <th scope="col">Start Date</th>
+                      <th scope="col">End Date</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Submitted Date</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>                    
+                    <tr *ngFor="let submission of challenge.userSubmissions;  let i = index ">             
+                      <th scope="row">{{i+1}}</th>
+                      <td>{{submission.problem}}</td>
+                      <td>{{submission.problemType}}</td>
+                      <td>{{submission.startTime | date:'dd/MM/yyyy hh:mm a' }}</td>
+                      <td>{{submission.endTime | date:'dd/MM/yyyy hh:mm a'}}</td>
+                      <td>
+                          <span *ngIf="submission.submissionStatus == 'NOT_STARTED'" class="badge badge-secondary">Not Started</span>
+                          <span *ngIf="submission.submissionStatus == 'IN_PROGRESS'" class="badge badge-primary">In Progress</span>
+                          <span *ngIf="submission.submissionStatus == 'LIVE'" class="badge badge-success">Live</span>
+                          <span *ngIf="submission.submissionStatus == 'SUBMITTED'" class="badge badge-success">Submitted</span>                                                    
+                          <span *ngIf="submission.submissionStatus == 'EXPIRED'" class="badge badge-danger">Expired</span>
+                      </td>
+                      <td> <div *ngIf="submission.submittedTime">
+                        {{submission.submittedTime | date:'dd/MM/yyyy hh:mm a'}}                          
+                      </div></td>
+                      <td>
+                        <button *ngIf="isRegistered(challenge) && submission.submissionStatus == 'LIVE'" class="btn btn-info btn-sm" (click)="startChallenge(submission)">Start</button>        
+                        <button *ngIf="isRegistered(challenge) && submission.submissionStatus == 'IN_PROGRESS'" class="btn btn-info btn-sm" (click)="startChallenge(submission)">Resume</button>        
+                      </td>
+                    </tr>                                                          
+                  </tbody>
+                </table>              
+            </ng-template>
+          </li>
+          <li [ngbNavItem]="2">
+            <a ngbNavLink>Leaderboard</a>
+            <ng-template ngbNavContent>
+              <p>
+                Leaderboard
+              </p>
+            </ng-template>
+          </li>          
+        </ul>
+        
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
 
     </div>  
 </div>

@@ -22,7 +22,7 @@ export class LiveChallengeService {
 
   public getProblems(challengeId : number): Observable<Array<Problem>>{    
     let queryParams: any = {
-      'challengeId' : challengeId
+      'challengeInstanceId' : challengeId
     } 
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_PROBLEMS_URL,queryParams);
     return this.httpClient.get<Response<Array<Problem>>>(serviceUrl)

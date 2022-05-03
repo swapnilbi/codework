@@ -1,5 +1,6 @@
 package com.codework.service.impl;
 
+import com.codework.entity.ChallengeInstanceSubmission;
 import com.codework.entity.ProblemSolution;
 import com.codework.exception.BusinessException;
 import com.codework.exception.CodeWorkExceptionHandler;
@@ -7,6 +8,7 @@ import com.codework.exception.SystemException;
 import com.codework.model.*;
 import com.codework.repository.ProblemSolutionRepository;
 import com.codework.repository.SequenceGenerator;
+import com.codework.service.IChallengeInstanceService;
 import com.codework.service.ICodeExecutorService;
 import com.codework.service.IProblemService;
 import com.codework.service.IProblemSolutionService;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -34,6 +37,9 @@ public class ProblemSolutionService implements IProblemSolutionService {
     private IProblemService problemService;
 
     @Autowired
+    private IChallengeInstanceService challengeInstanceService;
+
+    @Autowired
     private ProblemSolutionRepository problemSolutionRepository;
 
     @Autowired
@@ -43,8 +49,8 @@ public class ProblemSolutionService implements IProblemSolutionService {
 
 
     @Override
-    public ProblemSolutionResult compileSolution(ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
-        validateSolution(problemSolution);
+    public ProblemSolutionResult compileSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException, IOException {
+        validateSolution(problemSolution, userId);
         ProblemSolutionResult problemSolutionResult = new ProblemSolutionResult();
         ProblemDetails problem = problemService.getProblem(problemSolution.getProblemId()).get();
         problemSolutionResult.setTimeLimit(problem.getCpuLimit());
@@ -58,8 +64,8 @@ public class ProblemSolutionService implements IProblemSolutionService {
     }
 
     @Override
-    public ProblemSolutionResult runAllTests(ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
-            validateSolution(problemSolution);
+    public ProblemSolutionResult runAllTests(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException, IOException {
+            validateSolution(problemSolution, userId);
             ProblemSolutionResult problemSolutionResult = new ProblemSolutionResult();
             ProblemDetails problem = problemService.getProblem(problemSolution.getProblemId()).get();
             problemSolutionResult.setTimeLimit(problem.getCpuLimit());
@@ -99,9 +105,9 @@ public class ProblemSolutionService implements IProblemSolutionService {
     }
 
     @Override
-    public ProblemSolution saveSolution(ProblemSolutionInput problemSolutionInput) throws SystemException, BusinessException {
-            validateSolution(problemSolutionInput);
-            Optional<ProblemSolution> savedSolution = problemSolutionRepository.findByUserIdAndProblemId("1", problemSolutionInput.getProblemId());
+    public ProblemSolution saveSolution(ProblemSolutionInput problemSolutionInput, Long userId) throws SystemException, BusinessException {
+            validateSolution(problemSolutionInput, userId);
+            Optional<ProblemSolution> savedSolution = problemSolutionRepository.findByUserIdAndProblemId(userId, problemSolutionInput.getProblemId());
             ProblemSolution problemSolution = null;
             if(savedSolution.isPresent()){
                 problemSolution = savedSolution.get();
@@ -110,28 +116,29 @@ public class ProblemSolutionService implements IProblemSolutionService {
                 problemSolution.setId(sequenceGenerator.generateSequence(ProblemSolution.SEQUENCE_NAME));
                 problemSolution.setCreatedAt(DateUtility.currentDate());
                 problemSolution.setProblemId(problemSolutionInput.getProblemId());
-                problemSolution.setUserId("1"); // temp
+                problemSolution.setUserId(userId); // temp
             }
+            if(problemSolutionInput.isSubmitted()){
+                problemSolution.setSubmittedAt(new Date());
+            }
+            problemSolution.setChallengeInstanceId(problemSolutionInput.getChallengeSolutionId());
+            problemSolution.setSubmitted(problemSolutionInput.isSubmitted());
             problemSolution.setSolution(problemSolutionInput.getSolution());
             problemSolution.setLanguageId(problemSolutionInput.getLanguageId());
-            problemSolution.setSubmitted(problemSolutionInput.isSubmitted());
-            if(problemSolutionInput.isSubmitted()){
-                problemSolution.setSubmittedAt(DateUtility.currentDate());
-            }
             problemSolution.setUpdatedAt(DateUtility.currentDate());
             problemSolutionRepository.save(problemSolution);
             return problemSolution;
     }
 
     @Override
-    public ProblemSolution submitSolution(ProblemSolutionInput problemSolutionInput) throws SystemException, BusinessException {
-        validateSolution(problemSolutionInput);
-        problemSolutionInput.setSubmitted(Boolean.TRUE);
-        return saveSolution(problemSolutionInput);
+    public ProblemSolution submitSolution(ProblemSolutionInput problemSolutionInput, Long userId) throws SystemException, BusinessException {
+        validateSolution(problemSolutionInput, userId);
+        problemSolutionInput.setSubmitted(true);
+        return saveSolution(problemSolutionInput, userId);
     }
 
-    private void validateSolution(ProblemSolutionInput problemSolutionInput) throws BusinessException {
-        Optional<ProblemSolution> savedSolution = problemSolutionRepository.findByUserIdAndProblemId("1", problemSolutionInput.getProblemId());
+    private void validateSolution(ProblemSolutionInput problemSolutionInput, Long userId) throws BusinessException {
+        Optional<ProblemSolution> savedSolution = problemSolutionRepository.findByUserIdAndProblemId(userId, problemSolutionInput.getProblemId());
         if(savedSolution.isPresent() && savedSolution.get().isSubmitted()){
             throw new BusinessException("Solution has been already submitted");
         }
@@ -236,7 +243,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
     }
 
     @Override
-    public Optional<ProblemSolution> getProblemSolution(String userId, Long problemId) {
+    public Optional<ProblemSolution> getProblemSolution(Long userId, Long problemId) {
         return problemSolutionRepository.findByUserIdAndProblemId(userId,problemId);
     }
 

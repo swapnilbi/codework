@@ -10,7 +10,5 @@ export interface ChallengeSubscription {
 
 export enum ChallengeSubscriptionStatus {
     REGISTERED = "REGISTERED", 
-    CANCELED = "CANCELED", 
-    STARTED = "STARTED", 
-    SUBMITTED = "SUBMITTED"
+    CANCELED = "CANCELED"    
 }

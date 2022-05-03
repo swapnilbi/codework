@@ -20,8 +20,6 @@ public class ChallengeSubscription {
 	@CreatedDate
 	private Date createdAt;
 	private Long challengeId;
-	private String userId;
+	private Long userId;
 	private ChallengeSubscriptionStatus status;
-	private Date startDate;
-	private Date endDate;
 }

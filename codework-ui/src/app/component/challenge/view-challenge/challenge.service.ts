@@ -6,6 +6,7 @@ import { AppConfig } from 'src/app/common/app.config';
 import { HttpHelper } from 'src/app/common/utility/utility';
 import { ChallengeSubscription } from 'src/app/model/challenge-subscription.modal';
 import { Challenge } from 'src/app/model/challenge.model';
+import { LiveChallenge } from 'src/app/model/live-challenge.model';
 import { Response } from 'src/app/model/response.model';
 
 @Injectable({
@@ -41,6 +42,20 @@ export class ChallengeService {
     );
   }
 
+  public getLiveChallengeDetails( challengeInstanceId : Number): Observable<LiveChallenge>{
+    let queryParams: any = {
+      'challengeInstanceId' : challengeInstanceId
+    }    
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_LIVE_CHALLENGE_DETAILS_URL,queryParams);
+    return this.httpClient.get<Response<LiveChallenge>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
     
   public registerChallenge( challengeId : Number): Observable<Challenge>{    
     let queryParams: any = {
@@ -57,13 +72,13 @@ export class ChallengeService {
   }
 
 
-  public startChallenge(challengeId : number): Observable<Challenge>{        
+  public startChallenge(challengeId : number): Observable<LiveChallenge>{        
     let queryParams: any = {
-      'challengeId' : challengeId
+      'challengeInstanceId' : challengeId
     } 
     console.log(queryParams);
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.START_CHALLENGE_URL,queryParams);
-    return this.httpClient.get<Response<Challenge>>(serviceUrl)
+    return this.httpClient.get<Response<LiveChallenge>>(serviceUrl)
     .pipe(
       map((data) => {
         return data.data;

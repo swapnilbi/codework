@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class ChallengeSubmitInput {
 
-	Long challengeId;
-	List<ProblemSolutionInput> solutionList;
+	private Long challengeInstanceId;
+	private List<ProblemSolutionInput> solutionList;
 
 }

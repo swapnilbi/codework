@@ -27,10 +27,8 @@ public class ProblemDetails {
 	private String problemStatement;
 	@NotNull(message = "type is required")
 	private ProblemType type;
-	@NotNull
 	private List<Language> languagesAllowed;
-	private Date startDate;
-	private Date endDate;
+	private Long challengeInstanceId;
 	private Map<Integer,String> placeHolderSolution;
 	private List<TestCase> testCases;
 	private Float memoryLimit;
@@ -45,8 +43,6 @@ public class ProblemDetails {
 		this.name = problem.getName();
 		this.problemStatement = problem.getProblemStatement();
 		this.type = problem.getType();
-		this.startDate = problem.getStartDate();
-		this.endDate = problem.getEndDate();
 		this.memoryLimit = problem.getMemoryLimit();
 		this.cpuLimit = problem.getCpuLimit();
 		this.placeHolderSolution = problem.getPlaceHolderSolution();

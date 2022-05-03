@@ -6,6 +6,7 @@ import com.codework.enums.ChallengeStatus;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
@@ -23,6 +24,7 @@ public class ChallengeDetails {
 	private boolean isRegistered;
 	private ChallengeStatus status;
 	private ChallengeSubscription challengeSubscription;
+	private List<UserSubmission> userSubmissions;
 
 	public ChallengeDetails(){
 

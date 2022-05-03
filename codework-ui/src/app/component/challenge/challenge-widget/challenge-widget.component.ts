@@ -23,33 +23,8 @@ export class ChallengeWidgetComponent implements OnInit {
     this.router.navigateByUrl(url);
   }
 
-  isChallengeSubmitted(){
-    return this.challenge && this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.SUBMITTED;
-  }
-
-  isChallengeStarted(){
-    return this.challenge && this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.STARTED;
-  }
-
-  isLiveChallenge(){
-    if(this.challenge && this.challenge.status ==  ChallengeStatus.LIVE){
-      if(this.challenge.challengeSubscription && this.challenge.challengeSubscription.status ==  ChallengeSubscriptionStatus.SUBMITTED){
-        return false;
-      }
-      return true;
-    }
-    return false;
-  }
-
-  isRegistered(challenge : Challenge){
+  isRegistered(challenge : Challenge){    
     return this.challenge && this.challenge.challengeSubscription;
-  }
-
-  startChallenge(){    
-    if(this.challenge){
-      var url = '/challenge/'+this.challenge.id+'/live';
-      this.router.navigateByUrl(url);    
-    }    
   }
 
 }

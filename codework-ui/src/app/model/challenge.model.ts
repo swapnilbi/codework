@@ -1,4 +1,5 @@
 import { ChallengeSubscription } from "./challenge-subscription.modal";
+import { UserSubmission } from "./user-submission.model";
 
 export interface Challenge {
     id : number,
@@ -11,6 +12,7 @@ export interface Challenge {
     endDate : Date,
     status : ChallengeStatus,
     challengeSubscription? : ChallengeSubscription,
+    userSubmissions? : Array<UserSubmission>,
     bannerImage? : string,
     createdAt? : Date     
 }

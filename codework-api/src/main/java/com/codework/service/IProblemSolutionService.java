@@ -12,15 +12,15 @@ import java.util.concurrent.ExecutionException;
 
 public interface IProblemSolutionService {
 
-    ProblemSolutionResult compileSolution(ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException;
+    ProblemSolutionResult compileSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException, IOException;
 
-    ProblemSolution saveSolution(ProblemSolutionInput problemSolution) throws SystemException, BusinessException;
+    ProblemSolution saveSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException;
 
-    ProblemSolution submitSolution(ProblemSolutionInput problemSolution) throws SystemException, BusinessException;
+    ProblemSolution submitSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException;
 
-    ProblemSolutionResult runAllTests(ProblemSolutionInput problemSolution) throws BusinessException, IOException;
+    ProblemSolutionResult runAllTests(ProblemSolutionInput problemSolution, Long userId) throws BusinessException, IOException;
 
     void evaluateSolution(ProblemSolutionInput problemSolution);
 
-    Optional<ProblemSolution> getProblemSolution(String userId, Long problemId);
+    Optional<ProblemSolution> getProblemSolution(Long userId, Long problemId);
 }

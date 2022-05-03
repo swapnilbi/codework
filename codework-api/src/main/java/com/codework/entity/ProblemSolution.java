@@ -18,8 +18,9 @@ public class ProblemSolution {
 	private long id;
 
 	private Long problemId;
+	private Long challengeInstanceId;
 	private Integer languageId;
-	private String userId;
+	private Long userId;
 	private String solution;
 	private Date createdAt;
 	private Date updatedAt;

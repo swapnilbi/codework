@@ -8,7 +8,7 @@
       </option>
     </select>      
     <button type="button" class="btn btn-success btn-sm float-right ml-2" (click)="finishChallenge()"> <i class="far fa-clock"></i> Finish</button>    
-    <button type="button" [disabled]="isSolutionSubmitted()" class="btn btn-primary btn-sm float-right" (click)="saveSolution()"><i class="far fa-save"></i> Save</button>        
+    <button type="button" [disabled]="isSolutionSubmitted()" class="btn btn-primary btn-sm float-right" (click)="saveSolution(true)"><i class="far fa-save"></i> Save</button>        
   </div>
 
   <ngx-monaco-editor
@@ -18,5 +18,20 @@
     [(ngModel)]="code"     
     (onInit)="onEditorInit($event)"
   ></ngx-monaco-editor>
+
+  <div class="editor-footer">
+
+    <div class="mr-5">
+      <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="compileSolution()" class="btn btn-sm btn-primary ml-2"> <i class="fas fa-code"></i> Compile</button>
+      <button type="button" [disabled]="isSolutionSubmitted(selectedProblem) || !problemSolutionResult" (click)="showCompilationResult()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-poll"></i> Show Result </button>
+      <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="provideCustomInput()" class="btn btn-sm btn-secondary ml-2"> <i class="far fa-keyboard"></i> Custom Input</button>
+    </div>
+
+    <div class="ml-5 float right">
+      <button type="button" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="runAllTests()" class="btn btn-sm btn-info ml-2"><i class="fas fa-tasks"></i> Run Tests</button>
+      <!--<button type="button" [hidden]="!hasMultipleProblems()" [disabled]="isSolutionSubmitted(selectedProblem)" (click)="submitSolution()" class="btn btn-sm btn-success ml-2"> <i class="fas fa-check"></i> Submit</button>-->
+    </div>
+
+</div>
   
 </div>

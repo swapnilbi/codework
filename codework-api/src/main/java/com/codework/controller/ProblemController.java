@@ -34,9 +34,9 @@ public class ProblemController {
 	 * Returns all active Problems
 	 * @return List<ProblemDetails>
 	 */
-	@GetMapping(value = "/{challengeId}/problems")
-	public Response<List<ProblemDetails>> getProblems(@PathVariable Long challengeId) {
-		return new Response<>(problemService.getProblems(challengeId));
+	@GetMapping(value = "/instance/{challengeInstanceId}/problems")
+	public Response<List<ProblemDetails>> getProblems(@PathVariable Long challengeInstanceId) {
+		return new Response<>(problemService.getProblems(challengeInstanceId,1l));
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class ProblemController {
 	 */
 	@PostMapping(value = "/solution/compile")
 	public Response<ProblemSolutionResult> compileSolution(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
-		return new Response<>(problemSolutionService.compileSolution(problemSolution));
+		return new Response<>(problemSolutionService.compileSolution(problemSolution, 1l));
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class ProblemController {
 	 */
 	@PostMapping(value = "/solution/run")
 	public Response<ProblemSolutionResult> runAllTests(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
-		return new Response<>(problemSolutionService.runAllTests(problemSolution));
+		return new Response<>(problemSolutionService.runAllTests(problemSolution, 1l));
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class ProblemController {
 	 */
 	@PostMapping(value = "/solution/save")
 	public Response<ProblemSolution> saveSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException {
-		return new Response<ProblemSolution>(problemSolutionService.saveSolution(problemSolution));
+		return new Response<ProblemSolution>(problemSolutionService.saveSolution(problemSolution, 1l));
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class ProblemController {
 	 */
 	@PostMapping(value = "/solution/submit")
 	public Response<ProblemSolution> submitSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException {
-		return new Response<ProblemSolution>(problemSolutionService.submitSolution(problemSolution));
+		return new Response<ProblemSolution>(problemSolutionService.submitSolution(problemSolution, 1l));
 	}
 
 }

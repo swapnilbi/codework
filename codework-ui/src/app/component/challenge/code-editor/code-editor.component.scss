@@ -2,23 +2,6 @@
   height: 800px;
 }
 
-
-.editor-header{
-  background-color: #f0f0f0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;    
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  padding: 8px 27px;  
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 1000;
-}
-
 .language{
   font-size: 15px;
   font-family: Open Sans,sans-serif;
@@ -36,4 +19,23 @@
     width: 220px;
     height: 30px;
     margin-left: 5px;
+}
+
+
+.editor-footer{
+  background-color: #f0f0f0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 8px 27px;    
+  z-index: 1000;
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  bottom: 0;
 }

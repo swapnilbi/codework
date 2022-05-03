@@ -126,7 +126,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     challenge.challengeSubscription = {
                         challengeId :  challenge.id,
                         id : 1,
-                        status : ChallengeSubscriptionStatus.STARTED,
+                        status : ChallengeSubscriptionStatus.REGISTERED,
                         userId : "1"
                     };
                     let getChallenge : Response<Challenge> = {

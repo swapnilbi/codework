@@ -16,7 +16,7 @@ let challenges : Array<Challenge> = [
             id : 1,
             challengeId : 1,
             userId : "1",
-            status : ChallengeSubscriptionStatus.STARTED
+            status : ChallengeSubscriptionStatus.REGISTERED
         }
     },
     {

@@ -12,7 +12,7 @@ public interface IProblemService {
 
     Problem updateProblem(ProblemDetails problemDetails);
 
-    List<ProblemDetails> getProblems(Long challengeId);
+    List<ProblemDetails> getProblems(Long challengeId, Long userId);
 
     Problem createProblem(ProblemDetails problem);
 

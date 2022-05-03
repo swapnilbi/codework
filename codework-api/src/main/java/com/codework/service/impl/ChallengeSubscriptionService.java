@@ -3,10 +3,6 @@ package com.codework.service.impl;
 import java.util.Date;
 import java.util.Optional;
 
-import com.codework.entity.ProblemSolution;
-import com.codework.exception.SystemException;
-import com.codework.model.ChallengeSubmitInput;
-import com.codework.model.ProblemSolutionInput;
 import com.codework.service.IProblemSolutionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,14 +21,11 @@ public class ChallengeSubscriptionService implements IChallengeSubscriptionServi
 	ChallengeSubscriptionRepository challengeSubscriptionRepository;
 
 	@Autowired
-	IProblemSolutionService problemSolutionService;
-	
-	@Autowired
 	SequenceGenerator sequenceGenerator;
 	
 	@Override
-	public Optional<ChallengeSubscription> registerChallenge(Long challengeId) throws BusinessException {
-		Optional<ChallengeSubscription> existingSubscription = getChallengeSubscription(challengeId, "1");
+	public Optional<ChallengeSubscription> registerChallenge(Long challengeId, Long userId) throws BusinessException {
+		Optional<ChallengeSubscription> existingSubscription = getChallengeSubscription(challengeId, userId);
 		if(existingSubscription.isPresent()) {
 			throw new BusinessException("You have been already registered");
 		}
@@ -40,37 +33,14 @@ public class ChallengeSubscriptionService implements IChallengeSubscriptionServi
 		challengeSubscription.setId(sequenceGenerator.generateSequence(ChallengeSubscription.SEQUENCE_NAME));
 		challengeSubscription.setChallengeId(challengeId);
 		challengeSubscription.setStatus(ChallengeSubscriptionStatus.REGISTERED);
-		challengeSubscription.setUserId("1");
+		challengeSubscription.setUserId(userId);
+		challengeSubscription.setCreatedAt(new Date());
 		return Optional.of(challengeSubscriptionRepository.save(challengeSubscription));
 	}
 
 	@Override
-	public Optional<ChallengeSubscription> getChallengeSubscription(Long challengeId, String userId) {
+	public Optional<ChallengeSubscription> getChallengeSubscription(Long challengeId, Long userId) {
 		return challengeSubscriptionRepository.findByChallengeIdAndUserId(challengeId, userId);
-	}
-
-	@Override
-	public ChallengeSubscription startChallenge(Long challengeId) {
-		ChallengeSubscription challengeSubscription = challengeSubscriptionRepository.findByChallengeIdAndUserId(challengeId, "1").get();
-		challengeSubscription.setStatus(ChallengeSubscriptionStatus.STARTED);
-		challengeSubscription.setStartDate(new Date());
-		challengeSubscriptionRepository.save(challengeSubscription);
-		return challengeSubscription;
-	}
-
-	@Override
-	public ChallengeSubscription submitChallenge(ChallengeSubmitInput submitInput) throws SystemException, BusinessException {
-		if(submitInput.getSolutionList()!=null){
-			for(ProblemSolutionInput solutionInput : submitInput.getSolutionList()){
-				solutionInput.setSubmitted(Boolean.TRUE);
-				problemSolutionService.saveSolution(solutionInput);
-			}
-		}
-		ChallengeSubscription challengeSubscription = challengeSubscriptionRepository.findByChallengeIdAndUserId(submitInput.getChallengeId(), "1").get();
-		challengeSubscription.setStatus(ChallengeSubscriptionStatus.SUBMITTED);
-		challengeSubscription.setEndDate(new Date());
-		challengeSubscriptionRepository.save(challengeSubscription);
-		return challengeSubscription;
 	}
 	
 }

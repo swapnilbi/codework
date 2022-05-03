@@ -21,12 +21,11 @@ public class Problem {
 	@Id
 	private Long id;
 	private Long challengeId;
+	private Long challengeInstanceId;
 	private String name;
 	private String problemStatement;
 	private ProblemType type;
 	private List<Integer> languagesAllowed;
-	private Date startDate;
-	private Date endDate;
 	private Float memoryLimit;
 	private Float cpuLimit;
 	private Map<Integer,String> placeHolderSolution;
