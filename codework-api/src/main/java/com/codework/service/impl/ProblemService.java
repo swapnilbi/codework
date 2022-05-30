@@ -1,20 +1,22 @@
 package com.codework.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import com.codework.entity.*;
-import com.codework.enums.ChallengeSubscriptionStatus;
 import com.codework.enums.SubmissionStatus;
-import com.codework.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.codework.model.ProblemDetails;
 import com.codework.repository.ProblemRepository;
 import com.codework.repository.SequenceGenerator;
+import com.codework.service.IChallengeInstanceService;
+import com.codework.service.ILanguageService;
+import com.codework.service.IProblemService;
+import com.codework.service.IProblemSolutionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProblemService implements IProblemService {
@@ -47,11 +49,12 @@ public class ProblemService implements IProblemService {
 
 	@Override
 	public Problem createProblem(ProblemDetails problemDetails) {
+		ChallengeInstance challengeInstance = challengeInstanceService.getChallengeInstance(problemDetails.getChallengeInstanceId());
 		Problem problem = new Problem();
 		List<Integer> languages = new ArrayList<>();
 		problem.setId(sequenceGenerator.generateSequence(Problem.SEQUENCE_NAME));
 		problem.setName(problemDetails.getName());
-		problem.setChallengeId(problemDetails.getChallengeId());
+		problem.setChallengeId(challengeInstance.getChallengeId());
 		problem.setProblemStatement(problemDetails.getProblemStatement());
 		problem.setType(problemDetails.getType());
 		if(problemDetails.getLanguagesAllowed()!=null) {
@@ -63,10 +66,20 @@ public class ProblemService implements IProblemService {
 		problem.setMemoryLimit(problemDetails.getMemoryLimit());
 		problem.setCpuLimit(problemDetails.getCpuLimit());
 		problem.setPlaceHolderSolution(problemDetails.getPlaceHolderSolution());
-		problem.setCreatedAt(problemDetails.getCreatedAt());
-		problem.setCreatedBy(problemDetails.getCreatedBy());
+		problem.setCreatedAt(new Date());
+		//problem.setCreatedBy(problemDetails.getCreatedBy());
 		problemRepository.save(problem);
 		return problem;
+	}
+
+	@Override
+	public void deleteProblem(Long problemId) {
+		problemRepository.deleteById(problemId);
+	}
+
+	@Override
+	public List<Language> getLanguages() {
+		return languageService.getActiveLanguages();
 	}
 
 	@Override
@@ -90,8 +103,13 @@ public class ProblemService implements IProblemService {
 	}
 
 	@Override
+	public List<Problem> getProblems(Long challengeInstanceId) {
+		return problemRepository.findByChallengeInstanceId(challengeInstanceId);
+	}
+
+	@Override
 	public List<ProblemDetails> getProblems(Long challengeInstanceId, Long userId) {
-		List<Problem> problemList = problemRepository.findByChallengeInstanceId(challengeInstanceId);
+		List<Problem> problemList = getProblems(challengeInstanceId);
 		Optional<ChallengeInstanceSubmission> challengeInstanceSubmission = challengeInstanceService.getChallengeInstanceSubmission(challengeInstanceId,userId);
 		boolean isChallengeStarted = challengeInstanceSubmission.isPresent() ? challengeInstanceSubmission.get().getSubmissionStatus().equals(SubmissionStatus.IN_PROGRESS) : false;
 		List<ProblemDetails> problemDetailsList = new ArrayList<>();

@@ -6,7 +6,7 @@ import { ProblemSolution } from 'src/app/model/problem-solution.model';
 import { Problem } from 'src/app/model/problem.model';
 import Swal from 'sweetalert2';
 import { LoaderService } from '../../common/loader/loader.service';
-import { LiveChallengeService } from '../live-challenge/live-challenge.service';
+import { LiveChallengeService } from '../../../service/live-challenge.service';
 
 @Component({
   selector: 'free-text-editor',

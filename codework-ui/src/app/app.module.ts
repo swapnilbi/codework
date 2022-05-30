@@ -18,7 +18,7 @@ import { AngularSplitModule } from 'angular-split';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { CodeEditorComponent } from './component/challenge/code-editor/code-editor.component';
 import { CodeEditorConfig } from './component/challenge/code-editor/code-editor.config';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FakeBackendInterceptor } from './common/interceptors/mock-http-interceptor';
 import { HttpRequestInterceptor } from './common/interceptors/http-interceptor';
@@ -36,6 +36,13 @@ import { CustomInputComponent } from './component/challenge/live-challenge/custo
 import { TestResultComponent } from './component/challenge/live-challenge/test-result/test-result.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FreeTextEditorComponent } from './component/challenge/free-text-editor/free-text-editor.component';
+import { LoginComponent } from './component/authentication/login/login.component';
+import { LocalStorageService } from './common/utility/local-storage';
+import { ManageChallengeComponent } from './component/challenge/manage-challenge/manage-challenge.component';
+import { AgGridModule } from 'ag-grid-angular';
+import { ManageChallengeInstanceComponent } from './component/challenge/manage-challenge/manage-challenge-instance/manage-challenge-instance.component';
+import { ManageProblemComponent } from './component/challenge/manage-challenge/manage-problem/manage-problem.component';
+import { CreateProblemComponent } from './component/challenge/manage-challenge/create-problem/create-problem.component';
 
 export const isMock = environment.mock;
 
@@ -59,9 +66,16 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CustomInputComponent,
     TestResultComponent,
     FreeTextEditorComponent,    
+    LoginComponent, 
+    ManageChallengeComponent, 
+    ManageChallengeInstanceComponent, 
+    ManageProblemComponent, CreateProblemComponent    
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AgGridModule.withComponents([]),
     BrowserAnimationsModule,
     AppRoutingModule,
     CommonModule,    
@@ -86,7 +100,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       useClass: isMock ? FakeBackendInterceptor : HttpRequestInterceptor,
       multi: true
     },
-    LoaderService       
+    LoaderService,
+    LocalStorageService
 ],
   bootstrap: [AppComponent]
 })

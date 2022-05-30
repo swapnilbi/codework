@@ -2,7 +2,7 @@ import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { Challenge } from 'src/app/model/challenge.model';
 import { LoaderService } from '../../common/loader/loader.service';
-import { ChallengeService } from './challenge.service';
+import { ChallengeService } from '../../../service/challenge.service';
 
 @Component({
   selector: 'app-view-challenge',

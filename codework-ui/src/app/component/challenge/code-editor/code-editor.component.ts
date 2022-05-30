@@ -13,9 +13,9 @@ import { AlertService } from '../../common/alert/alert-service.service';
 import { LoaderService } from '../../common/loader/loader.service';
 import { CompileResultComponent } from '../live-challenge/compile-result/compile-result.component';
 import { CustomInputComponent } from '../live-challenge/custom-input/custom-input.component';
-import { LiveChallengeService } from '../live-challenge/live-challenge.service';
+import { LiveChallengeService } from '../../../service/live-challenge.service';
 import { TestResultComponent } from '../live-challenge/test-result/test-result.component';
-import { ChallengeService } from '../view-challenge/challenge.service';
+import { ChallengeService } from '../../../service/challenge.service';
 
 @Component({
   selector: 'code-editor',

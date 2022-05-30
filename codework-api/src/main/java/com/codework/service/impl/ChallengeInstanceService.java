@@ -128,4 +128,11 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		return challengeInstanceRepository.save(challengeInstance);
 	}
 
+	@Override
+	public ChallengeInstance stopChallengeInstance(Long instanceId) {
+		ChallengeInstance challengeInstance = getChallengeInstance(instanceId);
+		challengeInstance.setInstanceStatus(ChallengeInstanceStatus.CREATED);
+		return challengeInstanceRepository.save(challengeInstance);
+	}
+
 }

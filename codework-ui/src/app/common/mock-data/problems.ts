@@ -5,6 +5,7 @@ let problems : Array<Problem> = [
     {
         id : 1,
         challengeId : 1,
+        challengeInstanceId : 1,
         name : 'Problem 1',        
         problemStatement : "<p> You are given a set of binary elements. You have to eliminate the binary numbers that contain as a substring. The resultant sequence will be 1, 10, 100, 101, 1000, and so on. You are required to generate the code to determine the value of the new sequence. </p> <p> You are required to generate the code to determine the value of the new sequence. </p> <p> <strong>Input format</strong> </p> <ul> <li>First line: <i><b>T</b></i> denoting the number of test cases</li> <li>Next <i><b>T</b></i> lines: A single integer<i><b>K</b></i> </ul> <p> <strong>Output format</strong> </p> <p> Print <i><b>T</b></i> lines representing the code to display the <i><b>K</b></i>th value. </p> <p> <strong>Constraints</strong> </p> <p> 1 <code> < </code> T <code> < </code> 10 </p> <p> 1 <code> < </code> K <code> < </code> 10 </p> <p> <strong>Explanation</strong> </p>",
         isSubmitted : false,
@@ -31,6 +32,7 @@ let problems : Array<Problem> = [
     {
         id : 2,
         challengeId : 1,
+        challengeInstanceId : 1,
         name : 'Problem 2',        
         problemStatement : "<p> You are given a set of binary elements. You have to eliminate the binary numbers that contain as a substring. The resultant sequence will be 1, 10, 100, 101, 1000, and so on. You are required to generate the code to determine the value of the new sequence. </p> <p> You are required to generate the code to determine the value of the new sequence. </p> <p> <strong>Input format</strong> </p> <ul> <li>First line: <i><b>T</b></i> denoting the number of test cases</li> <li>Next <i><b>T</b></i> lines: A single integer<i><b>K</b></i> </ul> <p> <strong>Output format</strong> </p> <p> Print <i><b>T</b></i> lines representing the code to display the <i><b>K</b></i>th value. </p> <p> <strong>Constraints</strong> </p> <p> 1 <code> < </code> T <code> < </code> 10 </p> <p> 1 <code> < </code> K <code> < </code> 10 </p> <p> <strong>Explanation</strong> </p>",
         isSubmitted : false,

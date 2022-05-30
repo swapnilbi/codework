@@ -104,6 +104,18 @@ public class ChallengeService implements IChallengeService {
 	}
 
 	@Override
+	public List<ChallengeDetails> getChallenges() {
+		List<ChallengeDetails> challengeDetailsList = new ArrayList<>();
+		List<Challenge> challengeList = challengeRepository.findAll();
+		if(challengeList!= null && challengeList.size() > 0){
+			for(Challenge challenge : challengeList){
+				challengeDetailsList.add(new ChallengeDetails(challenge));
+			}
+		}
+		return challengeDetailsList;
+	}
+
+	@Override
 	public Optional<ChallengeDetails> createChallenge(ChallengeDetails challengeInput) {
 		Challenge challenge = new Challenge();
 		challenge.setId(sequenceGenerator.generateSequence(Challenge.SEQUENCE_NAME));
@@ -126,6 +138,22 @@ public class ChallengeService implements IChallengeService {
 		Optional<ChallengeInstanceSubmission> challengeInstanceSubmission = challengeInstanceService.getChallengeInstanceSubmission(challengeInstanceId,userId);
 		ChallengeInstanceSubmission instanceSubmission = challengeInstanceSubmission.orElse(null);
 		return new LiveChallengeDetails(challengeDetails,challengeInstance, instanceSubmission);
+	}
+
+	@Override
+	public Challenge startChallenge(Long challengeId) {
+		Challenge challenge = challengeRepository.findById(challengeId).get();
+		challenge.setStatus(ChallengeStatus.LIVE);
+		challengeRepository.save(challenge);
+		return challenge;
+	}
+
+	@Override
+	public Challenge stopChallenge(Long challengeId) {
+		Challenge challenge = challengeRepository.findById(challengeId).get();
+		challenge.setStatus(ChallengeStatus.SCHEDULED);
+		challengeRepository.save(challenge);
+		return challenge;
 	}
 
 }

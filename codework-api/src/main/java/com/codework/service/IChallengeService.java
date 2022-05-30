@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import com.codework.entity.Challenge;
 import com.codework.model.ChallengeDetails;
 import com.codework.model.LiveChallengeDetails;
 
@@ -15,7 +16,13 @@ public interface IChallengeService {
 
     List<ChallengeDetails> getChallenges(Long userId);
 
+    List<ChallengeDetails> getChallenges();
+
     Optional<ChallengeDetails> createChallenge(ChallengeDetails challengeInput);
 
     LiveChallengeDetails getLiveChallengeDetails(Long challengeInstanceId, Long userId);
+
+    Challenge startChallenge(Long challengeId);
+
+    Challenge stopChallenge(Long challengeId);
 }

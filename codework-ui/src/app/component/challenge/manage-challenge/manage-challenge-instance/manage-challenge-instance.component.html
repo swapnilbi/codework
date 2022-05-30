@@ -1,0 +1,40 @@
+<div class="container-div">
+    <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp; <strong>Manage Challenge Instances</strong></h6>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>          
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let challengInstance of challengInstanceList">          
+          <td>            
+            {{ challengInstance.name }}
+          </td>
+          <td>{{ challengInstance.type}}</td>         
+          <td>{{ challengInstance.startDate | date :  "dd/MM/yy hh:mm a" }}</td>
+          <td>{{ challengInstance.endDate | date :  "dd/MM/yy hh:mm a" }}</td>
+          <td>
+            <span *ngIf="challengInstance.instanceStatus == 'LIVE'" class="badge badge-success"> {{ challengInstance.instanceStatus}}</span>
+            <span *ngIf="challengInstance.instanceStatus == 'CREATED'" class="badge badge-primary"> {{ challengInstance.instanceStatus}}</span>
+            <span *ngIf="challengInstance.instanceStatus == 'EXPIRED'" class="badge badge-danger"> {{ challengInstance.instanceStatus}}</span>
+         </td>          
+          <td>                         
+            <a *ngIf="true" (click)="manageProblems(challengInstance)"> <i class="fas fa-list" aria-hidden="true"></i></a> &nbsp;            
+            <a *ngIf="true"><i class='fas fa-edit'></i> </a> &nbsp;  
+            <a (click)="startChallengeInstance(challengInstance)" *ngIf="challengInstance.instanceStatus == 'CREATED'"><i class='fas fa-play'></i></a> &nbsp; 
+            <a (click)="stopChallengeInstance(challengInstance)" *ngIf="challengInstance.instanceStatus == 'LIVE'"><i class='fas fa-stop'></i></a> &nbsp; 
+            <a *ngIf="challengInstance.instanceStatus == 'LIVE' || challengInstance.instanceStatus == 'EXPIRED'"><i class="fas fa-poll"></i></a> &nbsp;             
+            <a *ngIf="challengInstance.instanceStatus == 'LIVE' || challengInstance.instanceStatus == 'EXPIRED'"><i class='fas fa-trophy'></i></a>            
+          </td>          
+        </tr>
+        </tbody>
+      </table>
+
+</div>

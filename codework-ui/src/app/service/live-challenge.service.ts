@@ -24,7 +24,7 @@ export class LiveChallengeService {
     let queryParams: any = {
       'challengeInstanceId' : challengeId
     } 
-    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_PROBLEMS_URL,queryParams);
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_INSTANCE_PROBLEMS_URL,queryParams);
     return this.httpClient.get<Response<Array<Problem>>>(serviceUrl)
     .pipe(
       map((data) => {

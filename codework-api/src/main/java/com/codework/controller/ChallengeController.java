@@ -1,5 +1,6 @@
 package com.codework.controller;
 
+import com.codework.entity.Challenge;
 import com.codework.entity.ChallengeInstance;
 import com.codework.entity.ChallengeInstanceSubmission;
 import com.codework.entity.ChallengeSubscription;
@@ -14,10 +15,12 @@ import com.codework.service.IChallengeInstanceService;
 import com.codework.service.IChallengeService;
 import com.codework.service.IChallengeSubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping(value = "api/challenge")
 @RestController
 public class ChallengeController {
@@ -28,37 +31,26 @@ public class ChallengeController {
 	@Autowired
 	IChallengeInstanceService challengeInstanceService;
 
-	@Autowired
-	IChallengeSubscriptionService challengeSubscriptionService;
+	/**
+	 * Get challenge details
+	 * @param challengeId
+	 * @return ChallengeDetails
+	 */
+	@GetMapping(value = "/manage/{challengeId}/start")
+	public Response<Challenge> startChallenge(@PathVariable Long challengeId) {
+		return new Response<>(challengeService.startChallenge(challengeId));
+	}
 
 	/**
 	 * Get challenge details
 	 * @param challengeId
 	 * @return ChallengeDetails
 	 */
-	@GetMapping(value = "/{challengeId}")
-	public Response<ChallengeDetails> getChallenge(@PathVariable Long challengeId) {
-		return new Response<>(challengeService.getChallengeDetails(challengeId,1l).get());
+	@GetMapping(value = "/manage/{challengeId}/stop")
+	public Response<Challenge> stopChallenge(@PathVariable Long challengeId) {
+		return new Response<>(challengeService.stopChallenge(challengeId));
 	}
 
-	/**
-	 * Get live challenge details
-	 * @param challengeInstanceId
-	 * @return ChallengeDetails
-	 */
-	@GetMapping(value = "/live/{challengeInstanceId}")
-	public Response<LiveChallengeDetails> getLiveChallengeDetails(@PathVariable Long challengeInstanceId) {
-		return new Response<>(challengeService.getLiveChallengeDetails(challengeInstanceId,1l));
-	}
-
-	/**
-	 * Returns all active challenges
-	 * @return List<ChallengeDetails>
-	 */
-	@GetMapping(value = "/list")
-	public Response<List<ChallengeDetails>> getChallenges() {
-		return new Response<>(challengeService.getChallenges(1l));
-	}
 
 	/**
 	 * Creates new challenge
@@ -95,46 +87,40 @@ public class ChallengeController {
 	 * @param challengeInstanceId
 	 * @return ChallengeInstance
 	 */
-	@PutMapping("/instance/{challengeInstanceId}/start")
+	@GetMapping("/instance/{challengeInstanceId}/start")
 	public Response<ChallengeInstance> startChallengeInstance(@PathVariable Long challengeInstanceId) {
 		return new Response<>(challengeInstanceService.startChallengeInstance(challengeInstanceId));
 	}
 
 	/**
-	 * register challenge
-	 * @param challengeId
-	 * @return Challenge
-	 * @throws BusinessException 
-	 */
-	@GetMapping(value = "/{challengeId}/register")
-	public Response<ChallengeDetails> registerChallenge(@PathVariable Long challengeId) throws BusinessException {
-		ChallengeSubscription challengeSubscription = challengeSubscriptionService.registerChallenge(challengeId, 1l).get();
-		ChallengeDetails challengeDetails = challengeService.getChallenge(challengeId,1l).get();
-		challengeDetails.setChallengeSubscription(challengeSubscription);
-		return new Response<>(challengeDetails);
-	}
-	
-	/**
-	 * start challenge
+	 * start challenge instance
 	 * @param challengeInstanceId
-	 * @return Challenge
+	 * @return ChallengeInstance
 	 */
-	@GetMapping(value = "/{challengeInstanceId}/start")
-	public Response<LiveChallengeDetails> startChallenge(@PathVariable Long challengeInstanceId) throws BusinessException {
-		ChallengeInstanceSubmission challengeInstanceSubmission = challengeInstanceService.startChallenge(challengeInstanceId,1l);
-		LiveChallengeDetails challengeDetails = challengeService.getLiveChallengeDetails(challengeInstanceSubmission.getChallengeId(),1l);
-		return new Response<>(challengeDetails);
+	@GetMapping("/instance/{challengeInstanceId}/stop")
+	public Response<ChallengeInstance> stopChallengeInstance(@PathVariable Long challengeInstanceId) {
+		return new Response<>(challengeInstanceService.stopChallengeInstance(challengeInstanceId));
 	}
 
 	/**
 	 * submit challenge
-	 * @param submitInput
+	 * @param challengeId
 	 * @return Challenge
 	 */
-	@PostMapping(value = "/{challengeId}/submit")
-	public Response<ChallengeDetails> submitChallenge(@RequestBody ChallengeSubmitInput submitInput) throws SystemException, BusinessException {
-		ChallengeInstanceSubmission challengeInstanceSubmission = challengeInstanceService.submitChallenge(submitInput, 1l);
-		ChallengeDetails challengeDetails = challengeService.getChallenge(challengeInstanceSubmission.getChallengeId(),1l).get();
-		return new Response<>(challengeDetails);
+	@GetMapping(value = "/{challengeId}/instance/list")
+	public Response<List<ChallengeInstance>> getChallengeInstanceList(@PathVariable Long challengeId) throws SystemException {
+		List<ChallengeInstance> challengeInstanceList = challengeInstanceService.getChallengeInstanceList(challengeId);
+		return new Response<>(challengeInstanceList);
 	}
+
+	/**
+	 * Returns all active challenges
+	 * @return List<ChallengeDetails>
+	 */
+	@GetMapping(value = "/manage/list")
+	public Response<List<ChallengeDetails>> getChallengeList() {
+		return new Response<>(challengeService.getChallenges());
+	}
+
+
 }

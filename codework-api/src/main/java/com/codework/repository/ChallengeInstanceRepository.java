@@ -1,6 +1,5 @@
 package com.codework.repository;
 
-import com.codework.entity.Challenge;
 import com.codework.entity.ChallengeInstance;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

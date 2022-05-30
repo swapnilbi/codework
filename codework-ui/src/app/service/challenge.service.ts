@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map,tap } from 'rxjs/operators';
 import { AppConfig } from 'src/app/common/app.config';
 import { HttpHelper } from 'src/app/common/utility/utility';
+import { ChallengeInstance } from 'src/app/model/challenge-instance.model';
 import { ChallengeSubscription } from 'src/app/model/challenge-subscription.modal';
 import { Challenge } from 'src/app/model/challenge.model';
 import { LiveChallenge } from 'src/app/model/live-challenge.model';
@@ -20,6 +21,32 @@ export class ChallengeService {
     
     const serviceUrl = AppConfig.SERVICE_URL.GET_CHALLENGE_URL;
     return this.httpClient.get<Response<Array<Challenge>>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public getChallengeList(): Observable<Array<Challenge>>{
+    
+    const serviceUrl = AppConfig.SERVICE_URL.GET_CHALLENGE_LIST_URL;
+    return this.httpClient.get<Response<Array<Challenge>>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public getChallengeInstanceList(challengeId : Number): Observable<Array<ChallengeInstance>>{
+    let queryParams: any = {
+      'challengeId' : challengeId
+    }    
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_CHALLENGE_INSTANCE_LIST_URL,queryParams);    
+    return this.httpClient.get<Response<Array<ChallengeInstance>>>(serviceUrl)
     .pipe(
       map((data) => {
         return data.data;
@@ -72,11 +99,39 @@ export class ChallengeService {
   }
 
 
+  public startChallengeInstance(challengeInstanceId : number): Observable<ChallengeInstance>{        
+    let queryParams: any = {
+      'challengeInstanceId' : challengeInstanceId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.START_CHALLENGE_INTANCE_URL,queryParams);
+    return this.httpClient.get<Response<ChallengeInstance>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public stopChallengeInstance(challengeInstanceId : number): Observable<ChallengeInstance>{        
+    let queryParams: any = {
+      'challengeInstanceId' : challengeInstanceId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.STOP_CHALLENGE_INTANCE_URL,queryParams);
+    return this.httpClient.get<Response<ChallengeInstance>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+
   public startChallenge(challengeId : number): Observable<LiveChallenge>{        
     let queryParams: any = {
       'challengeInstanceId' : challengeId
-    } 
-    console.log(queryParams);
+    }     
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.START_CHALLENGE_URL,queryParams);
     return this.httpClient.get<Response<LiveChallenge>>(serviceUrl)
     .pipe(

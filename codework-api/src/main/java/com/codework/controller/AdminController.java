@@ -5,10 +5,12 @@ import com.codework.model.LanguageBatch;
 import com.codework.model.Response;
 import com.codework.service.ILanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping(value = "api/admin")
 @RestController
 public class AdminController {

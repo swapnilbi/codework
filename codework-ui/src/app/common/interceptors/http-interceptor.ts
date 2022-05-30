@@ -4,23 +4,41 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { AlertService } from '../../component/common/alert/alert-service.service';
 import { LoaderService } from '../../component/common/loader/loader.service'; 
+import { UserAuthService } from 'src/app/service/user-auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
-    constructor(private injector: Injector, private alertService: AlertService, private loaderService: LoaderService) {
+
+    constructor(private alertService: AlertService, 
+        private router: Router,        
+        private userAuthService: UserAuthService, 
+        private loaderService: LoaderService) {
 
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {               
         //return next.handle(request);
+        let token = this.userAuthService.getToken();
+        if(token){
+            request = request.clone({
+                url:  request.url,
+                setHeaders: {
+                  Authorization: `Bearer ${token}`
+                }
+            });
+        }        
         return next.handle(request).pipe(
             tap(evt => {
                 return evt;
             }),
             catchError((err: any) => {
+                this.loaderService.hide();                   
                 if(err instanceof HttpErrorResponse) { 
-                    if(err.error && err.error.remarks && err.error.remarks.length > 0){
-                        this.loaderService.hide();                   
+                    if(err.error && err.status == 401){                                                
+                        this.userAuthService.logout();
+                        this.router.navigate(['login']);   
+                    }else if(err.error && err.error.remarks && err.error.remarks.length > 0){                                
                         this.alertService.error(err.error.remarks[0].message);   
                     }else{
                         this.alertService.error("Something went wrong. Please try again.");   

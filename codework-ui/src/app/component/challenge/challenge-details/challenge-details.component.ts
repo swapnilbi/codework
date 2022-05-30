@@ -5,7 +5,7 @@ import { Challenge, ChallengeStatus } from 'src/app/model/challenge.model';
 import { UserSubmission } from 'src/app/model/user-submission.model';
 import { AlertService } from '../../common/alert/alert-service.service';
 import { LoaderService } from '../../common/loader/loader.service';
-import { ChallengeService } from '../view-challenge/challenge.service';
+import { ChallengeService } from '../../../service/challenge.service';
 
 @Component({
   selector: 'app-challenge-details',

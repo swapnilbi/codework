@@ -1,0 +1,38 @@
+<div class="container-div">
+    <h6><strong>Manage Challenges</strong></h6>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>          
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Start Date</th>
+          <th scope="col">End Date</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let challenge of challenges">          
+          <td>            
+            {{ challenge.name }}
+          </td>
+          <td>{{ challenge.shortDescription}}</td>         
+          <td>{{ challenge.startDate | date :  "dd/MM/yy hh:mm a" }}</td>
+          <td>{{ challenge.endDate | date :  "dd/MM/yy hh:mm a" }}</td>
+          <td>
+            <span *ngIf="challenge.status == 'LIVE'" class="badge badge-success"> {{ challenge.status}}</span>
+            <span *ngIf="challenge.status == 'SCHEDULED'" class="badge badge-primary"> {{ challenge.status}}</span>
+            <span *ngIf="challenge.status == 'EXPIRED'" class="badge badge-danger"> {{ challenge.status}}</span>
+         </td>          
+          <td>             
+            <a *ngIf="true" (click)="viewChallengeInstance(challenge)"> <i class="fas fa-list" aria-hidden="true"></i></a> &nbsp;            
+            <a *ngIf="true"> <i class='fas fa-edit'></i> </a> &nbsp;  
+            <a *ngIf="challenge.status == 'SCHEDULED'"><i class='fas fa-play'></i></a> &nbsp;             
+            <a *ngIf="challenge.status == 'LIVE' || challenge.status == 'EXPIRED'"><i class='fas fa-trophy'></i></a>                        
+          </td>          
+        </tr>
+        </tbody>
+      </table>
+
+</div>

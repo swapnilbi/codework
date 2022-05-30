@@ -1,14 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserAuthService } from './service/user-auth.service';
 import { SidebarService } from './component/common/sidebar/sidebar.service';
+import { UserProfile } from './model/user-profile.model';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   
-  constructor(public sidebarService: SidebarService) { }
+  isAuthenticated: boolean = false;
+  userProfile: UserProfile | null = null;
+
+  constructor(public sidebarService: SidebarService, private userAuthService : UserAuthService, private router: Router) { }
+
+  ngOnInit(): void {
+    this.userAuthService.getUser().subscribe(response =>{
+      if(response){
+        this.userProfile =  response;
+        this.isAuthenticated = true;
+      }else{
+        this.isAuthenticated = false;
+        this.router.navigate(['login']);           
+      }      
+    });    
+  }
   
   toggleSidebar() {
     this.sidebarService.setSidebarState(!this.sidebarService.getSidebarState());

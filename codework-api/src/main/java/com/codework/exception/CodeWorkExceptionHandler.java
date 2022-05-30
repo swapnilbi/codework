@@ -10,6 +10,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -48,6 +50,28 @@ public class CodeWorkExceptionHandler {
         remark.setType(RemarkType.ERROR);
         response.setRemarks(Arrays.asList(remark));
         return new ResponseEntity(response,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity handleBadCredentialsException(SecurityException securityException) {
+        logger.warn(securityException.getMessage());
+        Response response = new Response();
+        Remark remark = new Remark();
+        remark.setMessage(securityException.getMessage());
+        remark.setType(RemarkType.ERROR);
+        response.setRemarks(Arrays.asList(remark));
+        return new ResponseEntity(response,HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity handleAccessDeniedException(AccessDeniedException accessDeniedException) {
+        logger.warn(accessDeniedException.getMessage());
+        Response response = new Response();
+        Remark remark = new Remark();
+        remark.setMessage(accessDeniedException.getMessage());
+        remark.setType(RemarkType.ERROR);
+        response.setRemarks(Arrays.asList(remark));
+        return new ResponseEntity(response,HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)

@@ -29,4 +29,6 @@ public interface IChallengeInstanceService {
     ChallengeInstance updateChallengeInstance(ChallengeInstance challengeInstance);
 
     ChallengeInstance startChallengeInstance(Long instanceId);
+
+    ChallengeInstance stopChallengeInstance(Long instanceId);
 }

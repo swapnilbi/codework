@@ -1,50 +1,32 @@
 package com.codework.controller;
 
-import java.io.IOException;
-import java.util.List;
-
+import com.codework.entity.Language;
 import com.codework.entity.Problem;
-import com.codework.entity.ProblemSolution;
-import com.codework.exception.BusinessException;
-import com.codework.exception.SystemException;
-import com.codework.model.ProblemSolutionInput;
-import com.codework.model.ProblemSolutionResult;
-import com.codework.service.IProblemSolutionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.codework.model.ProblemDetails;
 import com.codework.model.Response;
 import com.codework.service.IProblemService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
-@RequestMapping(value = "api/challenge")
+@PreAuthorize("hasAuthority('ADMIN')")
+@RequestMapping(value = "api/problem")
 @RestController
 public class ProblemController {
 
 	@Autowired
 	IProblemService problemService;
 
-	@Autowired
-	IProblemSolutionService problemSolutionService;
-
-
-	/**
-	 * Returns all active Problems
-	 * @return List<ProblemDetails>
-	 */
-	@GetMapping(value = "/instance/{challengeInstanceId}/problems")
-	public Response<List<ProblemDetails>> getProblems(@PathVariable Long challengeInstanceId) {
-		return new Response<>(problemService.getProblems(challengeInstanceId,1l));
-	}
-
 	/**
 	 * Creates new problem
 	 * @param problemDetails
 	 * @return ProblemDetails
 	 */
-	@PostMapping(value = "/problem")
+	@PostMapping
 	public Response<Problem> createProblem(@Valid @RequestBody ProblemDetails problemDetails) {
 		return new Response<>(problemService.createProblem(problemDetails));
 	}
@@ -54,45 +36,33 @@ public class ProblemController {
 	 * @param problemDetails
 	 * @return ProblemDetails
 	 */
-	@PutMapping(value = "/problem")
+	@PutMapping
 	public Response<Problem> updateProblem(@Valid @RequestBody ProblemDetails problemDetails) {
 		return new Response<>(problemService.updateProblem(problemDetails));
 	}
 
-	/**
-	 * Compile solution
-	 *
-	 */
-	@PostMapping(value = "/solution/compile")
-	public Response<ProblemSolutionResult> compileSolution(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
-		return new Response<>(problemSolutionService.compileSolution(problemSolution, 1l));
+	@GetMapping("{instanceId}/list")
+	public Response<List<Problem>> getProblems(@PathVariable Long instanceId) {
+		return new Response<>(problemService.getProblems(instanceId));
 	}
 
-	/**
-	 * Run All test cases
-	 *
-	 */
-	@PostMapping(value = "/solution/run")
-	public Response<ProblemSolutionResult> runAllTests(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
-		return new Response<>(problemSolutionService.runAllTests(problemSolution, 1l));
+	@DeleteMapping("{problemId}")
+	public Response deleteProblem(@PathVariable Long problemId) {
+		problemService.deleteProblem(problemId);
+		return new Response<>();
 	}
 
-	/**
-	 * Save solution
-	 *
-	 */
-	@PostMapping(value = "/solution/save")
-	public Response<ProblemSolution> saveSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException {
-		return new Response<ProblemSolution>(problemSolutionService.saveSolution(problemSolution, 1l));
+	@GetMapping("{problemId}")
+	public Response<ProblemDetails> getProblem(@PathVariable Long problemId) {
+		Optional<ProblemDetails> problemDetails = problemService.getProblem(problemId);
+		return new Response<>(problemDetails.get());
 	}
 
-	/**
-	 * Submit solution
-	 *
-	 */
-	@PostMapping(value = "/solution/submit")
-	public Response<ProblemSolution> submitSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException {
-		return new Response<ProblemSolution>(problemSolutionService.submitSolution(problemSolution, 1l));
+	@GetMapping("languages")
+	public Response<List<Language>> getLanguages() {
+		return new Response<>(problemService.getLanguages());
 	}
+
+
 
 }

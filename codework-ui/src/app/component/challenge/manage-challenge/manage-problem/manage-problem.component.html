@@ -1,0 +1,34 @@
+<div class="container-div">  
+
+  <div class="d-flex">
+    <div class="mr-auto p-2">
+       <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp; <strong>Manage Problems</strong></h6>
+    </div>
+    <div class="p-2">
+      <button (click)="createProblem()" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> New</button>        
+    </div>    
+  </div>
+  
+  <table class="table table-striped">
+        <thead>
+        <tr>          
+          <th scope="col">Name</th>
+          <th scope="col">Type</th>                    
+          <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let problem of problems">          
+          <td>            
+            {{ problem.name }}
+          </td>
+          <td>{{ problem.type}}</td>                             
+          <td>                         
+            <a (click)="editProblem(problem)" *ngIf="true"> <i class='fas fa-edit'></i> </a> &nbsp;  
+            <a (click)="deleteProblem(problem)" *ngIf="true"><i class='fas fa-trash'></i></a> &nbsp;                         
+          </td>          
+        </tr>
+        </tbody>
+      </table>
+
+</div>

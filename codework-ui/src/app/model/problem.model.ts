@@ -3,6 +3,7 @@ import { ProblemSolution } from "./problem-solution.model";
 export interface Problem {
     id : number,
     challengeId : number,
+    challengeInstanceId : number,
     name : string,    
     problemStatement : string,    
     type : ProblemType,    

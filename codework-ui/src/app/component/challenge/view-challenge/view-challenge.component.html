@@ -1,7 +1,9 @@
-<div class="row">
-    <div class="col-sm-4 col-md-6 col-lg-12 mt-3">
-        <div class="challenge-list">
-             <challenge-widget *ngFor="let challenge of challengeList" [challenge]="challenge"></challenge-widget>
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-4 col-md-6 col-lg-12 mt-3">
+            <div class="challenge-list">
+                <challenge-widget *ngFor="let challenge of challengeList" [challenge]="challenge"></challenge-widget>
+            </div>
         </div>
     </div>
 </div>

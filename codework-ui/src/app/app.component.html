@@ -1,4 +1,4 @@
-<div [ngClass]="getSideBarState()? 'dashboard' : 'dashboard-compact'">
+<div *ngIf="isAuthenticated" [ngClass]="getSideBarState()? 'dashboard' : 'dashboard-compact'">
   <app-sidebar></app-sidebar>
   <div class='dashboard-app'>
       <header class='dashboard-toolbar'><a class="menu-toggle" (click)="toggleSidebar()"><i class="fas fa-bars"></i></a>
@@ -10,4 +10,9 @@
           <router-outlet></router-outlet>        
       </div>      
   </div>
+</div>
+<div *ngIf="!isAuthenticated">
+  <app-loader></app-loader>
+  <app-alert></app-alert>
+  <router-outlet></router-outlet>        
 </div>
