@@ -42,4 +42,9 @@ public class UserSessionService implements IUserSessionService {
 		userSession.setLogoutTime(new Date());
 		return userSessionRepository.save(userSession);
 	}
+
+	@Override
+	public void updateUserSession(UserSession userSession) {
+		userSessionRepository.save(userSession);
+	}
 }

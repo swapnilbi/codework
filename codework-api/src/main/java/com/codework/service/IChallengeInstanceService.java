@@ -31,4 +31,6 @@ public interface IChallengeInstanceService {
     ChallengeInstance startChallengeInstance(Long instanceId);
 
     ChallengeInstance stopChallengeInstance(Long instanceId);
+
+    void deleteChallengeInstance(Long challengeInstanceId);
 }

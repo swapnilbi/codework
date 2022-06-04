@@ -1,5 +1,13 @@
 <div class="container-div">
-    <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp; <strong>Manage Challenge Instances</strong></h6>
+
+    <div class="d-flex">
+      <div class="mr-auto p-2">
+        <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp; <strong>Manage Challenge Instances</strong></h6>
+      </div>
+      <div class="p-2">
+        <button (click)="createChallengeInstance()" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> New</button>        
+      </div>    
+    </div>
 
     <table class="table table-striped">
         <thead>
@@ -27,7 +35,8 @@
          </td>          
           <td>                         
             <a *ngIf="true" (click)="manageProblems(challengInstance)"> <i class="fas fa-list" aria-hidden="true"></i></a> &nbsp;            
-            <a *ngIf="true"><i class='fas fa-edit'></i> </a> &nbsp;  
+            <a (click)="editChallengeInstance(challengInstance)" *ngIf="true"><i class='fas fa-edit'></i> </a> &nbsp;  
+            <a *ngIf="challengInstance.instanceStatus == 'CREATED'" (click)="deleteChallengeInstance(challengInstance)"><i class='fas fa-trash'></i></a> &nbsp;                         
             <a (click)="startChallengeInstance(challengInstance)" *ngIf="challengInstance.instanceStatus == 'CREATED'"><i class='fas fa-play'></i></a> &nbsp; 
             <a (click)="stopChallengeInstance(challengInstance)" *ngIf="challengInstance.instanceStatus == 'LIVE'"><i class='fas fa-stop'></i></a> &nbsp; 
             <a *ngIf="challengInstance.instanceStatus == 'LIVE' || challengInstance.instanceStatus == 'EXPIRED'"><i class="fas fa-poll"></i></a> &nbsp;             

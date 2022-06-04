@@ -1,19 +1,9 @@
 package com.codework.controller;
 
 import com.codework.entity.Challenge;
-import com.codework.entity.ChallengeInstance;
-import com.codework.entity.ChallengeInstanceSubmission;
-import com.codework.entity.ChallengeSubscription;
-import com.codework.enums.ChallengeSubscriptionStatus;
-import com.codework.exception.BusinessException;
-import com.codework.exception.SystemException;
 import com.codework.model.ChallengeDetails;
-import com.codework.model.ChallengeSubmitInput;
-import com.codework.model.LiveChallengeDetails;
 import com.codework.model.Response;
-import com.codework.service.IChallengeInstanceService;
 import com.codework.service.IChallengeService;
-import com.codework.service.IChallengeSubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +18,12 @@ public class ChallengeController {
 	@Autowired
 	IChallengeService challengeService;
 
-	@Autowired
-	IChallengeInstanceService challengeInstanceService;
-
 	/**
 	 * Get challenge details
 	 * @param challengeId
 	 * @return ChallengeDetails
 	 */
-	@GetMapping(value = "/manage/{challengeId}/start")
+	@GetMapping(value = "/{challengeId}/publish")
 	public Response<Challenge> startChallenge(@PathVariable Long challengeId) {
 		return new Response<>(challengeService.startChallenge(challengeId));
 	}
@@ -46,7 +33,7 @@ public class ChallengeController {
 	 * @param challengeId
 	 * @return ChallengeDetails
 	 */
-	@GetMapping(value = "/manage/{challengeId}/stop")
+	@GetMapping(value = "/{challengeId}/stop")
 	public Response<Challenge> stopChallenge(@PathVariable Long challengeId) {
 		return new Response<>(challengeService.stopChallenge(challengeId));
 	}
@@ -63,54 +50,24 @@ public class ChallengeController {
 	}
 
 	/**
-	 * Creates new challenge instance
-	 * @param challengeInstance
-	 * @return ChallengeInstance
+	 * Creates new challenge
+	 * @param challengeDetails
+	 * @return ChallengeDetails
 	 */
-	@PostMapping("/instance")
-	public Response<ChallengeInstance> createChallengeInstance(@RequestBody ChallengeInstance challengeInstance) {
-		return new Response<>(challengeInstanceService.createChallengeInstance(challengeInstance));
+	@PutMapping("/{challengeId}")
+	public Response<Challenge> updateChallenge(@RequestBody ChallengeDetails challengeDetails) {
+		return new Response<>(challengeService.updateChallenge(challengeDetails));
 	}
 
 	/**
-	 * Updates existing challenge istance
-	 * @param challengeInstance
-	 * @return ChallengeInstance
-	 */
-	@PutMapping("/instance")
-	public Response<ChallengeInstance> updateChallengeInstance(@RequestBody ChallengeInstance challengeInstance) {
-		return new Response<>(challengeInstanceService.updateChallengeInstance(challengeInstance));
-	}
-
-	/**
-	 * start challenge instance
-	 * @param challengeInstanceId
-	 * @return ChallengeInstance
-	 */
-	@GetMapping("/instance/{challengeInstanceId}/start")
-	public Response<ChallengeInstance> startChallengeInstance(@PathVariable Long challengeInstanceId) {
-		return new Response<>(challengeInstanceService.startChallengeInstance(challengeInstanceId));
-	}
-
-	/**
-	 * start challenge instance
-	 * @param challengeInstanceId
-	 * @return ChallengeInstance
-	 */
-	@GetMapping("/instance/{challengeInstanceId}/stop")
-	public Response<ChallengeInstance> stopChallengeInstance(@PathVariable Long challengeInstanceId) {
-		return new Response<>(challengeInstanceService.stopChallengeInstance(challengeInstanceId));
-	}
-
-	/**
-	 * submit challenge
+	 * Deletes challenge
 	 * @param challengeId
-	 * @return Challenge
+	 * @return ChallengeDetails
 	 */
-	@GetMapping(value = "/{challengeId}/instance/list")
-	public Response<List<ChallengeInstance>> getChallengeInstanceList(@PathVariable Long challengeId) throws SystemException {
-		List<ChallengeInstance> challengeInstanceList = challengeInstanceService.getChallengeInstanceList(challengeId);
-		return new Response<>(challengeInstanceList);
+	@DeleteMapping("/{challengeId}")
+	public Response deleteChallenge(@PathVariable Long challengeId) {
+		challengeService.deleteChallenge(challengeId);
+		return new Response<>();
 	}
 
 	/**

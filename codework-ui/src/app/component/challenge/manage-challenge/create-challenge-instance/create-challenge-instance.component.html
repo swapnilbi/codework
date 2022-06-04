@@ -1,0 +1,67 @@
+<div class="container-div">  
+    <form [formGroup]="challengeInstanceForm">
+        <div class="d-flex">
+        <div class="mr-auto p-2">
+            <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp;
+                 <strong *ngIf="!instanceId">Create Challenge Instance</strong>
+                 <strong *ngIf="instanceId">Update Challenge Instance</strong>
+            </h6>
+        </div>
+        <div class="p-2">
+            <button (click)="createChallengeInstance(challengeInstanceForm.value)" *ngIf="!instanceId" [disabled]="!challengeInstanceForm.valid" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Save</button>        
+            <button (click)="updateChallengeInstance(challengeInstanceForm.value)" *ngIf="instanceId" [disabled]="!challengeInstanceForm.valid" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Update</button>        
+        </div>    
+        </div>
+
+        <div class="row">
+            <div class="col-12">        
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="name">Name</label>
+                        <input formControlName="name" type="text" class="form-control" id="name" placeholder="Name">
+                    </div>      
+                    <div class="form-group col-md-3">
+                        <label for="name">Type</label>
+                        <input formControlName="type" type="text" class="form-control" id="name" placeholder="Type">
+                    </div>                  
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="name">Start Date</label>
+                        <div class="input-group">                            
+                            <input type="text"
+                            formControlName="startDate"
+                            placeholder="Start Date"
+                            class="form-control"
+                            [bsConfig]="{withTimepicker: true, rangeInputFormat : 'DD/MM/YYYY h:mm a', dateInputFormat: 'DD/MM/YYYY h:mm A'}"
+                            bsDatepicker
+                            >
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" id="btnGroupAddon"> <i class="fa fa-calendar" aria-hidden="true"></i> </div>
+                            </div>
+                        </div>                        
+                    </div>
+                    
+                    <div class="form-group col-md-3">
+                        <label for="name">End Date</label>
+                        <div class="input-group">                            
+                            <input type="text"
+                            formControlName="endDate"
+                            placeholder="End Date"
+                            class="form-control"
+                            [bsConfig]="{withTimepicker: true, rangeInputFormat : 'MMMM Do YYYY, h:mm:ss a', dateInputFormat: 'MMMM Do YYYY, h:mm:ss a'}"
+                            bsDatepicker
+                            >
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" id="btnGroupAddon"> <i class="fa fa-calendar" aria-hidden="true"></i> </div>
+                            </div>
+                        </div>                        
+                    </div>
+
+                </div>         
+            </div>       
+        </div>
+    </form>
+  </div>
+  

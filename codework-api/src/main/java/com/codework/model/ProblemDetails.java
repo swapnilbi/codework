@@ -28,6 +28,7 @@ public class ProblemDetails {
 	@NotNull(message = "type is required")
 	private ProblemType type;
 	private List<Language> languagesAllowed;
+	private ProblemPointSystem pointSystem;
 	private Long challengeInstanceId;
 	private Map<Integer,String> placeHolderSolution;
 	private List<TestCase> testCases;
@@ -42,6 +43,7 @@ public class ProblemDetails {
 		this.challengeId = problem.getChallengeId();
 		this.name = problem.getName();
 		this.problemStatement = problem.getProblemStatement();
+		this.pointSystem = problem.getPointSystem();
 		this.type = problem.getType();
 		this.memoryLimit = problem.getMemoryLimit();
 		this.cpuLimit = problem.getCpuLimit();

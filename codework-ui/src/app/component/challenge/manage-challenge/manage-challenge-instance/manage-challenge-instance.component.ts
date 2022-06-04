@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/component/common/alert/alert-service.service';
 import { LoaderService } from 'src/app/component/common/loader/loader.service';
 import { ChallengeInstance } from 'src/app/model/challenge-instance.model';
-import { ChallengeService } from '../../../../service/challenge.service';
+import Swal from 'sweetalert2';
+import { ChallengInstanceService } from '../../../../service/challenge-instance.service';
 
 @Component({
   selector: 'app-manage-challenge-instance',
@@ -14,8 +15,9 @@ import { ChallengeService } from '../../../../service/challenge.service';
 export class ManageChallengeInstanceComponent implements OnInit {
 
   challengInstanceList : Array<ChallengeInstance>;
+  challengeId? : any;
 
-  constructor(private challengeService : ChallengeService, 
+  constructor(private challengeInstanceService : ChallengInstanceService, 
     private route: ActivatedRoute, 
     private location : Location,
     private router: Router, 
@@ -25,15 +27,24 @@ export class ManageChallengeInstanceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let challengeId : any = this.route.snapshot.paramMap.get('id');    
-    this.challengeService.getChallengeInstanceList(challengeId).subscribe(response => {
+    this.challengeId = this.route.snapshot.paramMap.get('challengeId');      
+    this.getChallengeInstanceList();  
+  }
+
+  getChallengeInstanceList(){
+    this.challengeInstanceService.getChallengeInstanceList(this.challengeId).subscribe(response => {
       this.challengInstanceList = response;
     })
   }
 
+  editChallengeInstance(challengeInstance : ChallengeInstance){
+    var url = 'challenge/instance/'+challengeInstance.id+'/edit';
+    this.router.navigateByUrl(url);
+  }
+
   stopChallengeInstance(instance : ChallengeInstance){
     this.loaderService.show();       
-    this.challengeService.stopChallengeInstance(instance.id).subscribe(response => {    
+    this.challengeInstanceService.stopChallengeInstance(instance.id).subscribe(response => {    
       if(response){ 
         instance.instanceStatus = response.instanceStatus;               
         this.loaderService.hide();       
@@ -44,9 +55,34 @@ export class ManageChallengeInstanceComponent implements OnInit {
       }); 
   }
 
+  deleteChallengeInstance(challengeInstance : ChallengeInstance){
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+    }).then((result) => {
+      if (result.isConfirmed) {        
+        this.loaderService.show();       
+        this.challengeInstanceService.deleteChallengeInstance(challengeInstance.id).subscribe(response => {    
+          if(response){         
+            this.loaderService.hide();       
+            this.alertService.success('Challenge instance deleted successfully');
+            this.getChallengeInstanceList();
+            }                
+          }, error => {
+            this.loaderService.hide();       
+          });   
+      }
+    })    
+  }
+
   startChallengeInstance(instance : ChallengeInstance){
     this.loaderService.show();       
-    this.challengeService.startChallengeInstance(instance.id).subscribe(response => {    
+    this.challengeInstanceService.startChallengeInstance(instance.id).subscribe(response => {    
       if(response){ 
         instance.instanceStatus = response.instanceStatus;               
         this.loaderService.hide();       
@@ -55,6 +91,11 @@ export class ManageChallengeInstanceComponent implements OnInit {
       }, error => {
         this.loaderService.hide();       
       }); 
+  }
+
+  createChallengeInstance(){
+    var url = 'challenge/'+this.challengeId+'/instance/create';
+    this.router.navigateByUrl(url); 
   }
 
   manageProblems(instance : ChallengeInstance){    

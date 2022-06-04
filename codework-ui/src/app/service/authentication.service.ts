@@ -26,6 +26,17 @@ export class AuthenticationService {
     );
   }
 
+  public refreshToken(): Observable<Response<any>>{        
+    const serviceUrl = AppConfig.SERVICE_URL.REFRESH_TOKEN_URL;
+    return this.httpClient.post<Response<any>>(serviceUrl,null)
+    .pipe(
+      map((data) => {
+        return data;
+      }),
+      tap(event => {})
+    );
+  }
+
   public logout(): Observable<any>{        
     const serviceUrl = AppConfig.SERVICE_URL.LOGOUT_URL;
     return this.httpClient.get<any>(serviceUrl)

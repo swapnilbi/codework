@@ -24,7 +24,8 @@ export class LoginComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {        
+    
   }
 
   login(){
@@ -38,8 +39,8 @@ export class LoginComponent implements OnInit {
         this.userAuthService.setToken(response.token);
         this.authenticationService.getUserProfile().subscribe(response => {    
           this.loaderService.hide();          
-          this.userAuthService.setUser(response);
-          this.router.navigate(['challenges']);    
+          this.userAuthService.setUser(response);                
+          this.router.navigate(['challenges']);                      
         });        
       }, error => {        
         this.loaderService.hide();

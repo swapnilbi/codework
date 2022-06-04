@@ -36,7 +36,7 @@ public class ProblemController {
 	 * @param problemDetails
 	 * @return ProblemDetails
 	 */
-	@PutMapping
+	@PutMapping("{problemId}")
 	public Response<Problem> updateProblem(@Valid @RequestBody ProblemDetails problemDetails) {
 		return new Response<>(problemService.updateProblem(problemDetails));
 	}

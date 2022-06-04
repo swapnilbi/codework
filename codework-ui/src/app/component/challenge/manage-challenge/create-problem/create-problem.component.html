@@ -1,11 +1,15 @@
 <div class="container-div">  
-    <form [formGroup]="problemForm" (ngSubmit)="createProblem(problemForm.value)">
+    <form [formGroup]="problemForm">
         <div class="d-flex">
         <div class="mr-auto p-2">
-            <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp; <strong>Create Problem</strong></h6>
+            <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp;
+                 <strong *ngIf="!problemId">Create Problem</strong>
+                 <strong *ngIf="problemId">Update Problem</strong>
+            </h6>
         </div>
         <div class="p-2">
-            <button [disabled]="!problemForm.valid" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Save</button>        
+            <button (click)="createProblem(problemForm.value)" *ngIf="!problemId" [disabled]="!problemForm.valid" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Save</button>        
+            <button (click)="updateProblem(problemForm.value)" *ngIf="problemId" [disabled]="!problemForm.valid" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Update</button>        
         </div>    
         </div>
 
@@ -33,8 +37,8 @@
                         </div>
                         <div class="form-group col-md-6" *ngIf="problemForm.value.type == 'PROGRAM'">                        
                             <label for="inputEmail4">Languages Allowed</label>
-                            <select formControlName="languagesAllowed" multiple class="form-control" id="languagesAllowed">
-                                <option *ngFor="let language of languagesAllowed" [ngValue]="language">
+                            <select [compareWith]="lagnuageCompare" formControlName="languagesAllowed" multiple class="form-control" id="languagesAllowed">
+                                <option *ngFor="let language of languagesAllowedList" [ngValue]="language">
                                     {{ language.name }}
                                 </option>    
                             </select>                          
@@ -85,9 +89,9 @@
                         </div>  
                     </div>
             
-                    <strong [hidden]="problemForm.value.type != 'PROGRAM'">Test Cases</strong>
+                    <strong *ngIf="problemForm.value.type == 'PROGRAM'">Test Cases</strong>
 
-                    <div class="form-row" [hidden]="problemForm.value.type != 'PROGRAM'">
+                    <div class="form-row" *ngIf="problemForm.value.type == 'PROGRAM'">
                         <div class="form-group col-md-6">
                             <div class="card">
                                 <div class="card-body" formArrayName="testCases">                                           
@@ -115,9 +119,9 @@
                         </div>                    
                     </div>
 
-                    <strong [hidden]="!problemForm.value.languagesAllowed">Placeholder Solution</strong>
+                    <strong *ngIf="problemForm.value.type == 'PROGRAM' && problemForm.value.languagesAllowed.length > 0">Placeholder Solution</strong>
                     
-                    <div class="form-row" [hidden]="!problemForm.value.languagesAllowed">
+                    <div class="form-row" *ngIf="problemForm.value.type == 'PROGRAM' && problemForm.value.languagesAllowed.length > 0 ">
                         <div class="form-group col-md-6">
                             <div class="card">
                                 <div class="card-body" formArrayName="placeHolderSolutions">                                           
@@ -125,7 +129,7 @@
                                         <ng-container [formGroupName]="i">
                                             #{{i+1}} &nbsp;
                                             <label class="sr-only" for="input">Language</label>                                        
-                                            <select formControlName="id" class="form-control mb-2 mr-sm-2">
+                                            <select [compareWith]="lagnuageIdCompare" formControlName="id" class="form-control mb-2 mr-sm-2">
                                                 <option *ngFor="let language of problemForm.value.languagesAllowed" [ngValue]="language.id">
                                                     {{ language.name }}
                                                 </option>    

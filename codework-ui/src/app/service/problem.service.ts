@@ -68,6 +68,20 @@ export class ProblemService {
     );
   }
 
+  public updateProblem(problem : Problem): Observable<Problem>{   
+    let queryParams: any = {
+      'problemId' : problem.id
+    } 
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.UPDATE_PROBLEM_URL,queryParams);         
+    return this.httpClient.put<Response<Problem>>(serviceUrl,problem)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
   public getLanguages(): Observable<Array<Language>>{        
     const serviceUrl = AppConfig.SERVICE_URL.GET_LANGUAGES_URL;    
     return this.httpClient.get<Response<Array<Language>>>(serviceUrl)

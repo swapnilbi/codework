@@ -8,6 +8,8 @@ import { ManageChallengeComponent } from './component/challenge/manage-challenge
 import { ManageChallengeInstanceComponent } from './component/challenge/manage-challenge/manage-challenge-instance/manage-challenge-instance.component';
 import { ManageProblemComponent } from './component/challenge/manage-challenge/manage-problem/manage-problem.component';
 import { CreateProblemComponent } from './component/challenge/manage-challenge/create-problem/create-problem.component';
+import { CreateChallengeInstanceComponent } from './component/challenge/manage-challenge/create-challenge-instance/create-challenge-instance.component';
+import { CreateChallengeComponent } from './component/challenge/manage-challenge/create-challenge/create-challenge.component';
 
 const routes: Routes = [
   {
@@ -21,11 +23,27 @@ const routes: Routes = [
   {
     path : "challenge/manage",
     component : ManageChallengeComponent
+  },
+  {
+    path : "challenge/create",
+    component : CreateChallengeComponent
+  },
+  {
+    path : "challenge/:challengeId/edit",
+    component : CreateChallengeComponent
   },  
   {
-    path : "challenge/:id/instance/manage",
+    path : "challenge/:challengeId/instance/manage",
     component : ManageChallengeInstanceComponent
   },
+  {
+    path : "challenge/:challengeId/instance/create",
+    component : CreateChallengeInstanceComponent
+  },
+  {
+    path : "challenge/instance/:instanceId/edit",
+    component : CreateChallengeInstanceComponent
+  },  
   {
     path : "challenge/instance/:id/problem/manage",
     component : ManageProblemComponent

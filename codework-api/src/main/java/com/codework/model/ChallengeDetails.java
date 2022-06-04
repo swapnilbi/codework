@@ -21,7 +21,6 @@ public class ChallengeDetails {
 	private Date startDate;
 	private Date endDate;
 	private String bannerImage;
-	private boolean isRegistered;
 	private ChallengeStatus status;
 	private ChallengeSubscription challengeSubscription;
 	private List<UserSubmission> userSubmissions;

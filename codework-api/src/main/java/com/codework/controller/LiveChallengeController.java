@@ -37,6 +37,16 @@ public class LiveChallengeController {
 
 
 	/**
+	 * Get challenge details
+	 * @param challengeId
+	 * @return ChallengeDetails
+	 */
+	@GetMapping(value = "/{challengeId}")
+	public Response<ChallengeDetails> getChallenge(@PathVariable Long challengeId) {
+		return new Response<>(challengeService.getChallengeDetails(challengeId,1l).get());
+	}
+
+	/**
 	 * Get live challenge details
 	 * @param challengeInstanceId
 	 * @return ChallengeDetails
@@ -74,7 +84,7 @@ public class LiveChallengeController {
 	 * @param challengeInstanceId
 	 * @return Challenge
 	 */
-	@GetMapping(value = "/{challengeInstanceId}/start")
+	@GetMapping(value = "/instance/{challengeInstanceId}/start")
 	public Response<LiveChallengeDetails> startUserChallenge(@PathVariable Long challengeInstanceId) throws BusinessException {
 		ChallengeInstanceSubmission challengeInstanceSubmission = challengeInstanceService.startChallenge(challengeInstanceId,1l);
 		LiveChallengeDetails challengeDetails = challengeService.getLiveChallengeDetails(challengeInstanceSubmission.getChallengeId(),1l);
@@ -86,7 +96,7 @@ public class LiveChallengeController {
 	 * @param submitInput
 	 * @return Challenge
 	 */
-	@PostMapping(value = "/{challengeId}/submit")
+	@PostMapping(value = "instance/{challengeInstanceId}/submit")
 	public Response<ChallengeDetails> submitChallenge(@RequestBody ChallengeSubmitInput submitInput) throws SystemException, BusinessException {
 		ChallengeInstanceSubmission challengeInstanceSubmission = challengeInstanceService.submitChallenge(submitInput, 1l);
 		ChallengeDetails challengeDetails = challengeService.getChallenge(challengeInstanceSubmission.getChallengeId(),1l).get();

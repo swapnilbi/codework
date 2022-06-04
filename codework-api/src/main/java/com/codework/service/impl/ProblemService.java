@@ -40,9 +40,13 @@ public class ProblemService implements IProblemService {
 	@Override
 	public Optional<ProblemDetails> getProblem(Long problemId) {
 		Optional<Problem> problem = problemRepository.findById(problemId);
-		 if(problem.isPresent()){
-			 	return Optional.of(new ProblemDetails(problem.get()));
+		 if(problem.isPresent()) {
+			 ProblemDetails problemDetails = new ProblemDetails(problem.get());
+			 if (problem.get().getLanguagesAllowed() != null) {
+				 problemDetails.setLanguagesAllowed(languageService.getLanguages(problem.get().getLanguagesAllowed()));
 			 }
+			 return Optional.of(problemDetails);
+		 }
 		 return Optional.empty();	
 	}
 
@@ -57,6 +61,7 @@ public class ProblemService implements IProblemService {
 		problem.setChallengeId(challengeInstance.getChallengeId());
 		problem.setProblemStatement(problemDetails.getProblemStatement());
 		problem.setType(problemDetails.getType());
+		problem.setPointSystem(problemDetails.getPointSystem());
 		if(problemDetails.getLanguagesAllowed()!=null) {
 			languages = problemDetails.getLanguagesAllowed().stream().map(Language::getId).collect(Collectors.toList());
 		}
@@ -83,6 +88,11 @@ public class ProblemService implements IProblemService {
 	}
 
 	@Override
+	public void deleteProblems(List<Long> problemIds) {
+		problemRepository.deleteAllById(problemIds);
+	}
+
+	@Override
 	public Problem updateProblem(ProblemDetails problemDetails) {
 		Problem problem = problemRepository.findById(problemDetails.getId()).get();
 		List<Integer> languages = new ArrayList<>();
@@ -92,8 +102,8 @@ public class ProblemService implements IProblemService {
 		if(problemDetails.getLanguagesAllowed()!=null) {
 			languages = problemDetails.getLanguagesAllowed().stream().map(Language::getId).collect(Collectors.toList());
 		}
+		problem.setPointSystem(problemDetails.getPointSystem());
 		problem.setLanguagesAllowed(languages);
-		problem.setChallengeInstanceId(problemDetails.getChallengeInstanceId());
 		problem.setTestCases(problemDetails.getTestCases());
 		problem.setMemoryLimit(problemDetails.getMemoryLimit());
 		problem.setCpuLimit(problemDetails.getCpuLimit());

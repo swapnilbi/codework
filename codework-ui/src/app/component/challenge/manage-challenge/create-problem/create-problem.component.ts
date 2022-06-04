@@ -4,7 +4,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/component/common/alert/alert-service.service';
 import { LoaderService } from 'src/app/component/common/loader/loader.service';
-import { Language, Problem, ProblemType } from 'src/app/model/problem.model';
+import { Language, Problem, ProblemType, TestCase } from 'src/app/model/problem.model';
 import { ProblemService } from 'src/app/service/problem.service';
 
 @Component({
@@ -20,7 +20,7 @@ export class CreateProblemComponent implements OnInit {
     'PROGRAM',
     'PUZZLE'
   ]
-  languagesAllowed : Array<Language> = [];
+  languagesAllowedList : Array<Language> = [];
   problemForm: FormGroup;
 
   ngOnInit(): void {
@@ -29,7 +29,7 @@ export class CreateProblemComponent implements OnInit {
     this.problemService.getLanguages().subscribe(response => {    
       if(response){         
           this.loaderService.hide();       
-          this.languagesAllowed = response;
+          this.languagesAllowedList = response;
           if(this.instanceId){
             this.setDefaultValues();   
             this.addTestCase();
@@ -37,12 +37,28 @@ export class CreateProblemComponent implements OnInit {
           }else if(this.problemId){
             this.problemService.getProblem(this.problemId).subscribe(problem => {  
               let _this = this;
-              if(problem.testCases && problem.testCases.length > 0){
-                problem.testCases.forEach(function (testCase: any) {
-                   _this.addTestCase();
-                });  
-              }              
-              this.problemForm.patchValue(problem);
+              if(problem.type ==  ProblemType.PROGRAM){
+                if(problem.testCases && problem.testCases.length > 0){
+                  problem.testCases.forEach(function (testCase: any) {
+                     _this.addTestCase();
+                  });                  
+                }   
+                if(problem.placeHolderSolution){
+                  let placeHolderSolutions = [];
+                  for(let i in problem.placeHolderSolution){
+                    _this.addPlaceHolderSolution();
+                    placeHolderSolutions.push({
+                      id : i,
+                      solution : problem.placeHolderSolution[i]
+                    })
+                  }                       
+                  problem.placeHolderSolutions = placeHolderSolutions;
+                }
+              }else{
+                this.addTestCase();
+                this.addPlaceHolderSolution();    
+              }                        
+              this.problemForm.patchValue(problem);              
             });
           }          
         }                
@@ -50,6 +66,8 @@ export class CreateProblemComponent implements OnInit {
         this.loaderService.hide();       
     });    
   }
+
+  
 
   constructor(private route: ActivatedRoute,
     private problemService : ProblemService,
@@ -62,7 +80,7 @@ export class CreateProblemComponent implements OnInit {
         "name": new FormControl("", Validators.required),
         "problemStatement": new FormControl("", Validators.required),
         "type": new FormControl(null, Validators.required),
-        "languagesAllowed" : new FormControl(null),
+        "languagesAllowed" : new FormControl([]),
         "memoryLimit" :  new FormControl(null),
         "cpuLimit" :new FormControl(null),        
         "pointSystem" : this.fb.group({
@@ -75,6 +93,14 @@ export class CreateProblemComponent implements OnInit {
         "testCases" : this.fb.array([]),
         "placeHolderSolutions" : this.fb.array([]),
      });     
+  }
+
+  lagnuageCompare(c1: Language, c2: Language): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
+  }
+
+  lagnuageIdCompare(c1: any, c2: any): boolean {    
+    return c1 && c2 ? c1 == c2 : false;
   }
 
   back(){        
@@ -100,7 +126,7 @@ export class CreateProblemComponent implements OnInit {
 
   addPlaceHolderSolution() {
     const placeHolderSolutionForm = this.fb.group({
-      id: new FormControl(null),
+      id: new FormControl(),
       solution: new FormControl(""),      
     })
     this.placeHolderSolutions.push(placeHolderSolutionForm);
@@ -114,11 +140,25 @@ export class CreateProblemComponent implements OnInit {
     return this.problemForm.controls["placeHolderSolutions"] as FormArray;
   }
 
-  createProblem(problemForm : any){    
-    /*
+  createProblem(problemForm : any){       
+    problemForm = this.getProblemForm(problemForm);
+    problemForm.challengeInstanceId = this.instanceId;    
+    this.loaderService.show();       
+    this.problemService.createProblem(problemForm).subscribe(response => {    
+      if(response){         
+          this.loaderService.hide();       
+          this.alertService.success("Problem has been created successfully");
+          this.showProblems();
+        }                
+      }, error => {
+        this.loaderService.hide();       
+    }); 
+  }
+
+  getProblemForm(problemForm : any){
+     /*
        TODO validations
     */
-    problemForm.challengeInstanceId = this.instanceId;
     let placeHolderSolution : any = {};
     if(problemForm.placeHolderSolutions && problemForm.placeHolderSolutions.length > 0){
       problemForm.placeHolderSolutions.forEach(function (solution: any) {
@@ -128,12 +168,27 @@ export class CreateProblemComponent implements OnInit {
       });        
     }	
     problemForm.placeHolderSolution = placeHolderSolution;
+    if(problemForm.testCases && problemForm.testCases.length > 0){
+      let testCases : Array<TestCase> = []
+      problemForm.testCases.forEach(function (testCase: any) {
+        if(testCase.input && testCase.input.trim()!=''){
+          testCases.push(testCase);
+        }        
+      });        
+      problemForm.testCases = testCases;
+    }	
+    return problemForm;
+  }
+
+  updateProblem(problemForm : any){           
+    problemForm = this.getProblemForm(problemForm);
+    problemForm.id = this.problemId;    
     this.loaderService.show();       
-    this.problemService.createProblem(problemForm).subscribe(response => {    
+    this.problemService.updateProblem(problemForm).subscribe(response => {    
       if(response){         
           this.loaderService.hide();       
-          this.alertService.success("Problem has been created successfully");
-          this.showProblems();
+          this.alertService.success("Problem has been updated successfully");
+          this.location.back();
         }                
       }, error => {
         this.loaderService.hide();       

@@ -25,4 +25,8 @@ public interface IChallengeService {
     Challenge startChallenge(Long challengeId);
 
     Challenge stopChallenge(Long challengeId);
+
+    Challenge updateChallenge(ChallengeDetails challengeDetails);
+
+    void deleteChallenge(Long challengeId);
 }

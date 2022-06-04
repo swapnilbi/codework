@@ -1,9 +1,6 @@
 package com.codework.service.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.codework.entity.ChallengeInstance;
 import com.codework.entity.ChallengeInstanceSubmission;
@@ -94,7 +91,7 @@ public class ChallengeService implements IChallengeService {
 	@Override
 	public List<ChallengeDetails> getChallenges(Long userId) {
 		List<ChallengeDetails> challengeDetailsList = new ArrayList<>();
-		List<Challenge> challengeList = challengeRepository.findAll();
+		List<Challenge> challengeList = challengeRepository.findByStatusIn(Arrays.asList(ChallengeStatus.LIVE));
 		if(challengeList!= null && challengeList.size() > 0){
 			for(Challenge challenge : challengeList){
 				challengeDetailsList.add(getChallenge(challenge.getId(), userId).get());
@@ -154,6 +151,28 @@ public class ChallengeService implements IChallengeService {
 		challenge.setStatus(ChallengeStatus.SCHEDULED);
 		challengeRepository.save(challenge);
 		return challenge;
+	}
+
+	@Override
+	public Challenge updateChallenge(ChallengeDetails challengeDetails) {
+		Challenge challenge = challengeRepository.findById(challengeDetails.getId()).get();
+		challenge.setShortDescription(challengeDetails.getShortDescription());
+		challenge.setName(challengeDetails.getName());
+		challenge.setBannerImage(challengeDetails.getBannerImage());
+		challenge.setLongDescription(challengeDetails.getLongDescription());
+		challenge.setStartDate(challengeDetails.getStartDate());
+		challenge.setEndDate(challengeDetails.getEndDate());
+		challengeRepository.save(challenge);
+		return challenge;
+	}
+
+	@Override
+	public void deleteChallenge(Long challengeId) {
+		List<ChallengeInstance> challengeInstanceList = challengeInstanceService.getChallengeInstanceList(challengeId);
+		if(challengeInstanceList!=null && !challengeInstanceList.isEmpty()){
+			challengeInstanceList.stream().forEach(t -> challengeInstanceService.deleteChallengeInstance(t.getId()));
+		}
+		challengeRepository.deleteById(challengeId);
 	}
 
 }

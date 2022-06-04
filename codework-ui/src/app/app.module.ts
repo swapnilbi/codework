@@ -35,6 +35,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { CustomInputComponent } from './component/challenge/live-challenge/custom-input/custom-input.component';
 import { TestResultComponent } from './component/challenge/live-challenge/test-result/test-result.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { FreeTextEditorComponent } from './component/challenge/free-text-editor/free-text-editor.component';
 import { LoginComponent } from './component/authentication/login/login.component';
 import { LocalStorageService } from './common/utility/local-storage';
@@ -43,6 +44,8 @@ import { AgGridModule } from 'ag-grid-angular';
 import { ManageChallengeInstanceComponent } from './component/challenge/manage-challenge/manage-challenge-instance/manage-challenge-instance.component';
 import { ManageProblemComponent } from './component/challenge/manage-challenge/manage-problem/manage-problem.component';
 import { CreateProblemComponent } from './component/challenge/manage-challenge/create-problem/create-problem.component';
+import { CreateChallengeInstanceComponent } from './component/challenge/manage-challenge/create-challenge-instance/create-challenge-instance.component';
+import { CreateChallengeComponent } from './component/challenge/manage-challenge/create-challenge/create-challenge.component';
 
 export const isMock = environment.mock;
 
@@ -69,11 +72,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LoginComponent, 
     ManageChallengeComponent, 
     ManageChallengeInstanceComponent, 
-    ManageProblemComponent, CreateProblemComponent    
+    ManageProblemComponent, CreateProblemComponent, CreateChallengeInstanceComponent, CreateChallengeComponent    
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    FormsModule,    
+    BsDatepickerModule.forRoot(),
     ReactiveFormsModule,
     AgGridModule.withComponents([]),
     BrowserAnimationsModule,

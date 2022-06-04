@@ -24,6 +24,13 @@ public class AuthenticationController {
 		return ResponseEntity.ok(new Response<>(new LoginResponse(token)));
 	}
 
+	@RequestMapping(value = "api/authenticate/refresh", method = RequestMethod.POST)
+	public ResponseEntity<Response<LoginResponse>> refreshToken(Authentication authentication)
+			throws SecurityException {
+		String token = authenticationService.refreshToken(authentication);
+		return ResponseEntity.ok(new Response<>(new LoginResponse(token)));
+	}
+
 	@RequestMapping(value = "api/logout", method = RequestMethod.GET)
 	public ResponseEntity logout(Authentication authentication)
 			throws SecurityException {

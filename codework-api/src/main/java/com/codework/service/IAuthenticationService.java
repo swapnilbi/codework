@@ -12,4 +12,6 @@ public interface IAuthenticationService {
     void logout(Authentication authentication) throws SecurityException;
 
     boolean validateToken(String token, User user);
+
+    String refreshToken(Authentication authentication);
 }

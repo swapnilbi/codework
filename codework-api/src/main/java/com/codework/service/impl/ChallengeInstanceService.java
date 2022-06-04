@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ChallengeInstanceService implements IChallengeInstanceService {
@@ -36,6 +37,9 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 
 	@Autowired
 	ChallengeInstanceSubmissionRepository challengeInstanceSubmissionRepository;
+
+	@Autowired
+	ProblemService problemService;
 
 	@Autowired
 	SequenceGenerator sequenceGenerator;
@@ -117,7 +121,12 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	}
 
 	@Override
-	public ChallengeInstance updateChallengeInstance(ChallengeInstance challengeInstance) {
+	public ChallengeInstance updateChallengeInstance(ChallengeInstance challengeInstanceForm) {
+		ChallengeInstance challengeInstance = getChallengeInstance(challengeInstanceForm.getId());
+		challengeInstance.setName(challengeInstanceForm.getName());
+		challengeInstance.setType(challengeInstanceForm.getType());
+		challengeInstance.setStartDate(challengeInstanceForm.getStartDate());
+		challengeInstance.setEndDate(challengeInstanceForm.getEndDate());
 		return challengeInstanceRepository.save(challengeInstance);
 	}
 
@@ -133,6 +142,15 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		ChallengeInstance challengeInstance = getChallengeInstance(instanceId);
 		challengeInstance.setInstanceStatus(ChallengeInstanceStatus.CREATED);
 		return challengeInstanceRepository.save(challengeInstance);
+	}
+
+	@Override
+	public void deleteChallengeInstance(Long challengeInstanceId) {
+		List<Problem> problemList = problemService.getProblems(challengeInstanceId);
+		if(problemList!=null && !problemList.isEmpty()){
+			problemService.deleteProblems(problemList.stream().map(t-> t.getId()).collect(Collectors.toList()));
+		}
+		challengeInstanceRepository.deleteById(challengeInstanceId);
 	}
 
 }

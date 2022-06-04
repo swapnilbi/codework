@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { UserAuthService } from './service/user-auth.service';
 import { SidebarService } from './component/common/sidebar/sidebar.service';
 import { UserProfile } from './model/user-profile.model';
+import { AuthenticationService } from './service/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +15,11 @@ export class AppComponent implements OnInit {
   isAuthenticated: boolean = false;
   userProfile: UserProfile | null = null;
 
-  constructor(public sidebarService: SidebarService, private userAuthService : UserAuthService, private router: Router) { }
+  constructor(public sidebarService: SidebarService, private authenticationService : AuthenticationService, private userAuthService : UserAuthService, private router: Router) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this.userAuthService.getUser().subscribe(response =>{
-      if(response){
+      if(response){                
         this.userProfile =  response;
         this.isAuthenticated = true;
       }else{

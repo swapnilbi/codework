@@ -11,4 +11,6 @@ public interface IUserSessionService {
     Optional<UserSession> getActiveUserSession(Long userId);
 
     UserSession logoutUserSession(UserSession userSession);
+
+    void updateUserSession(UserSession userSession);
 }

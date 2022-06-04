@@ -37,19 +37,22 @@ public class AuthenticationService implements IAuthenticationService {
 	public String authenticate(LoginInput loginInput) throws SecurityException {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginInput.getUsername(), loginInput.getPassword()));
-			final User user = (User) userDetailsService
-					.loadUserByUsername(loginInput.getUsername());
-			Date issueAt = new Date(System.currentTimeMillis());
-			Date expiredAt = new Date(System.currentTimeMillis() + JwtTokenUtil.JWT_TOKEN_VALIDITY*1000);
-			String token = jwtTokenUtil.generateToken(user,issueAt,expiredAt);
-			UserSession userSession = new UserSession(user.getId(),token,issueAt,expiredAt);
+			UserSession userSession = createUserSession(loginInput.getUsername());
 			userSessionService.createUserSession(userSession);
-			return token;
+			return userSession.getToken();
 		} catch (DisabledException e) {
 			throw new SecurityException("Your account has been disabled. Please contact administrator", e);
 		} catch (BadCredentialsException e) {
 			throw new SecurityException("Invalid username or password", e);
 		}
+	}
+
+	private UserSession createUserSession(String userName){
+		final User user = (User) userDetailsService.loadUserByUsername(userName);
+		Date issueAt = new Date(System.currentTimeMillis());
+		Date expiredAt = new Date(System.currentTimeMillis() + JwtTokenUtil.JWT_TOKEN_VALIDITY*1000);
+		String token = jwtTokenUtil.generateToken(user,issueAt,expiredAt);
+		return new UserSession(user.getId(),token,issueAt,expiredAt);
 	}
 
 	@Override
@@ -71,6 +74,19 @@ public class AuthenticationService implements IAuthenticationService {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public String refreshToken(Authentication authentication) {
+		UserSession userSession = createUserSession(authentication.getName());
+		Optional<UserSession> existingSession = userSessionService.getActiveUserSession(userSession.getUserId());
+		if(existingSession.isPresent()){
+			userSession.setId(existingSession.get().getId());
+			userSessionService.updateUserSession(userSession);
+		}else{
+			userSessionService.createUserSession(userSession);
+		}
+		return userSession.getToken();
 	}
 
 }

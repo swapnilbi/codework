@@ -15,6 +15,7 @@ export interface Problem {
     isSubmitted? : boolean,
     createdAt? : Date,
     placeHolderSolution? : Record<number,string>,
+    placeHolderSolutions? : Array<any>, // TODO remove
     testCases?: Array<TestCase>,
     problemSolution?: ProblemSolution    
 }
@@ -34,5 +35,6 @@ export enum ProblemType {
 export interface Language {    
     id : number,
     name : string,
-    editorCode : string
+    editorCode : string,
+    selected? : boolean
 }

@@ -11,6 +11,7 @@ import { ProblemSolutionResult } from 'src/app/model/problem-solution-result.mod
 import { ProblemSolution } from 'src/app/model/problem-solution.model';
 import { Problem } from 'src/app/model/problem.model';
 import { Response } from 'src/app/model/response.model';
+import { LiveChallenge } from '../model/live-challenge.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,20 @@ export class LiveChallengeService {
     } 
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_INSTANCE_PROBLEMS_URL,queryParams);
     return this.httpClient.get<Response<Array<Problem>>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public startChallenge(challengeId : number): Observable<LiveChallenge>{    
+    let queryParams: any = {
+      'challengeInstanceId' : challengeId
+    } 
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.START_CHALLENGE_URL,queryParams);
+    return this.httpClient.get<Response<LiveChallenge>>(serviceUrl)
     .pipe(
       map((data) => {
         return data.data;
@@ -88,5 +103,6 @@ export class LiveChallengeService {
       tap(event => {})
     );
   }
+  
   
 }

@@ -8,6 +8,7 @@ import { LoaderService } from '../../common/loader/loader.service';
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
 import { ChallengeService } from '../../../service/challenge.service';
 import { LiveChallengeService } from '../../../service/live-challenge.service';
+import { ChallengInstanceService } from '../../../service/challenge-instance.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { ChallengeSubmitInput } from 'src/app/model/challenge-submit.model';
@@ -31,7 +32,13 @@ export class LiveChallengeComponent implements OnInit {
 
   problems:Problem[] = []; 
 
-  constructor(private router: Router,private modalService: BsModalService, private route: ActivatedRoute, private challengeService: ChallengeService,private liveChallengeService: LiveChallengeService, protected alertService: AlertService, private loaderService: LoaderService) {
+  constructor(private router: Router,
+    private modalService: BsModalService, 
+    private route: ActivatedRoute,     
+    private challengeService: ChallengeService,
+    private liveChallengeService: LiveChallengeService, 
+    protected alertService: AlertService, 
+    private loaderService: LoaderService) {
     
   }
 
@@ -71,7 +78,7 @@ export class LiveChallengeComponent implements OnInit {
   startChallenge(){    
     if(this.liveChallenge && this.liveChallenge.challengeInstance){      
       this.loaderService.show();
-      this.challengeService.startChallenge(this.liveChallenge.challengeInstance.id).subscribe(response => {
+      this.liveChallengeService.startChallenge(this.liveChallenge.challengeInstance.id).subscribe(response => {
         this.liveChallenge = response;
         this.challenge = response.challengeDetails;        
         this.loaderService.hide();         

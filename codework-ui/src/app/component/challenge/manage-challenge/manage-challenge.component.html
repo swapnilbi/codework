@@ -1,5 +1,13 @@
 <div class="container-div">
-    <h6><strong>Manage Challenges</strong></h6>
+
+    <div class="d-flex">
+      <div class="mr-auto p-2">
+        <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp; <strong>Manage Challenges</strong></h6>
+      </div>
+      <div class="p-2">
+        <button (click)="createChallenge()" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> New</button>        
+      </div>    
+    </div>
 
     <table class="table table-striped">
         <thead>
@@ -27,8 +35,10 @@
          </td>          
           <td>             
             <a *ngIf="true" (click)="viewChallengeInstance(challenge)"> <i class="fas fa-list" aria-hidden="true"></i></a> &nbsp;            
-            <a *ngIf="true"> <i class='fas fa-edit'></i> </a> &nbsp;  
-            <a *ngIf="challenge.status == 'SCHEDULED'"><i class='fas fa-play'></i></a> &nbsp;             
+            <a *ngIf="true" (click)="editChallenge(challenge)"> <i class='fas fa-edit'></i> </a> &nbsp;  
+            <!--<a *ngIf="challenge.status == 'SCHEDULED'" (click)="deleteChallenge(challenge)"><i class='fas fa-trash'></i></a> &nbsp; -->
+            <a *ngIf="challenge.status == 'SCHEDULED'" (click)="publishChallenge(challenge)"><i class='fas fa-play'></i></a> &nbsp;             
+            <a *ngIf="challenge.status == 'LIVE'" (click)="stopChallenge(challenge)"><i class='fas fa-stop'></i></a> &nbsp;             
             <a *ngIf="challenge.status == 'LIVE' || challenge.status == 'EXPIRED'"><i class='fas fa-trophy'></i></a>                        
           </td>          
         </tr>
