@@ -1,6 +1,6 @@
-import { ChallengeSubscriptionStatus } from "src/app/model/challenge-subscription.modal";
-import { Challenge, ChallengeStatus, ParticipationStatus } from "src/app/model/challenge.model";
-import { Response } from "src/app/model/response.model";
+import { ChallengeSubscriptionStatus } from "src/app/challenge/model/challenge-subscription.modal";
+import { Challenge, ChallengeStatus, ParticipationStatus } from "src/app/challenge/model/challenge.model";
+import { Response } from "src/app/challenge/model/response.model";
 
 let challenges : Array<Challenge> = [
     {

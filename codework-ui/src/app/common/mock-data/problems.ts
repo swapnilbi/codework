@@ -1,5 +1,5 @@
-import { Problem, ProblemType } from "src/app/model/problem.model";
-import { Response } from "src/app/model/response.model";
+import { Problem, ProblemType } from "src/app/challenge/model/problem.model";
+import { Response } from "src/app/challenge/model/response.model";
 
 let problems : Array<Problem> = [
     {

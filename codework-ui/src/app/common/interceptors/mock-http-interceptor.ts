@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
-import { Challenge, ChallengeStatus } from '../../model/challenge.model';
+import { Challenge, ChallengeStatus } from '../../challenge/model/challenge.model';
 import { challengeList } from '../mock-data/challenges';
-import { Problem } from 'src/app/model/problem.model';
+import { Problem } from 'src/app/challenge/model/problem.model';
 import { problemList } from '../mock-data/problems';
 import { compileResult, runAllTestsResult } from '../mock-data/compile-result';
-import { Response } from 'src/app/model/response.model';
-import { ChallengeSubscriptionStatus } from 'src/app/model/challenge-subscription.modal';
+import { Response } from 'src/app/challenge/model/response.model';
+import { ChallengeSubscriptionStatus } from 'src/app/challenge/model/challenge-subscription.modal';
 
 // array in local storage for registered users
 let challenges : Response<Array<Challenge>> = challengeList;

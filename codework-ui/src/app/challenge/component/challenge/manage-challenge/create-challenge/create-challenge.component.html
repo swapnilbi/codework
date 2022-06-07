@@ -1,0 +1,82 @@
+<div class="container-div">  
+    <form [formGroup]="challengeForm">
+        <div class="d-flex">
+        <div class="mr-auto p-2">
+            <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp;
+                 <strong *ngIf="!challengeId">Create Challenge</strong>
+                 <strong *ngIf="challengeId">Update Challenge</strong>
+            </h6>
+        </div>
+        <div class="p-2">
+            <button (click)="createChallenge(challengeForm.value)" *ngIf="!challengeId" [disabled]="!challengeForm.valid" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Save</button>        
+            <button (click)="updateChallenge(challengeForm.value)" *ngIf="challengeId" [disabled]="!challengeForm.valid" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Update</button>        
+        </div>    
+        </div>
+
+        <div class="row">
+            <div class="col-12">        
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="name">Name</label>
+                        <input formControlName="name" type="text" class="form-control" id="name" placeholder="Name">
+                    </div>         
+                    <div class="form-group col-md-3">
+                        <label for="name">Short Description</label>
+                        <input formControlName="shortDescription" type="text" class="form-control" id="name" placeholder="Short Description">
+                    </div>                 
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Widget Image Url</label>
+                        <input formControlName="bannerImage" type="text" class="form-control" id="name" placeholder="Widget Image Url">
+                    </div>                             
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Long Description</label>                        
+                        <textarea formControlName="longDescription" class="form-control" id="longDescription" placeholder="Long Description" rows="5"></textarea>      
+                        <button *ngIf="challengeForm.value && challengeForm.value.longDescription" (click)="previewLongDescription(challengeForm.value.longDescription)" type="button" class="btn btn-info btn-sm mt-1"> <i class="fas fa-search"></i> Preview</button>        
+                    </div>                          
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="name">Start Date</label>
+                        <div class="input-group">                            
+                            <input type="text"
+                            formControlName="startDate"
+                            placeholder="Start Date"
+                            class="form-control"
+                            [bsConfig]="{withTimepicker: true, rangeInputFormat : 'DD/MM/YYYY h:mm a', dateInputFormat: 'DD/MM/YYYY h:mm A'}"
+                            bsDatepicker
+                            >
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" id="btnGroupAddon"> <i class="fa fa-calendar" aria-hidden="true"></i> </div>
+                            </div>
+                        </div>                        
+                    </div>
+                    
+                    <div class="form-group col-md-3">
+                        <label for="name">End Date</label>
+                        <div class="input-group">                            
+                            <input type="text"
+                            formControlName="endDate"
+                            placeholder="End Date"
+                            class="form-control"
+                            [bsConfig]="{withTimepicker: true, rangeInputFormat : 'MMMM Do YYYY, h:mm:ss a', dateInputFormat: 'MMMM Do YYYY, h:mm:ss a'}"
+                            bsDatepicker
+                            >
+                            <div class="input-group-prepend">
+                                <div class="input-group-text" id="btnGroupAddon"> <i class="fa fa-calendar" aria-hidden="true"></i> </div>
+                            </div>
+                        </div>                        
+                    </div>
+
+                </div>         
+            </div>       
+        </div>
+    </form>
+  </div>
+  

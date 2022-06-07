@@ -2,9 +2,9 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { AlertService } from '../../component/common/alert/alert-service.service';
-import { LoaderService } from '../../component/common/loader/loader.service'; 
-import { UserAuthService } from 'src/app/service/user-auth.service';
+import { AlertService } from '../../common/component/common/alert/alert-service.service';
+import { LoaderService } from '../../common/component/common/loader/loader.service'; 
+import { UserAuthService } from 'src/app/user/service/user-auth.service';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -32,8 +32,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             tap(evt => {
                 return evt;
             }),
-            catchError((err: any) => {
-                this.loaderService.hide();                   
+            catchError((err: any) => {                
+                this.loaderService.hide();                                   
                 if(err instanceof HttpErrorResponse) { 
                     if(err.error && err.status == 401){                                                
                         this.userAuthService.logout();

@@ -1,5 +1,5 @@
-import { ProblemSolutionResult } from "src/app/model/problem-solution-result.model";
-import { Response } from "src/app/model/response.model";
+import { ProblemSolutionResult } from "src/app/challenge/model/problem-solution-result.model";
+import { Response } from "src/app/challenge/model/response.model";
 
 let compileResultObj : ProblemSolutionResult = {
     result: false,

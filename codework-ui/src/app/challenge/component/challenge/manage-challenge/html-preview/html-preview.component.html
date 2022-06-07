@@ -1,0 +1,23 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<h6 class="font-weight-bold">Preview</h6>
+		<button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="onCancel()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+	</div>
+	<div class="modal-body">        
+        <div class="form-group">            
+            <div [innerHTML]="code"></div>            
+        </div>                    
+	</div>
+
+  <div class="modal-footer">        
+    <button type="button" class="btn btn-secondary" (click)="onCancel()">Close</button>
+  </div>
+
+</div>

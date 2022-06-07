@@ -1,0 +1,159 @@
+<div class="container-div">  
+    <form [formGroup]="problemForm">
+        <div class="d-flex">
+        <div class="mr-auto p-2">
+            <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp;
+                 <strong *ngIf="!problemId">Create Problem</strong>
+                 <strong *ngIf="problemId">Update Problem</strong>
+            </h6>
+        </div>
+        <div class="p-2">
+            <button (click)="createProblem(problemForm.value)" *ngIf="!problemId" [disabled]="!problemForm.valid" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Save</button>        
+            <button (click)="updateProblem(problemForm.value)" *ngIf="problemId" [disabled]="!problemForm.valid" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Update</button>        
+        </div>    
+        </div>
+
+        <div class="row">
+            <div class="col-12">        
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="name">Name</label>
+                            <input formControlName="name" type="text" class="form-control" id="name" placeholder="Name">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="problemStatement">Type</label>
+                            <select formControlName="type" class="form-control" id="type">
+                                <option *ngFor="let problemType of problemTypes" [ngValue]="problemType">
+                                    {{ problemType }}
+                                </option>                        
+                            </select>                       
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="problemStatement">Problem Statement</label>
+                            <textarea formControlName="problemStatement" class="form-control" id="problemStatement" placeholder="Problem Statement" rows="3"></textarea>      
+                            <button *ngIf="problemForm.value && problemForm.value.problemStatement" (click)="previewProblemStatement(problemForm.value.problemStatement)" type="button" class="btn btn-info btn-sm mt-1"> <i class="fas fa-search"></i> Preview</button>        
+                        </div>
+                        <div class="form-group col-md-6" *ngIf="problemForm.value.type == 'PROGRAM'">                        
+                            <label for="inputEmail4">Languages Allowed</label>
+                            <select [compareWith]="lagnuageCompare" formControlName="languagesAllowed" multiple class="form-control" id="languagesAllowed">
+                                <option *ngFor="let language of languagesAllowedList" [ngValue]="language">
+                                    {{ language.name }}
+                                </option>    
+                            </select>                          
+                        </div>
+                    </div>
+
+                    <div class="form-row" *ngIf="problemForm.value.type == 'PROGRAM'">                    
+                        <div class="form-group col-md-3">                                                  
+                            <label for="inputPassword4">Memory Limit(KB)</label>
+                            <input formControlName="memoryLimit" type="text" class="form-control" id="inputPassword4" placeholder="Memory Limit">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="inputPassword4">CPU Limit(Seconds)</label>
+                            <input formControlName="cpuLimit" type="text" class="form-control" id="inputPassword4" placeholder="CPU Limit">                          
+                        </div>
+                    </div>
+
+                    <strong>Points System</strong>
+
+                    <div class="form-row">   
+                        <div class="form-group col-md-12">
+                            <div class="card">
+                                <div class="card-body">  
+                                    <div class="form-inline" formGroupName="pointSystem">
+                                        <div class="form-group col-md-2">                                                  
+                                            <label for="correctAnswer">Points for correct Answer</label>
+                                            <input formControlName="correctAnswer" type="number" class="form-control" id="correctAnswer" placeholder="Points for correct Answer">
+                                        </div>
+                                        <div class="form-group col-md-2" *ngIf="problemForm.value.type == 'PROGRAM'">
+                                            <label for="bestSolutionBonus">Best solution bonus</label>
+                                            <input formControlName="bestSolutionBonus" type="number" class="form-control" id="bestSolutionBonus" placeholder="Best solution bonus">                          
+                                        </div>
+                                        <div class="form-group col-md-2" *ngIf="problemForm.value.type == 'PROGRAM'">
+                                            <label for="minNumberOfTc">Minimum number of TCs</label>
+                                            <input formControlName="minNumberOfTc" type="number" class="form-control" id="minNumberOfTc" placeholder="Minimum number of TCs">                          
+                                        </div>                    
+                                        <div class="form-group col-md-2" *ngIf="problemForm.value.type == 'PROGRAM'">                        
+                                            <label for="quickSolutionBonus">Quick submission bonus</label>                        
+                                            <input formControlName="quickSolutionBonus" type="number" class="form-control" id="quickSolutionBonus" placeholder="Quick submission bonus">                          
+                                        </div>
+                                        <div class="custom-control custom-checkbox mr-sm-2" *ngIf="problemForm.value.type == 'PROGRAM'">
+                                            <input formControlName="splitPointsByTc" type="checkbox" class="custom-control-input" id="splitPointsByTc">
+                                            <label class="custom-control-label" for="splitPointsByTc">Splits points by TCs</label>
+                                        </div>
+                                    </div>                            
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+            
+                    <strong *ngIf="problemForm.value.type == 'PROGRAM'">Test Cases</strong>
+
+                    <div class="form-row" *ngIf="problemForm.value.type == 'PROGRAM'">
+                        <div class="form-group col-md-6">
+                            <div class="card">
+                                <div class="card-body" formArrayName="testCases">                                           
+                                    <div class="form-inline" *ngFor="let testCaseForm of testCases.controls; let i = index">
+                                        <ng-container [formGroupName]="i">
+                                            #{{i+1}} &nbsp;
+                                            <label class="sr-only" for="input">Input</label>
+                                            <textarea formControlName="input" rows="2" class="form-control mb-2 mr-sm-2" placeholder="Input"></textarea>
+
+                                            <label class="sr-only" for="c">Expected Output</label>
+                                            <textarea formControlName="expectedOutput" rows="2" class="form-control mb-2 mr-sm-2" placeholder="Expected Output"></textarea>
+
+                                            <div class="form-check mb-2 mr-sm-2">
+                                                <input formControlName="isSample" class="form-check-input" type="checkbox">
+                                                <label class="form-check-label" for="inlineFormCheck">
+                                                Is Sample TC
+                                                </label>
+                                            </div>                                                                                                                                                                
+                                            <button *ngIf="i == testCases.controls.length - 1" (click)="addTestCase()" type="submit" class="btn btn-primary btn-sm mb-2">Add</button>
+                                            <button *ngIf="i != testCases.controls.length - 1" (click)="deleteTestCase(i)" type="submit" class="btn btn-danger btn-sm mb-2">Remove</button>
+                                        </ng-container>
+                                    </div>                                 
+                                </div>
+                            </div>
+                        </div>                    
+                    </div>
+
+                    <strong *ngIf="problemForm.value.type == 'PROGRAM' && problemForm.value.languagesAllowed.length > 0">Placeholder Solution</strong>
+                    
+                    <div class="form-row" *ngIf="problemForm.value.type == 'PROGRAM' && problemForm.value.languagesAllowed.length > 0 ">
+                        <div class="form-group col-md-6">
+                            <div class="card">
+                                <div class="card-body" formArrayName="placeHolderSolutions">                                           
+                                    <div class="" *ngFor="let placeholderForm of placeHolderSolutions.controls; let i = index">
+                                        <ng-container [formGroupName]="i">
+                                            #{{i+1}} &nbsp;
+                                            <label class="sr-only" for="input">Language</label>                                        
+                                            <select [compareWith]="lagnuageIdCompare" formControlName="id" class="form-control mb-2 mr-sm-2">
+                                                <option *ngFor="let language of problemForm.value.languagesAllowed" [ngValue]="language.id">
+                                                    {{ language.name }}
+                                                </option>    
+                                            </select>     
+
+                                            <label class="sr-only" for="c">Solution</label>
+                                            <textarea formControlName="solution" class="form-control mb-2 mr-sm-4" placeholder="Placeholder solution" rows="3"></textarea>                                              
+                                            
+                                            <button *ngIf="i == placeHolderSolutions.controls.length - 1" (click)="addPlaceHolderSolution()" type="submit" class="btn btn-primary btn-sm mb-2">Add</button>
+                                            <button *ngIf="i != placeHolderSolutions.controls.length - 1" (click)="deletePlaceHolderSolution(i)" type="submit" class="btn btn-danger btn-sm mb-2">Remove</button>
+                                        </ng-container>
+                                    </div>                                 
+                                </div>
+                            </div>
+                        </div>                    
+                    </div>
+                
+                    <!--                                            
+                    testCases
+                    placeHolderSolution                
+                    -->                
+            </div>       
+        </div>
+    </form>
+  </div>
+  
