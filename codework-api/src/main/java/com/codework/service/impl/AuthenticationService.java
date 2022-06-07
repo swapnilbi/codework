@@ -11,8 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -28,7 +26,7 @@ public class AuthenticationService implements IAuthenticationService {
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private UserDetailsService userDetailsService;
+	private UserService userService;
 
 	@Autowired
 	private UserSessionService userSessionService;
@@ -37,7 +35,8 @@ public class AuthenticationService implements IAuthenticationService {
 	public String authenticate(LoginInput loginInput) throws SecurityException {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginInput.getUsername(), loginInput.getPassword()));
-			UserSession userSession = createUserSession(loginInput.getUsername());
+			final User user = userService.getUserByUsername(loginInput.getUsername()).get();
+			UserSession userSession = createUserSession(user);
 			userSessionService.createUserSession(userSession);
 			return userSession.getToken();
 		} catch (DisabledException e) {
@@ -47,8 +46,7 @@ public class AuthenticationService implements IAuthenticationService {
 		}
 	}
 
-	private UserSession createUserSession(String userName){
-		final User user = (User) userDetailsService.loadUserByUsername(userName);
+	private UserSession createUserSession(User user){
 		Date issueAt = new Date(System.currentTimeMillis());
 		Date expiredAt = new Date(System.currentTimeMillis() + JwtTokenUtil.JWT_TOKEN_VALIDITY*1000);
 		String token = jwtTokenUtil.generateToken(user,issueAt,expiredAt);
@@ -56,10 +54,8 @@ public class AuthenticationService implements IAuthenticationService {
 	}
 
 	@Override
-	public void logout(Authentication authentication) {
-		final User user = (User) userDetailsService
-				.loadUserByUsername(authentication.getName());
-		Optional<UserSession> userSession = userSessionService.getActiveUserSession(user.getId());
+	public void logout(Long userId) {
+		Optional<UserSession> userSession = userSessionService.getActiveUserSession(userId);
 		if(userSession.isPresent()){
 			userSessionService.logoutUserSession(userSession.get());
 		}
@@ -77,8 +73,9 @@ public class AuthenticationService implements IAuthenticationService {
 	}
 
 	@Override
-	public String refreshToken(Authentication authentication) {
-		UserSession userSession = createUserSession(authentication.getName());
+	public String refreshToken(Long userId) {
+		final User user = userService.getUserById(userId).get();
+		UserSession userSession = createUserSession(user);
 		Optional<UserSession> existingSession = userSessionService.getActiveUserSession(userSession.getUserId());
 		if(existingSession.isPresent()){
 			userSession.setId(existingSession.get().getId());

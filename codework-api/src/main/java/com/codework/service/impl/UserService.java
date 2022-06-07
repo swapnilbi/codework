@@ -23,8 +23,8 @@ public class UserService implements IUserService {
 	private PasswordEncoder passwordEncoder;
 
 	@Override
-	public User getUserById(Long userId) {
-		return userRepository.findById(userId).get();
+	public Optional<User> getUserById(Long userId) {
+		return userRepository.findById(userId);
 	}
 
 	@Override

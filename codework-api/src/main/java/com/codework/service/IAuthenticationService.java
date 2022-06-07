@@ -9,9 +9,9 @@ public interface IAuthenticationService {
 
     String authenticate(LoginInput loginInput) throws SecurityException;
 
-    void logout(Authentication authentication) throws SecurityException;
+    void logout(Long userId) throws SecurityException;
 
     boolean validateToken(String token, User user);
 
-    String refreshToken(Authentication authentication);
+    String refreshToken(Long userId);
 }

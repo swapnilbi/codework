@@ -32,8 +32,11 @@ public class UserController {
 
 	@PutMapping
 	@PreAuthorize("hasAuthority('ADMIN')")
-	public Response<User> updateUser(@RequestBody User user) {
-		User existingUser = userService.getUserById(user.getId());
+	public Response<User> updateUser(@RequestBody User user) throws BusinessException {
+		Optional<User> existingUser = userService.getUserById(user.getId());
+		if(!existingUser.isPresent()){
+			throw new BusinessException("User does not exist");
+		}
 		userService.updateUser(user);
 		return new Response<>(user);
 	}

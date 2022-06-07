@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface IUserService {
 
-    User getUserById(Long userId);
+    Optional<User> getUserById(Long userId);
 
     Optional<User> getUserByUsername(String username);
 

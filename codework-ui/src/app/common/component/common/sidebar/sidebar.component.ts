@@ -49,16 +49,17 @@ export class SidebarComponent implements OnInit {
         "index" : 1,
         "url" : "/challenges",
         "icon" : "fas fa-code",        
-        "roles" : ["USER","ADMIN"],
-        "subMenus" : [{
-          "id" : 11,
-          "title" : "Manage",
-          "index" : 1,
-          "icon" : "fas fa-cog",
-          "url" : "/challenge/manage",          
-          "roles" : ["ADMIN"]
-        }]
-      }];
+        "roles" : ["USER","ADMIN"]        
+      },
+      {
+        "id" : 2,
+        "title" : "Manage Challenges",
+        "index" : 2,
+        "icon" : "fas fa-cog",
+        "url" : "/challenge/manage",          
+        "roles" : ["ADMIN"]
+      }  
+    ];
       let filteredMenuConfig = [];
       menuConfig.forEach(function (menu: any) {
         let hasRole : boolean = false;

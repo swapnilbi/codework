@@ -2,13 +2,11 @@ package com.codework.config;
 
 import com.codework.entity.User;
 import com.codework.service.impl.AuthenticationService;
+import com.codework.service.impl.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,7 +21,7 @@ import java.io.IOException;
 public class AuthenticationRequestFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private UserDetailsService userDetailsService;
+	private UserService userService;
 
 	@Autowired
 	private AuthenticationService authenticationService;
@@ -36,13 +34,13 @@ public class AuthenticationRequestFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		final String requestTokenHeader = request.getHeader("Authorization");
-		String username = null;
+		String userId = null;
 		String jwtToken = null;
 		// JWT Token is in the form "Bearer token". Remove Bearer word and get only the Token
 		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
 			jwtToken = requestTokenHeader.substring(7);
 			try {
-				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+				userId = jwtTokenUtil.getUserIdFromToken(jwtToken);
 			} catch (IllegalArgumentException e) {
 				logger.warn("Unable to get JWT Token");
 			} catch (ExpiredJwtException e) {
@@ -53,8 +51,8 @@ public class AuthenticationRequestFilter extends OncePerRequestFilter {
 		}
 
 		//Once we get the token validate it.
-		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			User user = (User) this.userDetailsService.loadUserByUsername(username);
+		if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			User user = this.userService.getUserById(Long.valueOf(userId)).get();
 			// if token is valid configure Spring Security to manually set authentication
 			if (authenticationService.validateToken(jwtToken, user)) {
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(

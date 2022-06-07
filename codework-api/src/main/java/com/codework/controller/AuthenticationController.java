@@ -5,6 +5,7 @@ import com.codework.model.LoginInput;
 import com.codework.model.LoginResponse;
 import com.codework.model.Response;
 import com.codework.service.IAuthenticationService;
+import com.codework.utility.SecurityHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,16 +26,15 @@ public class AuthenticationController {
 	}
 
 	@RequestMapping(value = "api/authenticate/refresh", method = RequestMethod.POST)
-	public ResponseEntity<Response<LoginResponse>> refreshToken(Authentication authentication)
-			throws SecurityException {
-		String token = authenticationService.refreshToken(authentication);
+	public ResponseEntity<Response<LoginResponse>> refreshToken() {
+		String token = authenticationService.refreshToken(SecurityHelper.getUserId());
 		return ResponseEntity.ok(new Response<>(new LoginResponse(token)));
 	}
 
 	@RequestMapping(value = "api/logout", method = RequestMethod.GET)
-	public ResponseEntity logout(Authentication authentication)
+	public ResponseEntity logout()
 			throws SecurityException {
-		authenticationService.logout(authentication);
+		authenticationService.logout(SecurityHelper.getUserId());
 		return  ResponseEntity.ok().build();
 	}
 
