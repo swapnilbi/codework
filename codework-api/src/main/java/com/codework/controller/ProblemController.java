@@ -54,7 +54,7 @@ public class ProblemController {
 
 	@GetMapping("{problemId}")
 	public Response<ProblemDetails> getProblem(@PathVariable Long problemId) {
-		Optional<ProblemDetails> problemDetails = problemService.getProblem(problemId);
+		Optional<ProblemDetails> problemDetails = problemService.getProblemDetails(problemId);
 		return new Response<>(problemDetails.get());
 	}
 

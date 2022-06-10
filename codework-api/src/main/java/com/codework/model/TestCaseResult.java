@@ -5,12 +5,13 @@ import lombok.Data;
 @Data
 public class TestCaseResult {
 
+	private String submissionId;
 	private Long id;
 	private boolean status;
 	private Integer statusCode;
 	private String input;
 	private String time;
-	private String memory;
+	private Long memory;
 	private String remark;
 	private String expectedOutput;
 	private String actualOutput;

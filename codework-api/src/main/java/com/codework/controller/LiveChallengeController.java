@@ -36,6 +36,9 @@ public class LiveChallengeController {
 	@Autowired
 	IProblemSolutionService problemSolutionService;
 
+	@Autowired
+	IProblemEvaluationService problemEvaluationService;
+
 
 	/**
 	 * Get challenge details
@@ -148,5 +151,15 @@ public class LiveChallengeController {
 	public Response<ProblemSolution> submitSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException {
 		return new Response<ProblemSolution>(problemSolutionService.submitSolution(problemSolution, SecurityHelper.getUserId()));
 	}
+
+	/**
+	 * evaluate challenge
+	 *
+	 */
+	@PostMapping(value = "/solution/evaluate")
+	public void evaluateSolution() throws IOException {
+		problemEvaluationService.checkAllSubmissionResult();
+	}
+
 
 }

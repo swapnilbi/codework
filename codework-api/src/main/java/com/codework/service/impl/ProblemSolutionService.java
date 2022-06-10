@@ -1,7 +1,8 @@
 package com.codework.service.impl;
 
-import com.codework.entity.ChallengeInstanceSubmission;
+import com.codework.entity.Problem;
 import com.codework.entity.ProblemSolution;
+import com.codework.enums.EvaluationStatus;
 import com.codework.exception.BusinessException;
 import com.codework.exception.CodeWorkExceptionHandler;
 import com.codework.exception.SystemException;
@@ -20,11 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,7 +51,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
     public ProblemSolutionResult compileSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException, IOException {
         validateSolution(problemSolution, userId);
         ProblemSolutionResult problemSolutionResult = new ProblemSolutionResult();
-        ProblemDetails problem = problemService.getProblem(problemSolution.getProblemId()).get();
+        ProblemDetails problem = problemService.getProblemDetails(problemSolution.getProblemId()).get();
         problemSolutionResult.setTimeLimit(problem.getCpuLimit());
         problemSolutionResult.setMemoryLimit(problem.getMemoryLimit());
         if(problemSolution.getCustomInput()!=null && !problemSolution.getCustomInput().trim().equals("")){
@@ -67,7 +66,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
     public ProblemSolutionResult runAllTests(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException, IOException {
             validateSolution(problemSolution, userId);
             ProblemSolutionResult problemSolutionResult = new ProblemSolutionResult();
-            ProblemDetails problem = problemService.getProblem(problemSolution.getProblemId()).get();
+            ProblemDetails problem = problemService.getProblemDetails(problemSolution.getProblemId()).get();
             problemSolutionResult.setTimeLimit(problem.getCpuLimit());
             problemSolutionResult.setMemoryLimit(problem.getMemoryLimit());
             List<TestCase> testCases = problem.getTestCases();
@@ -121,13 +120,19 @@ public class ProblemSolutionService implements IProblemSolutionService {
             if(problemSolutionInput.isSubmitted()){
                 problemSolution.setSubmittedAt(new Date());
             }
-            problemSolution.setChallengeInstanceId(problemSolutionInput.getChallengeSolutionId());
+            problemSolution.setChallengeInstanceId(problemSolutionInput.getChallengeInstanceId());
             problemSolution.setSubmitted(problemSolutionInput.isSubmitted());
             problemSolution.setSolution(problemSolutionInput.getSolution());
             problemSolution.setLanguageId(problemSolutionInput.getLanguageId());
             problemSolution.setUpdatedAt(DateUtility.currentDate());
             problemSolutionRepository.save(problemSolution);
             return problemSolution;
+    }
+
+    @Override
+    public ProblemSolution updateSolution(ProblemSolution problemSolution) throws SystemException {
+        problemSolutionRepository.save(problemSolution);
+        return problemSolution;
     }
 
     @Override
@@ -222,24 +227,19 @@ public class ProblemSolutionService implements IProblemSolutionService {
         return testCaseResult;
     }
 
-    public ProblemSolutionResult runAllTestss(ProblemSolutionInput problemSolution) {
-        try{
-            ProblemSolutionResult problemSolutionResult = new ProblemSolutionResult();
-            SubmissionRequest submissionRequest = new SubmissionRequest();
-            SubmissionBatch submissionBatch = new SubmissionBatch(Arrays.asList(submissionRequest));
-            List<SubmissionResult> submissionResult = codeExecutorService.createSubmissionBatch(submissionBatch);
-            if(submissionResult!=null){
-
+    public List<SubmissionResult> evaluateSolution(Problem problem, ProblemSolution problemSolution) throws IOException {
+        List<SubmissionRequest> submissionRequests = new ArrayList<>();
+        if(problem.getTestCases()!=null && !problem.getTestCases().isEmpty()){
+            for(TestCase testCase : problem.getTestCases()){
+                SubmissionRequest submissionRequest = new SubmissionRequest(problemSolution.getLanguageId(),problemSolution.getSolution(),testCase.getInput(),testCase.getExpectedOutput());
+                submissionRequest.setMemoryLimit(problem.getMemoryLimit());
+                submissionRequest.setCpuTimeLimit(problem.getCpuLimit());
+                submissionRequests.add(submissionRequest);
             }
-        }catch(Exception e){
-            e.printStackTrace();
+            SubmissionBatch submissionBatch = new SubmissionBatch(submissionRequests);
+            return codeExecutorService.createSubmissionBatch(submissionBatch);
         }
-        return null;
-    }
-
-    @Override
-    public void evaluateSolution(ProblemSolutionInput problemSolution) {
-
+        return Collections.emptyList();
     }
 
     @Override
@@ -247,14 +247,40 @@ public class ProblemSolutionService implements IProblemSolutionService {
         return problemSolutionRepository.findByUserIdAndProblemId(userId,problemId);
     }
 
-    public Callable getCompileResult(String token){
-            return new Callable() {
-            @Override
-            public Object call() throws Exception {
-                SubmissionStatus submissionStatus = codeExecutorService.getSubmissionStatus(token);
-                return submissionStatus;
+    @Override
+    public List<ProblemSolution> getProblemSolutions(Long userId, Long challengeInstanceId) {
+        return problemSolutionRepository.findByUserIdAndChallengeInstanceId(userId,challengeInstanceId);
+    }
+
+    @Override
+    public List<ProblemSolution> getProblemSolutions(EvaluationStatus evaluationStatus) {
+        return problemSolutionRepository.findByEvaluationStatus(evaluationStatus);
+    }
+
+    @Override
+    public List<TestCaseResult> evaluateBatchSubmission(List<TestCaseResult> testCases) throws IOException {
+        List<String> tokens = testCases.stream().filter(t-> t.getSubmissionId()!=null && t.getStatusCode()==null).map(t-> t.getSubmissionId()).collect(Collectors.toList());
+        SubmissionBatchStatus submissionBatchStatus = codeExecutorService.getSubmissionBatchStatus(tokens);
+        if(submissionBatchStatus!=null && submissionBatchStatus.getSubmissions()!=null){
+            Map<String,SubmissionStatus> submissionStatusResultMap = submissionBatchStatus.getSubmissions().stream().filter(t-> t!=null).collect(Collectors.toMap(SubmissionStatus::getToken, Function.identity()));
+            for(TestCaseResult testCaseResult : testCases){
+                if(testCaseResult.getStatusCode() == null){
+                    SubmissionStatus submissionStatus = submissionStatusResultMap.get(testCaseResult.getSubmissionId());
+                    if(submissionStatus!=null){
+                        testCaseResult.setMemory(submissionStatus.getMemory());
+                        testCaseResult.setTime(submissionStatus.getTime());
+                        testCaseResult.setStatus(submissionStatus.getStatus().getId() == 3);
+                        testCaseResult.setStatusCode(submissionStatus.getStatus().getId());
+                        if(submissionStatus.getStatus().getId() != 3){
+                            testCaseResult.setRemark(ChallengeUtility.getSubmissionStatusDescription(submissionStatus.getStatus().getId()));
+                        }
+                        testCaseResult.setActualOutput(submissionStatus.getStdout());
+                        testCaseResult.setStandardError(submissionStatus.getStderr());
+                    }
+                }
             }
-        };
+        }
+        return testCases;
     }
 
 }

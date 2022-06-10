@@ -3,6 +3,7 @@ package com.codework.service.impl;
 import com.codework.entity.*;
 import com.codework.enums.SubmissionStatus;
 import com.codework.model.ProblemDetails;
+import com.codework.model.TestCase;
 import com.codework.repository.ProblemRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.IChallengeInstanceService;
@@ -35,10 +36,9 @@ public class ProblemService implements IProblemService {
 
 	@Autowired
 	IChallengeInstanceService challengeInstanceService;
-	
-	
+
 	@Override
-	public Optional<ProblemDetails> getProblem(Long problemId) {
+	public Optional<ProblemDetails> getProblemDetails(Long problemId) {
 		Optional<Problem> problem = problemRepository.findById(problemId);
 		 if(problem.isPresent()) {
 			 ProblemDetails problemDetails = new ProblemDetails(problem.get());
@@ -48,6 +48,12 @@ public class ProblemService implements IProblemService {
 			 return Optional.of(problemDetails);
 		 }
 		 return Optional.empty();	
+	}
+
+	@Override
+	public Problem getProblem(Long problemId) {
+		Optional<Problem> problem = problemRepository.findById(problemId);
+		return problem.get();
 	}
 
 
@@ -66,7 +72,13 @@ public class ProblemService implements IProblemService {
 			languages = problemDetails.getLanguagesAllowed().stream().map(Language::getId).collect(Collectors.toList());
 		}
 		problem.setLanguagesAllowed(languages);
-		problem.setTestCases(problemDetails.getTestCases());
+		if(problemDetails.getTestCases()!=null){
+			long id = 0;
+			for(TestCase testCase : problemDetails.getTestCases()){
+				testCase.setId(id++);
+			}
+			problem.setTestCases(problemDetails.getTestCases());
+		}
 		problem.setChallengeInstanceId(problemDetails.getChallengeInstanceId());
 		problem.setMemoryLimit(problemDetails.getMemoryLimit());
 		problem.setCpuLimit(problemDetails.getCpuLimit());
@@ -101,6 +113,13 @@ public class ProblemService implements IProblemService {
 		problem.setType(problemDetails.getType());
 		if(problemDetails.getLanguagesAllowed()!=null) {
 			languages = problemDetails.getLanguagesAllowed().stream().map(Language::getId).collect(Collectors.toList());
+		}
+		if(problemDetails.getTestCases()!=null){
+			long id = 0;
+			for(TestCase testCase : problemDetails.getTestCases()){
+				testCase.setId(id++);
+			}
+			problem.setTestCases(problemDetails.getTestCases());
 		}
 		problem.setPointSystem(problemDetails.getPointSystem());
 		problem.setLanguagesAllowed(languages);

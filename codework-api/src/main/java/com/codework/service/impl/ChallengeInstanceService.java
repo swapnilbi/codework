@@ -6,6 +6,7 @@ import com.codework.entity.ChallengeSubscription;
 import com.codework.entity.Problem;
 import com.codework.enums.ChallengeInstanceStatus;
 import com.codework.enums.ChallengeSubscriptionStatus;
+import com.codework.enums.EvaluationStatus;
 import com.codework.enums.SubmissionStatus;
 import com.codework.exception.BusinessException;
 import com.codework.exception.SystemException;
@@ -17,8 +18,12 @@ import com.codework.repository.ChallengeSubscriptionRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.IChallengeInstanceService;
 import com.codework.service.IChallengeSubscriptionService;
+import com.codework.service.IProblemEvaluationService;
 import com.codework.service.IProblemSolutionService;
+import com.codework.task.ProblemEvaluationTask;
+import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -39,10 +44,16 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	ChallengeInstanceSubmissionRepository challengeInstanceSubmissionRepository;
 
 	@Autowired
+	IProblemEvaluationService problemEvaluationService;
+
+	@Autowired
 	ProblemService problemService;
 
 	@Autowired
 	SequenceGenerator sequenceGenerator;
+
+	@Autowired
+	private TaskExecutor executor;
 
 	@Override
 	public ChallengeInstanceSubmission startChallenge(Long challengeInstanceId, Long userId) throws BusinessException {
@@ -80,7 +91,7 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		validateChallengeStatus(challengeInstance);
 		ChallengeInstanceSubmission challengeInstanceSubmission = getChallengeInstanceSubmission(submitInput.getChallengeInstanceId(),userId).get();
 		if(challengeInstanceSubmission.getSubmissionStatus().equals(SubmissionStatus.SUBMITTED)){
-			throw new BusinessException("You have already submitted this challenge");
+			throw new BusinessException("Sorry! You have already submitted this challenge");
 		}
 		if(submitInput.getSolutionList()!=null){
 			for(ProblemSolutionInput solutionInput : submitInput.getSolutionList()){
@@ -91,6 +102,7 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		challengeInstanceSubmission.setSubmissionTime(new Date());
 		challengeInstanceSubmission.setSubmissionStatus(SubmissionStatus.SUBMITTED);
 		challengeInstanceSubmissionRepository.save(challengeInstanceSubmission);
+		executor.execute(new ProblemEvaluationTask(problemEvaluationService,challengeInstanceSubmission));
 		return challengeInstanceSubmission;
 	}
 

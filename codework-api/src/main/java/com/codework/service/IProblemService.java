@@ -9,13 +9,15 @@ import com.codework.model.ProblemDetails;
 
 public interface IProblemService {
 
-    Optional<ProblemDetails> getProblem(Long id);
+    Problem getProblem(Long id);
 
     Problem updateProblem(ProblemDetails problemDetails);
 
     List<Problem> getProblems(Long challengeInstanceId);
 
     List<ProblemDetails> getProblems(Long challengeId, Long userId);
+
+    Optional<ProblemDetails> getProblemDetails(Long problemId);
 
     Problem createProblem(ProblemDetails problem);
 

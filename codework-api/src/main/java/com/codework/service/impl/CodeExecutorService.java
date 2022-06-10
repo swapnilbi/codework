@@ -34,6 +34,8 @@ public class CodeExecutorService implements ICodeExecutorService {
 
     @Value("${judge0.apiKey}")
     private String judgeApiKey;
+
+    private final static String GET_SUBMISSION_STATUS_FIELDS = "stdin,expected_output,stdout,status_id,time,memory,stderr,token,compile_output,exit_code,message,status";
     
     private OkHttpClient getHttpClient() {
     	OkHttpClient client = new OkHttpClient();
@@ -51,9 +53,9 @@ public class CodeExecutorService implements ICodeExecutorService {
         System.out.println(new Gson().toJson(submissionRequest));
         RequestBody body = RequestBody.create(mediaType, new Gson().toJson(submissionRequest));
         Request request = new Request.Builder()
-            .url(judgeHostUrl+ "submissions?base64_encoded=true&fields=*&wait=true")
+            .url(judgeHostUrl+ "submissions?base64_encoded=true&wait=true&fields="+GET_SUBMISSION_STATUS_FIELDS)
             .post(body)
-            .addHeader("content-type", "application/json")
+                .addHeader("content-type", "application/json; charset=utf-8")
             .addHeader("x-rapidapi-host", judgeHost)
             .addHeader("x-rapidapi-key", judgeApiKey)
             .build();
@@ -74,7 +76,7 @@ public class CodeExecutorService implements ICodeExecutorService {
         Request request = new Request.Builder()
                 .url(judgeHostUrl+ "submissions/batch?base64_encoded=true&fields=*")
                 .post(body)
-                .addHeader("content-type", "application/json")
+                .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("x-rapidapi-host", judgeHost)
                 .addHeader("x-rapidapi-key", judgeApiKey)
                 .build();
@@ -90,10 +92,11 @@ public class CodeExecutorService implements ICodeExecutorService {
     @Override
     public SubmissionStatus getSubmissionStatus(String token) throws IOException {
         OkHttpClient client = getHttpClient();
+        String url = judgeHostUrl+ "submissions/"+token+"?base64_encoded=true&fields="+GET_SUBMISSION_STATUS_FIELDS;
         Request request = new Request.Builder()
-                .url(judgeHostUrl+ "submissions/"+token+"?base64_encoded=true&fields=*")
+                .url(url)
                 .get()
-                .addHeader("content-type", "application/json")
+                .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("x-rapidapi-host", judgeHost)
                 .addHeader("x-rapidapi-key", judgeApiKey)
                 .build();
@@ -109,10 +112,12 @@ public class CodeExecutorService implements ICodeExecutorService {
     public SubmissionBatchStatus getSubmissionBatchStatus(List<String> token) throws IOException {
         OkHttpClient client = getHttpClient();
         String tokens = token.stream().collect(Collectors.joining(","));
+        String url = judgeHostUrl+ "submissions/batch?tokens="+tokens+"&base64_encoded=true&fields="+GET_SUBMISSION_STATUS_FIELDS;
+        System.out.println(url);
         Request request = new Request.Builder()
-                .url(judgeHostUrl+ "submissions/batch?tokens="+tokens+"?base64_encoded=true&fields=*")
+                .url(url)
                 .get()
-                .addHeader("content-type", "application/json")
+                .addHeader("content-type", "application/json; charset=utf-8")
                 .addHeader("x-rapidapi-host", judgeHost)
                 .addHeader("x-rapidapi-key", judgeApiKey)
                 .build();

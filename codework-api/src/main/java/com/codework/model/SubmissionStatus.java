@@ -5,44 +5,23 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.ToString;
 
-import java.util.Base64;
-import java.util.Date;
-
 @ToString
 public class SubmissionStatus {
 
-    @SerializedName("source_code")
-    private String sourceCode;
-    @SerializedName("language_id")
-    private String languageId;
     private String stdin;
     @SerializedName("expected_output")
     private String expectedOutput;
     private String stdout;
     @SerializedName("status_id")
-    private String statusId;
-    @SerializedName("created_at")
-    private Date createdAt;
-    @SerializedName("finished_at")
-    private Date finishedAt;
+    private Integer statusId;
     private String time;
-    private String memory;
+    private Long memory;
     private String stderr;
     private String token;
-    @SerializedName("cpu_time_limit")
-    private Float cpuTimeLimit;
-    @SerializedName("memory_limit")
-    private Float memoryLimit;
-    @SerializedName("stack_limit")
-    private String stackLimit;
     @SerializedName("compile_output")
     private String compileOutput;
     @SerializedName("exit_code")
-    private String exitCode;
-    @SerializedName("exit_signal")
-    private String exitSignal;
-    @SerializedName("command_line_arguments")
-    private String commandLineArgument;
+    private Integer exitCode;
     private String message;
     private Status status;
 
@@ -51,22 +30,6 @@ public class SubmissionStatus {
         private Integer id;
         private String description;
     }
-
-	public String getSourceCode() {
-		return sourceCode;
-	}
-
-	public void setSourceCode(String sourceCode) {
-		this.sourceCode = sourceCode;
-	}
-
-	public String getLanguageId() {
-		return languageId;
-	}
-
-	public void setLanguageId(String languageId) {
-		this.languageId = languageId;
-	}
 
 	public String getStdin() {
 		return ChallengeUtility.decodeFromBase64(stdin);
@@ -85,35 +48,21 @@ public class SubmissionStatus {
 	}
 
 	public String getStdout() {
-		return ChallengeUtility.decodeFromBase64(stdout);
+		if(stdout!=null)
+			return ChallengeUtility.decodeFromBase64(stdout);
+		return null;
 	}
 
 	public void setStdout(String stdout) {
 		this.stdout = stdout;
 	}
 
-	public String getStatusId() {
+	public Integer getStatusId() {
 		return statusId;
 	}
 
-	public void setStatusId(String statusId) {
+	public void setStatusId(Integer statusId) {
 		this.statusId = statusId;
-	}
-
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public Date getFinishedAt() {
-		return finishedAt;
-	}
-
-	public void setFinishedAt(Date finishedAt) {
-		this.finishedAt = finishedAt;
 	}
 
 	public String getTime() {
@@ -124,11 +73,11 @@ public class SubmissionStatus {
 		this.time = time;
 	}
 
-	public String getMemory() {
+	public Long getMemory() {
 		return memory;
 	}
 
-	public void setMemory(String memory) {
+	public void setMemory(Long memory) {
 		this.memory = memory;
 	}
 
@@ -148,30 +97,6 @@ public class SubmissionStatus {
 		this.token = token;
 	}
 
-	public Float getCpuTimeLimit() {
-		return cpuTimeLimit;
-	}
-
-	public void setCpuTimeLimit(Float cpuTimeLimit) {
-		this.cpuTimeLimit = cpuTimeLimit;
-	}
-
-	public Float getMemoryLimit() {
-		return memoryLimit;
-	}
-
-	public void setMemoryLimit(Float memoryLimit) {
-		this.memoryLimit = memoryLimit;
-	}
-
-	public String getStackLimit() {
-		return stackLimit;
-	}
-
-	public void setStackLimit(String stackLimit) {
-		this.stackLimit = stackLimit;
-	}
-
 	public String getCompileOutput() {
 		return ChallengeUtility.decodeFromBase64(compileOutput);
 	}
@@ -180,28 +105,12 @@ public class SubmissionStatus {
 		this.compileOutput = compileOutput;
 	}
 
-	public String getExitCode() {
+	public Integer getExitCode() {
 		return exitCode;
 	}
 
-	public void setExitCode(String exitCode) {
+	public void setExitCode(Integer exitCode) {
 		this.exitCode = exitCode;
-	}
-
-	public String getExitSignal() {
-		return exitSignal;
-	}
-
-	public void setExitSignal(String exitSignal) {
-		this.exitSignal = exitSignal;
-	}
-
-	public String getCommandLineArgument() {
-		return commandLineArgument;
-	}
-
-	public void setCommandLineArgument(String commandLineArgument) {
-		this.commandLineArgument = commandLineArgument;
 	}
 
 	public String getMessage() {

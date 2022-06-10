@@ -9,10 +9,10 @@ import javax.validation.constraints.NotNull;
 public class ProblemPointSystem {
 	@NotNull
 	@Digits(fraction = 0, integer = 10)
-	private Float correctAnswer;
+	private Integer correctAnswer;
 	private Integer minNumberOfTc;
 	private boolean splitPointsByTc;
-	private Integer bestSolutionBonus; // execution time
-	private Integer quickSolutionBonus; // submission time
+	private Integer bestSolutionBonus; // execution time - TODO
+	private Integer quickSolutionBonus; // submission time - TODO
 
 }
