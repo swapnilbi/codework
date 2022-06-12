@@ -10,6 +10,7 @@ public class ProblemSolutionInput {
 	@NotNull
 	private Long problemId;
 	private Long challengeInstanceId;
+	private Long challengeInstanceSubmissionId;
 	@NotNull
 	private Integer languageId;
 	private String solution;

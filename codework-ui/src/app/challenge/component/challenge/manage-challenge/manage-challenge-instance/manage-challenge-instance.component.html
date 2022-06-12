@@ -33,14 +33,21 @@
             <span *ngIf="challengInstance.instanceStatus == 'CREATED'" class="badge badge-primary"> {{ challengInstance.instanceStatus}}</span>
             <span *ngIf="challengInstance.instanceStatus == 'EXPIRED'" class="badge badge-danger"> {{ challengInstance.instanceStatus}}</span>
          </td>          
-          <td>                         
-            <a *ngIf="true" (click)="manageProblems(challengInstance)"> <i class="fas fa-list" aria-hidden="true"></i></a> &nbsp;            
-            <a (click)="editChallengeInstance(challengInstance)" *ngIf="true"><i class='fas fa-edit'></i> </a> &nbsp;  
-            <a *ngIf="challengInstance.instanceStatus == 'CREATED'" (click)="deleteChallengeInstance(challengInstance)"><i class='fas fa-trash'></i></a> &nbsp;                         
-            <a (click)="startChallengeInstance(challengInstance)" *ngIf="challengInstance.instanceStatus == 'CREATED'"><i class='fas fa-play'></i></a> &nbsp; 
-            <a (click)="stopChallengeInstance(challengInstance)" *ngIf="challengInstance.instanceStatus == 'LIVE'"><i class='fas fa-stop'></i></a> &nbsp; 
-            <a *ngIf="challengInstance.instanceStatus == 'LIVE' || challengInstance.instanceStatus == 'EXPIRED'"><i class="fas fa-poll"></i></a> &nbsp;             
-            <a *ngIf="challengInstance.instanceStatus == 'LIVE' || challengInstance.instanceStatus == 'EXPIRED'"><i class='fas fa-trophy'></i></a>            
+          <td>       
+            
+            <div class="dropdown">
+              <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Action
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">                
+                <a (click)="editChallengeInstance(challengInstance)" class="dropdown-item" *ngIf="true"><i class='fas fa-edit'></i> Edit </a>
+                <a (click)="deleteChallengeInstance(challengInstance)" class="dropdown-item" *ngIf="challengInstance.instanceStatus == 'CREATED'"><i class='fas fa-trash'></i> &nbsp; Delete</a>
+                <a (click)="startChallengeInstance(challengInstance)" class="dropdown-item" *ngIf="challengInstance.instanceStatus == 'CREATED'"><i class='fas fa-play'></i>&nbsp; Start</a> 
+                <a (click)="stopChallengeInstance(challengInstance)" class="dropdown-item" *ngIf="challengInstance.instanceStatus == 'LIVE'"><i class='fas fa-stop'></i>&nbsp; Stop</a> 
+                <a (click)="manageProblems(challengInstance)" class="dropdown-item" *ngIf="true"> <i class="fas fa-list" aria-hidden="true"></i> &nbsp;Problems </a>                                 
+                <a (click)="evaluateChallengeInstance(challengInstance)" class="dropdown-item" *ngIf="challengInstance.instanceStatus == 'LIVE' || challengInstance.instanceStatus == 'EXPIRED'"><i class="fas fa-poll"></i>&nbsp; Evaluate</a>                      
+              </div>
+            </div>                        
           </td>          
         </tr>
         </tbody>

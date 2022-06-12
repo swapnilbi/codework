@@ -4,6 +4,7 @@ import com.codework.entity.Language;
 import com.codework.entity.Problem;
 import com.codework.model.ProblemDetails;
 import com.codework.model.Response;
+import com.codework.service.ILanguageService;
 import com.codework.service.IProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +21,9 @@ public class ProblemController {
 
 	@Autowired
 	IProblemService problemService;
+
+	@Autowired
+	ILanguageService languageService;
 
 	/**
 	 * Creates new problem
@@ -60,7 +64,7 @@ public class ProblemController {
 
 	@GetMapping("languages")
 	public Response<List<Language>> getLanguages() {
-		return new Response<>(problemService.getLanguages());
+		return new Response<>(languageService.getLanguages());
 	}
 
 

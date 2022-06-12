@@ -120,6 +120,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
             if(problemSolutionInput.isSubmitted()){
                 problemSolution.setSubmittedAt(new Date());
             }
+            problemSolution.setChallengeInstanceSubmissionId(problemSolutionInput.getChallengeInstanceSubmissionId());
             problemSolution.setChallengeInstanceId(problemSolutionInput.getChallengeInstanceId());
             problemSolution.setSubmitted(problemSolutionInput.isSubmitted());
             problemSolution.setSolution(problemSolutionInput.getSolution());
@@ -250,6 +251,16 @@ public class ProblemSolutionService implements IProblemSolutionService {
     @Override
     public List<ProblemSolution> getProblemSolutions(Long userId, Long challengeInstanceId) {
         return problemSolutionRepository.findByUserIdAndChallengeInstanceId(userId,challengeInstanceId);
+    }
+
+    @Override
+    public ProblemSolution getProblemSolution(Long problemSolutionId) {
+        return problemSolutionRepository.findById(problemSolutionId).get();
+    }
+
+    @Override
+    public List<ProblemSolution> getProblemSolutions(Long challengeInstanceSubmissionId) {
+        return problemSolutionRepository.findByChallengeInstanceSubmissionId(challengeInstanceSubmissionId);
     }
 
     @Override

@@ -85,6 +85,7 @@ public class ProblemEvaluationService implements IProblemEvaluationService {
                     testCaseResult.setId(problem.getTestCases().get(i).getId());
                     testCaseResult.setSubmissionId(submissionResults.get(i).getToken());
                     testCaseResult.setRemark(submissionResults.get(i).getError());
+                    testCaseResult.setExpectedOutput(problem.getTestCases().get(i).getExpectedOutput());
                     testCaseResults.add(testCaseResult);
                 }
                 problemSolution.setTestCaseResults(testCaseResults);

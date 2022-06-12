@@ -20,9 +20,9 @@ public class ProblemSolution {
 
 	@Id
 	private long id;
-
 	private Long problemId;
 	private Long challengeInstanceId;
+	private Long challengeInstanceSubmissionId;
 	private Integer languageId;
 	private Long userId;
 	private String solution;

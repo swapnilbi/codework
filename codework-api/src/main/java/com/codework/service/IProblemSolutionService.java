@@ -28,7 +28,11 @@ public interface IProblemSolutionService {
 
     Optional<ProblemSolution> getProblemSolution(Long userId, Long problemId);
 
-    List<ProblemSolution> getProblemSolutions(Long userId, Long challengeInstanceId);
+    List<ProblemSolution> getProblemSolutions(Long userId, Long challengeInstanceId); // TODO remove
+
+    ProblemSolution getProblemSolution(Long problemSolutionId);
+
+    List<ProblemSolution> getProblemSolutions(Long challengeInstanceSubmissionId);
 
     List<ProblemSolution> getProblemSolutions(EvaluationStatus evaluationStatus);
 

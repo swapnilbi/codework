@@ -23,9 +23,16 @@
             {{ problem.name }}
           </td>
           <td>{{ problem.type}}</td>                             
-          <td>                         
-            <a (click)="editProblem(problem)" *ngIf="true"> <i class='fas fa-edit'></i> </a> &nbsp;  
-            <a (click)="deleteProblem(problem)" *ngIf="true"><i class='fas fa-trash'></i></a> &nbsp;                         
+          <td>                                     
+            <div class="dropdown">
+              <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Action
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">                
+                <a (click)="editProblem(problem)"  class="dropdown-item" *ngIf="true"> <i class='fas fa-edit'></i> &nbsp; Edit </a>
+                <a (click)="deleteProblem(problem)"  class="dropdown-item" *ngIf="true"><i class='fas fa-trash'></i> &nbsp; Delete </a>
+              </div>
+            </div>                        
           </td>          
         </tr>
         </tbody>

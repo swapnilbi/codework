@@ -83,7 +83,7 @@ export class CodeEditorComponent implements OnInit {
     }    
   }
 
-  @Input() set liveChallenge(liveChallenge: LiveChallenge) {   
+  @Input() set liveChallenge(liveChallenge: LiveChallenge) {       
     this.challenge = liveChallenge.challengeDetails;
     this.challengeInstance = liveChallenge.challengeInstance;
     this.userSubmission = liveChallenge.challengeInstanceSubmission;
@@ -152,6 +152,7 @@ export class CodeEditorComponent implements OnInit {
       let challengeSolution: ProblemSolution = {
           challengeId : this.challenge.id,
           challengeInstanceId : this.challengeInstance?.id,
+          challengeInstanceSubmissionId : this.userSubmission?.id,
           languageId : this.getLanguage()?.id,
           problemId : this.selectedProblem.id,
           customInput : this.customInput,

@@ -9,8 +9,7 @@ import { LoaderService } from '../../../../common/component/common/loader/loader
 
 @Component({
   selector: 'app-manage-challenge',
-  templateUrl: './manage-challenge.component.html',
-  styleUrls: ['./manage-challenge.component.scss']
+  templateUrl: './manage-challenge.component.html'  
 })
 export class ManageChallengeComponent implements OnInit {
   

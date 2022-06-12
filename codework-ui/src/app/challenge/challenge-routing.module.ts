@@ -10,6 +10,7 @@ import { CreateProblemComponent } from './component/challenge/manage-challenge/c
 import { CreateChallengeInstanceComponent } from './component/challenge/manage-challenge/create-challenge-instance/create-challenge-instance.component';
 import { CreateChallengeComponent } from './component/challenge/manage-challenge/create-challenge/create-challenge.component';
 import { ChallengeComponent } from './challenge.component';
+import { EvaluateChallengeInstanceComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/evaluate-challenge-instance.component';
 
 const routes: Routes = [  
   {
@@ -43,6 +44,10 @@ const routes: Routes = [
           {
             path : "challenge/instance/:instanceId/edit",
             component : CreateChallengeInstanceComponent
+          },
+          {
+            path : "challenge/instance/:instanceId/evaluate",
+            component : EvaluateChallengeInstanceComponent
           },  
           {
             path : "challenge/instance/:id/problem/manage",

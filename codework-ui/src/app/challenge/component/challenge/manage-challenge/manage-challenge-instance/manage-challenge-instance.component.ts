@@ -9,8 +9,7 @@ import { ChallengInstanceService } from '../../../../service/challenge-instance.
 
 @Component({
   selector: 'app-manage-challenge-instance',
-  templateUrl: './manage-challenge-instance.component.html',
-  styleUrls: ['./manage-challenge-instance.component.scss']
+  templateUrl: './manage-challenge-instance.component.html'
 })
 export class ManageChallengeInstanceComponent implements OnInit {
 
@@ -35,6 +34,11 @@ export class ManageChallengeInstanceComponent implements OnInit {
     this.challengeInstanceService.getChallengeInstanceList(this.challengeId).subscribe(response => {
       this.challengInstanceList = response;
     })
+  }
+
+  evaluateChallengeInstance(challengeInstance : ChallengeInstance){
+    var url = 'challenge/instance/'+challengeInstance.id+'/evaluate';
+    this.router.navigateByUrl(url);
   }
 
   editChallengeInstance(challengeInstance : ChallengeInstance){

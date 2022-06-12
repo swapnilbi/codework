@@ -8,8 +8,7 @@ import { ChallengInstanceService } from 'src/app/challenge/service/challenge-ins
 
 @Component({
   selector: 'app-create-challenge-instance',
-  templateUrl: './create-challenge-instance.component.html',
-  styleUrls: ['./create-challenge-instance.component.scss']
+  templateUrl: './create-challenge-instance.component.html'  
 })
 export class CreateChallengeInstanceComponent implements OnInit {
 

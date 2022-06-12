@@ -20,5 +20,7 @@ export interface TestCaseResult{
     memory : number,
     remark? : string,
     expectedOutput? : string,
+    standardError? : string,
+    statusCode? : number,
     actualOutput? : string,    
 }

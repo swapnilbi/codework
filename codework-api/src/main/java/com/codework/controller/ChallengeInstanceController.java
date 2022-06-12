@@ -1,8 +1,11 @@
 package com.codework.controller;
 
 import com.codework.entity.ChallengeInstance;
+import com.codework.entity.ProblemSolution;
 import com.codework.exception.SystemException;
+import com.codework.model.EvaluateProblem;
 import com.codework.model.Response;
+import com.codework.model.UserSubmission;
 import com.codework.service.IChallengeInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,6 +61,37 @@ public class ChallengeInstanceController {
 	public Response<ChallengeInstance> startChallengeInstance(@PathVariable Long challengeInstanceId) {
 		return new Response<>(challengeInstanceService.startChallengeInstance(challengeInstanceId));
 	}
+
+	/**
+	 * view submissions
+	 * @param challengeInstanceId
+	 * @return ChallengeInstance
+	 */
+	@GetMapping("/instance/{challengeInstanceId}/submissions")
+	public Response<List<UserSubmission>> getChallengeInstanceSubmission(@PathVariable Long challengeInstanceId) {
+		return new Response<>(challengeInstanceService.getChallengeInstanceSubmissions(challengeInstanceId));
+	}
+
+	/**
+	 * get problems associated with submission
+	 * @param challengeInstanceSubmissionId
+	 * @return ChallengeInstance
+	 */
+	@GetMapping("/instance/submission/{challengeInstanceSubmissionId}/problems")
+	public Response<List<EvaluateProblem>> getSubmittedProblems(@PathVariable Long challengeInstanceSubmissionId) {
+		return new Response<>(challengeInstanceService.getSubmittedProblems(challengeInstanceSubmissionId));
+	}
+
+	/**
+	 * update problem solution
+	 * @param problemSolution
+	 * @return ChallengeInstance
+	 */
+	@PostMapping("/instance/submission/problem/{problemSubmissionId}")
+	public Response<EvaluateProblem> updateProblemSolution(@RequestBody ProblemSolution problemSolution) {
+		return new Response<>(challengeInstanceService.updateProblemSolution(problemSolution));
+	}
+
 
 	/**
 	 * start challenge instance

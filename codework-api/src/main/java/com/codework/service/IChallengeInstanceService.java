@@ -2,10 +2,12 @@ package com.codework.service;
 
 import com.codework.entity.ChallengeInstance;
 import com.codework.entity.ChallengeInstanceSubmission;
-import com.codework.entity.ChallengeSubscription;
+import com.codework.entity.ProblemSolution;
 import com.codework.exception.BusinessException;
 import com.codework.exception.SystemException;
 import com.codework.model.ChallengeSubmitInput;
+import com.codework.model.EvaluateProblem;
+import com.codework.model.UserSubmission;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,4 +35,10 @@ public interface IChallengeInstanceService {
     ChallengeInstance stopChallengeInstance(Long instanceId);
 
     void deleteChallengeInstance(Long challengeInstanceId);
+
+    List<UserSubmission> getChallengeInstanceSubmissions(Long challengeInstanceId);
+
+    List<EvaluateProblem> getSubmittedProblems(Long challengeInstanceSubmissionId);
+
+    EvaluateProblem updateProblemSolution(ProblemSolution problemSolution);
 }

@@ -8,6 +8,7 @@ import java.util.List;
 public class ChallengeSubmitInput {
 
 	private Long challengeInstanceId;
+	private Long challengeInstanceSubmissionId;
 	private List<ProblemSolutionInput> solutionList;
 
 }

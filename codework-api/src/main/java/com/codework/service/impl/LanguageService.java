@@ -1,16 +1,15 @@
 package com.codework.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.codework.entity.Language;
 import com.codework.model.LanguageBatch;
 import com.codework.repository.LanguageRepository;
 import com.codework.service.ILanguageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LanguageService implements ILanguageService {
@@ -51,6 +50,11 @@ public class LanguageService implements ILanguageService {
 		}
 		languageList = languageRepository.findAll();
 		return new ArrayList<>(languageList);
+	}
+
+	@Override
+	public List<Language> getLanguages() {
+		return getActiveLanguages();
 	}
 
 	@Override

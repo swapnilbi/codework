@@ -3,8 +3,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-html-preview',
-  templateUrl: './html-preview.component.html',
-  styleUrls: ['./html-preview.component.scss']
+  templateUrl: './html-preview.component.html'  
 })
 export class HtmlPreviewComponent implements OnInit {
 

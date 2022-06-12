@@ -11,8 +11,7 @@ import { HtmlPreviewComponent } from '../html-preview/html-preview.component';
 
 @Component({
   selector: 'app-create-problem',
-  templateUrl: './create-problem.component.html',
-  styleUrls: ['./create-problem.component.scss']
+  templateUrl: './create-problem.component.html'  
 })
 export class CreateProblemComponent implements OnInit {
 

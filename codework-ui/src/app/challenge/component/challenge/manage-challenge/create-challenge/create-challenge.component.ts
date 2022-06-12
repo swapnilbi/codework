@@ -10,8 +10,7 @@ import { HtmlPreviewComponent } from '../html-preview/html-preview.component';
 
 @Component({
   selector: 'app-create-challenge',
-  templateUrl: './create-challenge.component.html',
-  styleUrls: ['./create-challenge.component.scss']
+  templateUrl: './create-challenge.component.html'
 })
 export class CreateChallengeComponent implements OnInit {
 

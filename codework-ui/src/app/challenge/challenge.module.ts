@@ -19,7 +19,6 @@ import { LiveChallengeComponent } from './component/challenge/live-challenge/liv
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AgGridModule } from 'ag-grid-angular';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularSplitModule } from 'angular-split';
@@ -32,6 +31,8 @@ import { AppCommonModule } from '../common/common.module';
 import { ChallengeComponent } from './challenge.component';
 import { CommonModule } from '@angular/common';
 import { HtmlPreviewComponent } from './component/challenge/manage-challenge/html-preview/html-preview.component';
+import { EvaluateChallengeInstanceComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/evaluate-challenge-instance.component';
+import { ViewSubmissionComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/view-submission/view-submission.component';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -56,7 +57,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ManageProblemComponent, 
     CreateProblemComponent, 
     CreateChallengeInstanceComponent, 
-    CreateChallengeComponent, HtmlPreviewComponent        
+    CreateChallengeComponent, 
+    HtmlPreviewComponent, 
+    EvaluateChallengeInstanceComponent, ViewSubmissionComponent        
   ],
   imports: [    
     CommonModule,

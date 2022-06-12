@@ -9,8 +9,7 @@ import { LiveChallengeService } from '../../../service/live-challenge.service';
 
 @Component({
   selector: 'free-text-editor',
-  templateUrl: './free-text-editor.component.html',
-  styleUrls: ['./free-text-editor.component.scss']
+  templateUrl: './free-text-editor.component.html'
 })
 export class FreeTextEditorComponent implements OnInit {
 

@@ -33,13 +33,18 @@
             <span *ngIf="challenge.status == 'SCHEDULED'" class="badge badge-primary"> {{ challenge.status}}</span>
             <span *ngIf="challenge.status == 'EXPIRED'" class="badge badge-danger"> {{ challenge.status}}</span>
          </td>          
-          <td>             
-            <a *ngIf="true" (click)="viewChallengeInstance(challenge)"> <i class="fas fa-list" aria-hidden="true"></i></a> &nbsp;            
-            <a *ngIf="true" (click)="editChallenge(challenge)"> <i class='fas fa-edit'></i> </a> &nbsp;  
-            <!--<a *ngIf="challenge.status == 'SCHEDULED'" (click)="deleteChallenge(challenge)"><i class='fas fa-trash'></i></a> &nbsp; -->
-            <a *ngIf="challenge.status == 'SCHEDULED'" (click)="publishChallenge(challenge)"><i class='fas fa-play'></i></a> &nbsp;             
-            <a *ngIf="challenge.status == 'LIVE'" (click)="stopChallenge(challenge)"><i class='fas fa-stop'></i></a> &nbsp;             
-            <a *ngIf="challenge.status == 'LIVE' || challenge.status == 'EXPIRED'"><i class='fas fa-trophy'></i></a>                        
+          <td>                                
+            <div class="dropdown">
+              <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Action
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a *ngIf="true" class="dropdown-item" (click)="editChallenge(challenge)"><i class='fas fa-edit'></i> &nbsp; Edit</a>
+                <a *ngIf="challenge.status == 'SCHEDULED'" (click)="publishChallenge(challenge)" class="dropdown-item"><i class='fas fa-play'></i> &nbsp; Publish</a>
+                <a *ngIf="challenge.status == 'LIVE'" (click)="stopChallenge(challenge)" class="dropdown-item"><i class='fas fa-stop'></i> &nbsp; Stop</a>                
+                <a *ngIf="true" class="dropdown-item" (click)="viewChallengeInstance(challenge)"><i class="fas fa-list" aria-hidden="true"></i> &nbsp; Challenge Instances</a>                                
+              </div>
+            </div>                                       
           </td>          
         </tr>
         </tbody>

@@ -23,7 +23,5 @@ public interface IProblemService {
 
     void deleteProblem(Long problemId);
 
-    List<Language> getLanguages();
-
     void deleteProblems(List<Long> problemIds);
 }

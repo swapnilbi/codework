@@ -114,6 +114,7 @@ export class LiveChallengeComponent implements OnInit {
       }
       let solutions : ChallengeSubmitInput = {
         challengeInstanceId : this.liveChallenge?.challengeInstance?.id,
+        challengeInstanceSubmissionId : this.liveChallenge?.challengeInstanceSubmission?.id,
         solutionList : [challengeSolution]
       }
       return solutions;
@@ -138,6 +139,7 @@ export class LiveChallengeComponent implements OnInit {
       if (result.isConfirmed) {        
         let challengeSolution : ChallengeSubmitInput = {
           challengeInstanceId : this.liveChallenge?.challengeInstance?.id,
+          challengeInstanceSubmissionId : this.liveChallenge?.challengeInstanceSubmission?.id,
           solutionList : [solution]
         }        
         console.log(challengeSolution);

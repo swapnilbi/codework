@@ -17,5 +17,7 @@ public interface ILanguageService {
 
     List<Language> getActiveLanguages();
 
-	List<Language> getLanguages(List<Integer> languages);
+    List<Language> getLanguages();
+
+    List<Language> getLanguages(List<Integer> languages);
 }

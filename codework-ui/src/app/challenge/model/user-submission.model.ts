@@ -1,5 +1,7 @@
+import { UserProfile } from 'src/app/user/model/user-profile.model';
+
 export interface UserSubmission {
-    id? : number,
+    id : number,
     challengeId : number,
     challengeInstanceId : number,
     problem : string,
@@ -8,7 +10,11 @@ export interface UserSubmission {
     startTime? : Date,
     endTime? : Date
     submissionStatus : SubmissionStatus,
-    submittedTime? : Date | null
+    submittedTime? : Date | null,
+    evaluationStatus? : EvaluationStatus,
+	userDetails? : UserProfile,
+	totalPoints? : number,
+	timeTaken? : number
 }
 
 
@@ -18,4 +24,12 @@ export enum SubmissionStatus {
     IN_PROGRESS = "IN_PROGRESS",
     SUBMITTED = "SUBMITTED",
     EXPIRED = "EXPIRED"
+}
+
+
+export enum EvaluationStatus {
+    NOT_STARTED = "NOT_STARTED",
+    COMPLETED = "COMPLETED",
+    IN_PROGRESS = "IN_PROGRESS",
+    FAILED = "FAILED"
 }

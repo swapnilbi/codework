@@ -9,8 +9,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage-problem',
-  templateUrl: './manage-problem.component.html',
-  styleUrls: ['./manage-problem.component.scss']
+  templateUrl: './manage-problem.component.html'
 })
 export class ManageProblemComponent implements OnInit {
 

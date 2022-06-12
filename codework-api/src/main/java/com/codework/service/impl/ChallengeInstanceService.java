@@ -1,31 +1,24 @@
 package com.codework.service.impl;
 
-import com.codework.entity.ChallengeInstance;
-import com.codework.entity.ChallengeInstanceSubmission;
-import com.codework.entity.ChallengeSubscription;
-import com.codework.entity.Problem;
+import com.codework.entity.*;
 import com.codework.enums.ChallengeInstanceStatus;
-import com.codework.enums.ChallengeSubscriptionStatus;
 import com.codework.enums.EvaluationStatus;
+import com.codework.enums.SolutionResult;
 import com.codework.enums.SubmissionStatus;
 import com.codework.exception.BusinessException;
 import com.codework.exception.SystemException;
-import com.codework.model.ChallengeSubmitInput;
-import com.codework.model.ProblemSolutionInput;
+import com.codework.model.*;
 import com.codework.repository.ChallengeInstanceRepository;
 import com.codework.repository.ChallengeInstanceSubmissionRepository;
-import com.codework.repository.ChallengeSubscriptionRepository;
 import com.codework.repository.SequenceGenerator;
-import com.codework.service.IChallengeInstanceService;
-import com.codework.service.IChallengeSubscriptionService;
-import com.codework.service.IProblemEvaluationService;
-import com.codework.service.IProblemSolutionService;
+import com.codework.service.*;
 import com.codework.task.ProblemEvaluationTask;
-import org.apache.catalina.core.ApplicationContext;
+import org.apache.commons.codec.language.bm.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -41,13 +34,19 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	ChallengeInstanceRepository challengeInstanceRepository;
 
 	@Autowired
+	UserService userService;
+
+	@Autowired
 	ChallengeInstanceSubmissionRepository challengeInstanceSubmissionRepository;
 
 	@Autowired
 	IProblemEvaluationService problemEvaluationService;
 
 	@Autowired
-	ProblemService problemService;
+	IProblemService problemService;
+
+	@Autowired
+	ILanguageService languageService;
 
 	@Autowired
 	SequenceGenerator sequenceGenerator;
@@ -96,11 +95,14 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		if(submitInput.getSolutionList()!=null){
 			for(ProblemSolutionInput solutionInput : submitInput.getSolutionList()){
 				solutionInput.setSubmitted(true);
+				solutionInput.setChallengeInstanceId(submitInput.getChallengeInstanceId());
+				solutionInput.setChallengeInstanceSubmissionId(submitInput.getChallengeInstanceSubmissionId());
 				problemSolutionService.saveSolution(solutionInput,userId);
 			}
 		}
 		challengeInstanceSubmission.setSubmissionTime(new Date());
 		challengeInstanceSubmission.setSubmissionStatus(SubmissionStatus.SUBMITTED);
+		challengeInstanceSubmission.setTimeTaken(challengeInstanceSubmission.getSubmissionTime().getTime()- challengeInstanceSubmission.getStartTime().getTime());
 		challengeInstanceSubmissionRepository.save(challengeInstanceSubmission);
 		executor.execute(new ProblemEvaluationTask(problemEvaluationService,challengeInstanceSubmission));
 		return challengeInstanceSubmission;
@@ -163,6 +165,80 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 			problemService.deleteProblems(problemList.stream().map(t-> t.getId()).collect(Collectors.toList()));
 		}
 		challengeInstanceRepository.deleteById(challengeInstanceId);
+	}
+
+	@Override
+	public List<UserSubmission> getChallengeInstanceSubmissions(Long challengeInstanceId) {
+		List<UserSubmission> submissionList = new ArrayList<>();
+		List<ChallengeInstanceSubmission> challengeInstanceSubmissions = challengeInstanceSubmissionRepository.findByChallengeInstanceIdAndSubmissionStatus(challengeInstanceId, SubmissionStatus.SUBMITTED);
+		if (challengeInstanceSubmissions != null) {
+			for (ChallengeInstanceSubmission challengeInstanceSubmission : challengeInstanceSubmissions) {
+				UserSubmission submissionDetails = new UserSubmission(challengeInstanceSubmission);
+				List<ProblemSolution> problemSolutions = problemSolutionService.getProblemSolutions(challengeInstanceSubmission.getUserId(),challengeInstanceSubmission.getChallengeInstanceId());
+				EvaluationStatus evaluationStatus = EvaluationStatus.IN_PROGRESS;
+				if(problemSolutions !=null){
+					List<ProblemSolution> completedSolutionsList = problemSolutions.stream().filter(t-> EvaluationStatus.COMPLETED.equals(t.getEvaluationStatus())).collect(Collectors.toList());
+					Double totalPoints = completedSolutionsList.stream().mapToDouble(t-> t.getPoints()).sum();
+					submissionDetails.setTotalPoints(totalPoints);
+					if(completedSolutionsList.size()==problemSolutions.size()){
+						evaluationStatus = EvaluationStatus.COMPLETED;
+					}
+					submissionDetails.setEvaluationStatus(evaluationStatus);
+				}
+				User user = userService.getUserById(challengeInstanceSubmission.getUserId()).get();
+				UserProfile userProfile = new UserProfile();
+				userProfile.setFullName(user.getFullName());
+				userProfile.setGender(userProfile.getGender());
+				submissionDetails.setUserDetails(userProfile);
+				submissionList.add(submissionDetails);
+			}
+		}
+		return submissionList;
+	}
+
+	@Override
+	public List<EvaluateProblem> getSubmittedProblems(Long challengeInstanceSubmissionId) {
+		List<EvaluateProblem> evaluateProblems = new ArrayList<>();
+		List<ProblemSolution> problemSolutionList = problemSolutionService.getProblemSolutions(challengeInstanceSubmissionId);
+		if(problemSolutionList!=null){
+			for(ProblemSolution problemSolution: problemSolutionList){
+				evaluateProblems.add(getEvaluateProblem(problemSolution));
+			}
+		}
+		return evaluateProblems;
+	}
+
+	private EvaluateProblem getEvaluateProblem(ProblemSolution problemSolution){
+		EvaluateProblem evaluateProblem = new EvaluateProblem();
+		evaluateProblem.setProblemSolution(problemSolution);
+		Problem problem = problemService.getProblem(problemSolution.getProblemId());
+		evaluateProblem.setName(problem.getName());
+		evaluateProblem.setType(problem.getType());
+		if(problemSolution.getLanguageId()!=null){
+			Language language = languageService.getLanguage(problemSolution.getLanguageId());
+			evaluateProblem.setLanguage(language);
+		}
+		return evaluateProblem;
+	}
+
+	@Override
+	public EvaluateProblem updateProblemSolution(ProblemSolution problemSolutionInput) {
+		ProblemSolution problemSolution = problemSolutionService.getProblemSolution(problemSolutionInput.getId());
+		problemSolution.setEvaluationStatus(problemSolutionInput.getEvaluationStatus());
+		if(EvaluationStatus.IN_PROGRESS.equals(problemSolutionInput.getEvaluationStatus())){
+			problemSolution.setEvaluationRemarks(null);
+			problemSolution.setSolutionResult(null);
+		}else{
+			problemSolution.setEvaluationRemarks(problemSolutionInput.getEvaluationRemarks());
+			problemSolution.setSolutionResult(problemSolutionInput.getSolutionResult());
+		}
+		if(SolutionResult.FAIL.equals(problemSolutionInput.getSolutionResult())){
+			problemSolution.setPoints(0f);
+		}else{
+			problemSolution.setPoints(problemSolutionInput.getPoints());
+		}
+		problemSolutionService.updateSolution(problemSolution);
+		return getEvaluateProblem(problemSolution);
 	}
 
 }

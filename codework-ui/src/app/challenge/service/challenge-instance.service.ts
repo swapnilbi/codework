@@ -6,6 +6,9 @@ import { AppConfig } from 'src/app/common/app.config';
 import { HttpHelper } from 'src/app/common/utility/utility';
 import { ChallengeInstance } from 'src/app/challenge/model/challenge-instance.model';
 import { Response } from 'src/app/challenge/model/response.model';
+import { UserSubmission } from '../model/user-submission.model';
+import { EvaluateProblem } from '../model/evaluate-problem.model';
+import { ProblemSolution } from '../model/problem-solution.model';
 
 @Injectable({
   providedIn: 'root'
@@ -101,6 +104,48 @@ export class ChallengInstanceService {
     }     
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.STOP_CHALLENGE_INTANCE_URL,queryParams);
     return this.httpClient.get<Response<ChallengeInstance>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public getChallengeInstanceSubmissions(challengeInstanceId : number): Observable<Array<UserSubmission>>{        
+    let queryParams: any = {
+      'challengeInstanceId' : challengeInstanceId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_CHALLENGE_INTANCE_SUBMISSIONS_URL,queryParams);
+    return this.httpClient.get<Response<Array<UserSubmission>>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public getSubmittedProblems(challengeInstanceSubmissionId : number): Observable<Array<EvaluateProblem>>{        
+    let queryParams: any = {
+      'challengeInstanceSubmissionId' : challengeInstanceSubmissionId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_SUBMITTED_PROBLEMS_URL,queryParams);
+    return this.httpClient.get<Response<Array<EvaluateProblem>>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public updateProblemSolution(problemSolution : ProblemSolution): Observable<UserSubmission>{        
+    let queryParams: any = {
+      'problemSubmissionId' : problemSolution.id
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.UPDATE_PROBLEM_SUBMISSION_URL,queryParams);
+    return this.httpClient.post<Response<UserSubmission>>(serviceUrl,problemSolution)
     .pipe(
       map((data) => {
         return data.data;

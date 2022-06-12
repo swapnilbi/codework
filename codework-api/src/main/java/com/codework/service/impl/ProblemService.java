@@ -95,11 +95,6 @@ public class ProblemService implements IProblemService {
 	}
 
 	@Override
-	public List<Language> getLanguages() {
-		return languageService.getActiveLanguages();
-	}
-
-	@Override
 	public void deleteProblems(List<Long> problemIds) {
 		problemRepository.deleteAllById(problemIds);
 	}

@@ -1,0 +1,135 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<h6 class="font-weight-bold">Submissions</h6>
+		<button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="onCancel()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+	</div>
+	<div class="modal-body">        
+        <div class="form-group" [formGroup]="evaluationForm" *ngIf="selectedProblem">            
+            
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="problemStatement">Problem</label>
+                    <select (change)="onProblemChange($event)" [(ngModel)]="selectedProblem" [ngModelOptions]="{standalone: true}" class="form-control" id="type">
+                        <option *ngFor="let submittedProblem of submittedProblems" [ngValue]="submittedProblem">
+                            {{ submittedProblem.name }}
+                        </option>                        
+                    </select>                       
+                </div>                
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="problemStatement">Name </label>
+                    <input formControlName="name" readonly type="text" class="form-control">                    
+                </div>
+                <div class="form-group col-md-3">                        
+                    <label for="inputEmail4">Type</label>
+                    <input formControlName="type" readonly type="text" class="form-control">                    
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="problemStatement">Time Taken (Min) </label>
+                    <input formControlName="timeTaken" readonly type="text" class="form-control">                    
+                </div>                
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="problemStatement">Solution </label>                    
+                    <ngx-monaco-editor                                  
+                        *ngIf="selectedProblem.type == 'PROGRAM'"          
+                        style="height: 300px"
+                        [options]="editorOptions"  
+                        formControlName="solution"                          
+                  ></ngx-monaco-editor>
+                  <textarea *ngIf="selectedProblem.type != 'PROGRAM'"  formControlName="solution" class="form-control" rows="5"></textarea>      
+                </div>                
+            </div>
+        
+            <div class="form-row" *ngIf="selectedProblem.type == 'PROGRAM' && selectedProblem.problemSolution.evaluationStatus == 'COMPLETED'">
+                <div class="form-group col-md-6">
+                    <label for="problemStatement">Avg Execution Time </label>
+                    <input formControlName="avgExecutionTime" readonly type="text" class="form-control">                    
+                </div>                
+            </div>
+
+            <button *ngIf="selectedProblem.type == 'PROGRAM' && selectedProblem.problemSolution.evaluationStatus == 'COMPLETED'" class="btn btn-primary btn-sm mb-3" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" type="button"> Test Results</button>
+
+            <div *ngIf="selectedProblem.type == 'PROGRAM' && selectedProblem.problemSolution" class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <table class="table table-sm small">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Status Code</th>
+                            <th scope="col">Expected Output</th>
+                            <th scope="col">Actual Output</th>
+                            <th scope="col">Execution Time (Sec)</th>
+                            <th scope="col">Memory Consumed (KB)</th>                            
+                            <th scope="col">Remark</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr  *ngFor="let testResult of selectedProblem.problemSolution.testCaseResults; let i = index">
+                            <th scope="row">{{i+1}}</th>
+                            <td>
+                                <span *ngIf="testResult.status" class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Pass </span>        
+                                <span *ngIf="!testResult.status" class="text-danger"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> Fail </span>        
+                            </td>
+                            <td> {{testResult.statusCode}} </td>
+                            <td> {{testResult.expectedOutput}} </td>
+                            <td> {{testResult.actualOutput}} </td>
+                            <td> {{testResult.time}} </td>
+                            <td> {{testResult.memory}} </td>                            
+                            <td> {{testResult.remark}} </td>                            
+                          </tr>                          
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="problemStatement">Evaluation Status </label>
+                    <select formControlName="evaluationStatus" class="form-control" id="type">
+                        <option *ngFor="let evaluationStatus of evaluationStatusList" [ngValue]="evaluationStatus">
+                            {{ evaluationStatus }}
+                        </option>                        
+                    </select>
+                </div>
+                <div class="form-group col-md-3">                        
+                    <label for="inputEmail4">Result</label>
+                    <select formControlName="solutionResult" class="form-control" id="type">
+                        <option *ngFor="let result of resultList" [ngValue]="result">
+                            {{ result }}
+                        </option>                        
+                    </select>                    
+                </div>
+                <div class="form-group col-md-3">                        
+                    <label for="inputEmail4">Points</label>
+                    <input formControlName="points" type="text" class="form-control">                    
+                </div>                
+            </div>
+
+            <div class="form-row">                
+                <div class="form-group col-md-6">
+                    <label for="problemStatement">Remarks </label>
+                    <input formControlName="evaluationRemarks" type="text" class="form-control">                    
+                </div>                
+            </div>
+
+        </div>                    
+	</div>
+
+  <div class="modal-footer">        
+    <button [disabled]="!evaluationForm.valid" (click)="evaluateChallenge(evaluationForm.value)" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Save</button>        
+    <button type="button" class="btn btn-secondary" (click)="onCancel()">Close</button>
+  </div>
+
+</div>

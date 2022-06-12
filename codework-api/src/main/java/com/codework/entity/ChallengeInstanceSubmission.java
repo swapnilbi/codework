@@ -1,5 +1,6 @@
 package com.codework.entity;
 
+import com.codework.enums.EvaluationStatus;
 import com.codework.enums.SubmissionStatus;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -21,6 +22,7 @@ public class ChallengeInstanceSubmission {
 	private long challengeInstanceId;
 	private long userId;
 	private SubmissionStatus submissionStatus;
+	private Long timeTaken;
 	private Date startTime;
 	private Date submissionTime;
 }
