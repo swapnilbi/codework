@@ -7,6 +7,7 @@ import com.codework.exception.BusinessException;
 import com.codework.exception.SystemException;
 import com.codework.model.ChallengeSubmitInput;
 import com.codework.model.EvaluateProblem;
+import com.codework.model.Leaderboard;
 import com.codework.model.UserSubmission;
 
 import java.util.List;
@@ -41,4 +42,6 @@ public interface IChallengeInstanceService {
     List<EvaluateProblem> getSubmittedProblems(Long challengeInstanceSubmissionId);
 
     EvaluateProblem updateProblemSolution(ProblemSolution problemSolution);
+
+    Leaderboard getChallengeLeaderboard(Long challengeId);
 }

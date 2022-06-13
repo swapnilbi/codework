@@ -13,15 +13,11 @@ import com.codework.repository.ChallengeInstanceSubmissionRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.*;
 import com.codework.task.ProblemEvaluationTask;
-import org.apache.commons.codec.language.bm.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -239,6 +235,60 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		}
 		problemSolutionService.updateSolution(problemSolution);
 		return getEvaluateProblem(problemSolution);
+	}
+
+	private List<Leaderboard.ChallengeInstancePoints> getProblemSolutions(ChallengeInstance challengeInstance){
+		List<Leaderboard.ChallengeInstancePoints> challengeInstancePoints = new ArrayList<>();
+		List<ProblemSolution> problemInstanceSolutions = problemSolutionService.getProblemSolutionsByChallengeInstanceId(EvaluationStatus.COMPLETED,challengeInstance.getId());
+		if(problemInstanceSolutions!=null){
+			Map<Long, Set<ProblemSolution>> problemSolutionsByUser = problemInstanceSolutions.stream().collect(Collectors.groupingBy(ProblemSolution::getUserId, Collectors.toSet()));
+			for (Map.Entry<Long,Set<ProblemSolution>> entry : problemSolutionsByUser.entrySet()){
+				Leaderboard.ChallengeInstancePoints instancePoints = new Leaderboard.ChallengeInstancePoints();
+				instancePoints.setUserId(entry.getKey());
+				instancePoints.setChallengeInstanceId(challengeInstance.getId());
+				Double points = entry.getValue().stream().mapToDouble(ProblemSolution::getPoints).sum();
+				Double timeTaken = entry.getValue().stream().mapToLong(ProblemSolution::getTimeTaken).average().getAsDouble();
+				instancePoints.setPoints(points);
+				instancePoints.setTimeTaken(timeTaken.longValue());
+				challengeInstancePoints.add(instancePoints);
+			}
+		}
+		return challengeInstancePoints;
+	}
+
+	@Override
+	public Leaderboard getChallengeLeaderboard(Long challengeId) {
+		Leaderboard leaderboard = new Leaderboard();
+		List<ChallengeInstance> challengeInstanceList = getChallengeInstanceList(challengeId);
+		if(challengeInstanceList!=null){
+			List<Leaderboard.ChallengeInstancePoints> challengeInstancePointsList = new ArrayList<>();
+			for(ChallengeInstance challengeInstance : challengeInstanceList){
+				List<Leaderboard.ChallengeInstancePoints> instancePoints = getProblemSolutions(challengeInstance);
+				if(!instancePoints.isEmpty()){
+					challengeInstancePointsList.addAll(instancePoints);
+				}
+			}
+			if(!challengeInstancePointsList.isEmpty()){
+				Map<Long, Set<Leaderboard.ChallengeInstancePoints>> problemSolutionsByUser = challengeInstancePointsList.stream().collect(Collectors.groupingBy(Leaderboard.ChallengeInstancePoints::getUserId, Collectors.toSet()));
+				List<Leaderboard.UserSubmissions> userSubmissions = new ArrayList<>();
+				for (Map.Entry<Long,Set<Leaderboard.ChallengeInstancePoints>> entry : problemSolutionsByUser.entrySet()){
+					 Leaderboard.UserSubmissions submission = new Leaderboard.UserSubmissions();
+					 UserProfile userProfile = UserProfile.getUserProfile(userService.getUserById(entry.getKey()).get());
+					 Double points = entry.getValue().stream().mapToDouble(Leaderboard.ChallengeInstancePoints::getPoints).sum();
+					 Long timeTaken = entry.getValue().stream().mapToLong(Leaderboard.ChallengeInstancePoints::getTimeTaken).sum();
+					 submission.setTotalPoints(points);
+					 submission.setTotalTimeTaken(timeTaken);
+					 submission.setUserDetails(userProfile);
+					 submission.setId(userProfile.getId());
+					 submission.setChallengeInstancePoints(entry.getValue());
+					 userSubmissions.add(submission);
+				}
+				Collections.sort(userSubmissions);
+				leaderboard.setUserSubmissionsList(userSubmissions);
+			}
+			leaderboard.setChallengeInstanceList(challengeInstanceList);
+		}
+		return leaderboard;
 	}
 
 }

@@ -15,5 +15,7 @@ public interface ProblemSolutionRepository extends MongoRepository<ProblemSoluti
 
     List<ProblemSolution> findByChallengeInstanceSubmissionId(Long challengeInstanceSubmissionId);
 
+    List<ProblemSolution> findByEvaluationStatusAndChallengeInstanceId(EvaluationStatus evaluationStatus, Long challengeInstanceId);
+
     List<ProblemSolution> findByEvaluationStatus(EvaluationStatus evaluationStatus);
 }

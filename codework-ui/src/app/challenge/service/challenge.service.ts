@@ -9,6 +9,7 @@ import { ChallengeSubscription } from 'src/app/challenge/model/challenge-subscri
 import { Challenge } from 'src/app/challenge/model/challenge.model';
 import { LiveChallenge } from 'src/app/challenge/model/live-challenge.model';
 import { Response } from 'src/app/challenge/model/response.model';
+import { ChallengeLeaderboard } from '../model/challenge-leaderboard';
 
 @Injectable({
   providedIn: 'root'
@@ -158,6 +159,20 @@ export class ChallengeService {
     }     
     const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.STOP_CHALLENGE_URL,queryParams);
     return this.httpClient.get<Response<Challenge>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public getChallengeLeaderboard( challengeId : Number): Observable<ChallengeLeaderboard>{
+    let queryParams: any = {
+      'challengeId' : challengeId
+    }    
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_CHALLENGE_LEADERBOARD_URL,queryParams);
+    return this.httpClient.get<Response<ChallengeLeaderboard>>(serviceUrl)
     .pipe(
       map((data) => {
         return data.data;

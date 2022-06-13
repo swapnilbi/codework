@@ -51,6 +51,16 @@ public class LiveChallengeController {
 	}
 
 	/**
+	 * Get leaderboard
+	 * @param challengeId
+	 * @return ChallengeDetails
+	 */
+	@GetMapping(value = "/{challengeId}/leaderboard")
+	public Response<Leaderboard> getChallengeLeaderboard(@PathVariable Long challengeId) {
+		return new Response<>(challengeInstanceService.getChallengeLeaderboard(challengeId));
+	}
+
+	/**
 	 * Get live challenge details
 	 * @param challengeInstanceId
 	 * @return ChallengeDetails
@@ -91,7 +101,7 @@ public class LiveChallengeController {
 	@GetMapping(value = "/instance/{challengeInstanceId}/start")
 	public Response<LiveChallengeDetails> startUserChallenge(@PathVariable Long challengeInstanceId) throws BusinessException {
 		ChallengeInstanceSubmission challengeInstanceSubmission = challengeInstanceService.startChallenge(challengeInstanceId,SecurityHelper.getUserId());
-		LiveChallengeDetails challengeDetails = challengeService.getLiveChallengeDetails(challengeInstanceSubmission.getChallengeId(),SecurityHelper.getUserId());
+		LiveChallengeDetails challengeDetails = challengeService.getLiveChallengeDetails(challengeInstanceSubmission.getChallengeInstanceId(),SecurityHelper.getUserId());
 		return new Response<>(challengeDetails);
 	}
 

@@ -1,19 +1,19 @@
-<div *ngIf="challenge" class="container-div align-center">
+<div *ngIf="challenge" class="container-div align-center" >
     <div class="event-header">        
         <div class="inline-block event-title-block">
             <h3 class="font-weight-bold">Code Work Challenge 1</h3>
-            <div class="regular light">STARTS ON:  {{ challenge.startDate | date: 'MMM d, y h:mm a' }} </div>
-            <div class="regular light">ENDS ON:  {{ challenge.endDate | date: 'MMM d, y h:mm a' }} </div>
+            <div class="regular light">Opens At:  <span style="font-weight: 500"> {{ challenge.startDate | date: 'MMM d, h:mm a' }} </span></div>
+            <div class="regular light">Closes At:  <span style="font-weight: 500"> {{ challenge.endDate | date: 'MMM d, h:mm a' }} </span></div>
         </div>
         <p class="lead text-right">
-          <a *ngIf="!isRegistered(challenge)" class="btn btn-primary btn-lg ml-3" (click)="registerChallenge()" role="button">Register</a>                        
-          <span *ngIf="isRegistered(challenge)" class="text-primary" role="button"> <i class="far fa-calendar-check"></i> Registered</span>
+          <a *ngIf="!isRegistered(challenge)" class="btn btn-primary btn-sm ml-3" (click)="registerChallenge()" role="button">Register</a>                        
+          <span *ngIf="isRegistered(challenge)" class="text-primary btn-lg" role="button"> <i class="far fa-calendar-check"></i> Registered</span>
         </p>
         <div class="clear"></div>
     </div>
     <div class="jumbotron details-container-body">
         <div [innerHTML]="challenge.longDescription"></div>                
-        <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav-tabs justify-content-left">
+        <ul ngbNav #nav="ngbNav" [activeId]="1" (navChange)="onNavChange($event)" class="nav-tabs justify-content-left">
           <li [ngbNavItem]="1">
             <a ngbNavLink>My Submission</a>
             <ng-template ngbNavContent>              
@@ -58,15 +58,25 @@
           </li>
           <li [ngbNavItem]="2">
             <a ngbNavLink>Leaderboard</a>
-            <ng-template ngbNavContent>
-              <p>
-                Leaderboard
-              </p>
+            <ng-template ngbNavContent>                    
+              <div *ngIf="challengeLeaderboard && challengeLeaderboard.userSubmissionsList">
+                  <ag-grid-angular                         
+                  style="width: 100%; height:100%; position:relative; "
+                  class="ag-theme-alpine"                            
+                  (gridReady)="onGridReady($event)"                           
+                  [defaultColDef]="defaultColDef"
+                  (firstDataRendered)="onFirstDataRendered($event)"
+                  [animateRows]="true"
+                  [domLayout]="domLayout"
+                  [columnDefs]="columnDefs"
+                  [rowData]="rowData">
+                </ag-grid-angular> 
+              </div>              
             </ng-template>
           </li>          
         </ul>
         
         <div [ngbNavOutlet]="nav" class="mt-2"></div>
-
-    </div>  
+    </div>      
+  
 </div>

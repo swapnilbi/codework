@@ -34,6 +34,8 @@ public interface IProblemSolutionService {
 
     List<ProblemSolution> getProblemSolutions(Long challengeInstanceSubmissionId);
 
+    List<ProblemSolution> getProblemSolutionsByChallengeInstanceId(EvaluationStatus evaluationStatus, Long challengeInstanceId);
+
     List<ProblemSolution> getProblemSolutions(EvaluationStatus evaluationStatus);
 
     List<TestCaseResult> evaluateBatchSubmission(List<TestCaseResult> testCases) throws IOException;

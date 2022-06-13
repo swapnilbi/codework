@@ -38,6 +38,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                     if(err.error && err.status == 401){                                                
                         this.userAuthService.logout();
                         this.router.navigate(['login']);   
+                    }else if(err.error && err.status == 403){                                                                        
+                        this.router.navigate(['challenges']);   
                     }else if(err.error && err.error.remarks && err.error.remarks.length > 0){                                
                         this.alertService.error(err.error.remarks[0].message);   
                     }else{

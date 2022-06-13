@@ -11,6 +11,7 @@ export const AppConfig = {
     GET_CHALLENGE_DETAILS_URL : '/api/challenge/:challengeId',
     UPDATE_CHALLENGE_URL : '/api/challenge/:challengeId',
     DELETE_CHALLENGE_URL : '/api/challenge/:challengeId',
+    GET_CHALLENGE_LEADERBOARD_URL : '/api/challenge/:challengeId/leaderboard',
     PUBLISH_CHALLENGE_URL : '/api/challenge/:challengeId/publish',
     STOP_CHALLENGE_URL : '/api/challenge/:challengeId/stop',
     REGISTER_CHALLENGE_URL : '/api/challenge/:challengeId/register',

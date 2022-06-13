@@ -1,5 +1,5 @@
 <div class="card card-inverse card-info" (click)="viewChallenge()">
-    <div class="card-header" style="background-image: url('{{challenge.bannerImage}}')">            
+    <div class="card-header" style="background-image: url('assets/images/widget.png')">            
         <!--
         <div class="card-container text-center">
             <div class="registrations tool-tip align-left">
@@ -11,10 +11,10 @@
     <div class="card-block">                
         <h4 class="card-title">{{ challenge.name }}</h4>
         <div class="meta">
-            <a >Start Date : {{ challenge.startDate | date: 'MMM d, y h:mm a' }}</a>            
+            <a >Starts On : {{ challenge.startDate | date: 'MMM d, h:mm a' }}</a>            
         </div>
         <div class="meta">
-            <a >End Date : {{ challenge.endDate | date: 'MMM d, y h:mm a' }}</a>
+            <a >Ends On : {{ challenge.endDate | date: 'MMM d, h:mm a' }}</a>
         </div>        
         <div class="card-text">
             {{ challenge.shortDescription }}

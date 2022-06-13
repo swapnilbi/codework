@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import com.codework.entity.Challenge;
 import com.codework.model.ChallengeDetails;
+import com.codework.model.Leaderboard;
 import com.codework.model.LiveChallengeDetails;
 
 public interface IChallengeService {

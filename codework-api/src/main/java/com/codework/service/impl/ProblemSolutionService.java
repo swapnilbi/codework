@@ -264,6 +264,11 @@ public class ProblemSolutionService implements IProblemSolutionService {
     }
 
     @Override
+    public List<ProblemSolution> getProblemSolutionsByChallengeInstanceId(EvaluationStatus evaluationStatus, Long challengeInstanceId) {
+        return problemSolutionRepository.findByEvaluationStatusAndChallengeInstanceId(evaluationStatus,challengeInstanceId);
+    }
+
+    @Override
     public List<ProblemSolution> getProblemSolutions(EvaluationStatus evaluationStatus) {
         return problemSolutionRepository.findByEvaluationStatus(evaluationStatus);
     }

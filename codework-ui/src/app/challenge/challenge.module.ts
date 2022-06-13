@@ -33,6 +33,7 @@ import { CommonModule } from '@angular/common';
 import { HtmlPreviewComponent } from './component/challenge/manage-challenge/html-preview/html-preview.component';
 import { EvaluateChallengeInstanceComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/evaluate-challenge-instance.component';
 import { ViewSubmissionComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/view-submission/view-submission.component';
+import { AgGridRowNumberComponent } from './component/challenge/challenge-details/ag-grid-row-number/ag-grid-row-number.component';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -59,7 +60,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CreateChallengeInstanceComponent, 
     CreateChallengeComponent, 
     HtmlPreviewComponent, 
-    EvaluateChallengeInstanceComponent, ViewSubmissionComponent        
+    EvaluateChallengeInstanceComponent, ViewSubmissionComponent, AgGridRowNumberComponent        
   ],
   imports: [    
     CommonModule,
@@ -70,7 +71,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ReactiveFormsModule,
     AgGridModule.withComponents([]),    
     PerfectScrollbarModule,
-    NgbModule,
+    NgbModule,    
     AngularSplitModule,
     FormsModule,
     MonacoEditorModule.forRoot(CodeEditorConfig), // use forRoot() in main app module only.      

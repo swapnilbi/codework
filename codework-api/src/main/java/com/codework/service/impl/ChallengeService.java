@@ -6,6 +6,7 @@ import com.codework.entity.ChallengeInstance;
 import com.codework.entity.ChallengeInstanceSubmission;
 import com.codework.enums.ChallengeInstanceStatus;
 import com.codework.enums.SubmissionStatus;
+import com.codework.model.Leaderboard;
 import com.codework.model.LiveChallengeDetails;
 import com.codework.model.UserSubmission;
 import com.codework.service.IChallengeInstanceService;

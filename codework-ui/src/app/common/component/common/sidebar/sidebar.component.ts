@@ -60,7 +60,7 @@ export class SidebarComponent implements OnInit {
         "roles" : ["ADMIN"]
       }  
     ];
-      let filteredMenuConfig = [];
+      let filteredMenuConfig : any = [];
       menuConfig.forEach(function (menu: any) {
         let hasRole : boolean = false;
         roles.forEach(function (role: string) {
@@ -88,7 +88,7 @@ export class SidebarComponent implements OnInit {
           });          
         }        
       });
-      this.menus = of(menuConfig); 
+      this.menus = of(filteredMenuConfig); 
   }
 
   isSelected(menu : any){

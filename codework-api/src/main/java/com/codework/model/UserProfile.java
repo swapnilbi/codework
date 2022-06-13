@@ -19,6 +19,14 @@ public class UserProfile {
 
 	}
 
+	public static UserProfile getUserProfile(User user){
+		UserProfile userProfile = new UserProfile();
+		userProfile.setId(user.getId());
+		userProfile.setFullName(user.getFullName());
+		userProfile.setGender(user.getGender());
+		return userProfile;
+	}
+
 	public UserProfile(User user){
 		this.id = user.getId();
 		this.fullName = user.getFullName();
