@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { SidebarService } from '../common/component/common/sidebar/sidebar.service';
 
 @Component({

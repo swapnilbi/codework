@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { AppConfig } from 'src/app/common/app.config';
 import { Response } from 'src/app/challenge/model/response.model';
-import { LoginResponse } from 'src/app/user/model/user-login-response.model';
-import { UserLogin } from 'src/app/user/model/user-login.model';
-import { UserProfile } from 'src/app/user/model/user-profile.model';
+import { LoginResponse } from 'src/app/authentication/model/user-login-response.model';
+import { UserLogin } from 'src/app/authentication/model/user-login.model';
+import { UserProfile } from 'src/app/authentication/model/user-profile.model';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { LocalStorageService } from 'src/app/common/utility/local-storage';
-import { UserProfile } from 'src/app/user/model/user-profile.model';
+import { UserProfile } from 'src/app/authentication/model/user-profile.model';
 
 @Injectable({
   providedIn: 'root'

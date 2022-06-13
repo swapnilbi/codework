@@ -3,10 +3,10 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { SidebarService } from './sidebar.service';
 import { Observable, of } from 'rxjs';
 import { Router } from '@angular/router';
-import { UserAuthService } from '../../../../user/service/user-auth.service';
-import { AuthenticationService } from '../../../../user/service/authentication.service';
+import { UserAuthService } from '../../../../authentication/service/user-auth.service';
+import { AuthenticationService } from '../../../../authentication/service/authentication.service';
 import { LoaderService } from '../loader/loader.service';
-import { UserProfile } from 'src/app/user/model/user-profile.model';
+import { UserProfile } from 'src/app/authentication/model/user-profile.model';
 import { SelectMultipleControlValueAccessor } from '@angular/forms';
 // import { MenusService } from './menus.service';
 
@@ -58,7 +58,15 @@ export class SidebarComponent implements OnInit {
         "icon" : "fas fa-cog",
         "url" : "/challenge/manage",          
         "roles" : ["ADMIN"]
-      }  
+      },
+      {
+        "id" : 3,
+        "title" : "Manage Users",
+        "index" : 3,
+        "icon" : "fas fa-user",
+        "url" : "/user/manage",          
+        "roles" : ["ADMIN"]
+      }    
     ];
       let filteredMenuConfig : any = [];
       menuConfig.forEach(function (menu: any) {

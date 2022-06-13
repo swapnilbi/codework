@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequestMapping(value = "api/user")
@@ -46,6 +47,29 @@ public class UserController {
 	public Response<UserProfile> getUserProfile(Authentication authentication) {
 		User user = userService.getUserByUsername(authentication.getName()).get();
 		return new Response<>(new UserProfile(user));
+	}
+
+	@GetMapping("/{userId}/enable")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public Response<User> enableUser(@PathVariable Long userId) {
+		User user = userService.enableUser(userId);
+		user.setPassword(null);
+		return new Response<>(user);
+	}
+
+	@GetMapping("/{userId}/disable")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public Response<User> disableUser(@PathVariable Long userId) {
+		User user = userService.disableUser(userId);
+		user.setPassword(null);
+		return new Response<>(user);
+	}
+
+	@GetMapping("/list")
+	@PreAuthorize("hasAnyAuthority('ADMIN')")
+	public Response<List<User>> getUsers() {
+		List<User> users = userService.getUsers();
+		return new Response<>(users);
 	}
 
 }

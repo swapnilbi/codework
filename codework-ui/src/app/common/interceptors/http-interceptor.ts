@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { AlertService } from '../../common/component/common/alert/alert-service.service';
 import { LoaderService } from '../../common/component/common/loader/loader.service'; 
-import { UserAuthService } from 'src/app/user/service/user-auth.service';
+import { UserAuthService } from 'src/app/authentication/service/user-auth.service';
 import { Router } from '@angular/router';
 
 @Injectable()

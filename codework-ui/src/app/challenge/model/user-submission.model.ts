@@ -1,4 +1,4 @@
-import { UserProfile } from 'src/app/user/model/user-profile.model';
+import { UserProfile } from 'src/app/authentication/model/user-profile.model';
 
 export interface UserSubmission {
     id : number,

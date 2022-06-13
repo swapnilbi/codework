@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -60,7 +61,18 @@ public class CodeWorkExceptionHandler {
         remark.setMessage(securityException.getMessage());
         remark.setType(RemarkType.ERROR);
         response.setRemarks(Arrays.asList(remark));
-        return new ResponseEntity(response,HttpStatus.FORBIDDEN);
+        return new ResponseEntity(response,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(LockedException.class)
+    public ResponseEntity handleAccessDeniedException(LockedException lockedException) {
+        logger.warn(lockedException.getMessage());
+        Response response = new Response();
+        Remark remark = new Remark();
+        remark.setMessage(lockedException.getMessage());
+        remark.setType(RemarkType.ERROR);
+        response.setRemarks(Arrays.asList(remark));
+        return new ResponseEntity(response,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(AccessDeniedException.class)

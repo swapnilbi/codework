@@ -60,7 +60,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CreateChallengeInstanceComponent, 
     CreateChallengeComponent, 
     HtmlPreviewComponent, 
-    EvaluateChallengeInstanceComponent, ViewSubmissionComponent, AgGridRowNumberComponent        
+    EvaluateChallengeInstanceComponent, 
+    ViewSubmissionComponent, 
+    AgGridRowNumberComponent        
   ],
   imports: [    
     CommonModule,

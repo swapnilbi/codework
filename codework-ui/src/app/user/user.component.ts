@@ -1,27 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserAuthService } from './service/user-auth.service';
-import { UserProfile } from './model/user-profile.model';
+import { SidebarService } from '../common/component/common/sidebar/sidebar.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './user.component.html'  
+  selector: 'app-user',
+  templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit {
+
+  constructor(private router: Router, 
+    private sidebarService : SidebarService) { }
+
+  ngOnInit(): void {    
     
-  userProfile: UserProfile | null = null;
-
-  constructor(private userAuthService : UserAuthService, private router: Router) { }
-
-  ngOnInit(): void {        
-    this.userAuthService.getUser().subscribe(response =>{
-      if(response){                
-        this.userProfile =  response;        
-        this.router.navigate(['challenges']);           
-      }else{                
-        this.router.navigate(['login']);           
-      }      
-    });    
   }
-   
+  
+  toggleSidebar() {
+    this.sidebarService.setSidebarState(!this.sidebarService.getSidebarState());
+  }
+  
+  getSideBarState() {
+    return this.sidebarService.getSidebarState();
+  }
+
+  hideSidebar() {
+    this.sidebarService.setSidebarState(true);
+  }
+
 }

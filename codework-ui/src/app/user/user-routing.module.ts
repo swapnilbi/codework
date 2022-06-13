@@ -1,22 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './component/authentication/login/login.component';
+import { ManageUsersComponent } from './component/manage-users/manage-users.component';
 import { UserComponent } from './user.component';
 
-const routes: Routes = [     
+const routes: Routes = [  
   {
-    path: 'challenges', 
-    loadChildren: () => import('../challenge/challenge.module').then(m => m.ChallengeModule)  
-  },  
-  {
-    path: "",
-    component: UserComponent,
-    children: [
-      {
-        path : "",
-        component : LoginComponent
-      }
-    ]}
+    path: '',
+        component: UserComponent,
+        children: [
+          {
+            path : "manage",
+            component : ManageUsersComponent
+          },          
+          {
+            path : "",
+            component : ManageUsersComponent
+          }
+        ]  
+  }
 ];
 
 @NgModule({
