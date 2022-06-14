@@ -31,6 +31,10 @@ export class ManageUsersComponent implements OnInit {
     this.getUsers()
   }
 
+  bulkUpload(): void {
+    this.router.navigate(['user/bulk-upload']);                      
+  }
+
   getUsers(){
     this.loaderService.show();
     this.userService.getUsers().subscribe(response => {

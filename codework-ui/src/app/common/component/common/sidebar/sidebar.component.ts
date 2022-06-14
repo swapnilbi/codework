@@ -106,6 +106,10 @@ export class SidebarComponent implements OnInit {
     return false;
   }
 
+  changePassword(){
+    this.router.navigate(['user/change-password']);
+  }
+
   toggleDropdown(menu : any){
       menu.showDropdown = !menu.showDropdown;
   }

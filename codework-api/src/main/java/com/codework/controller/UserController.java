@@ -2,9 +2,11 @@ package com.codework.controller;
 
 import com.codework.entity.User;
 import com.codework.exception.BusinessException;
+import com.codework.model.PasswordChangeInput;
 import com.codework.model.Response;
 import com.codework.model.UserProfile;
 import com.codework.service.IUserService;
+import com.codework.utility.SecurityHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -40,6 +42,13 @@ public class UserController {
 		}
 		userService.updateUser(user);
 		return new Response<>(user);
+	}
+
+	@PutMapping("password/update")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public Response changePassword(@RequestBody PasswordChangeInput passwordChangeInput) throws BusinessException {
+		userService.changePassword(passwordChangeInput, SecurityHelper.getUserId());
+		return new Response<>();
 	}
 
 	@GetMapping("/profile")

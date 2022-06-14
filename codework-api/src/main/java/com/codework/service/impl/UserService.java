@@ -1,10 +1,13 @@
 package com.codework.service.impl;
 
 import com.codework.entity.User;
+import com.codework.exception.BusinessException;
+import com.codework.model.PasswordChangeInput;
 import com.codework.repository.SequenceGenerator;
 import com.codework.repository.UserRepository;
 import com.codework.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -69,5 +72,16 @@ public class UserService implements IUserService {
 		user.setActive(false);
 		userRepository.save(user);
 		return user;
+	}
+
+	@Override
+	public void changePassword(PasswordChangeInput passwordChangeInput, Long userId) throws BusinessException {
+		User user = getUserById(userId).get();
+		if(!BCrypt.checkpw(passwordChangeInput.getOldPassword(), user.getPassword())){
+			throw new BusinessException("Your old password is incorrect");
+		}
+		String newPassword = passwordEncoder.encode(passwordChangeInput.getNewPassword());
+		user.setPassword(newPassword);
+		userRepository.save(user);
 	}
 }

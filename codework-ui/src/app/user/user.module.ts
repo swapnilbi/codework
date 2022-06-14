@@ -8,11 +8,15 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ManageUsersComponent } from './component/manage-users/manage-users.component';
 import { UserRoutingModule } from './user-routing.module';
+import { ChangePasswordComponent } from './component/change-password/change-password.component';
+import { BulkUserUploadComponent } from './component/bulk-user-upload/bulk-user-upload.component';
 
 @NgModule({
   declarations: [
     UserComponent,
-    ManageUsersComponent
+    ManageUsersComponent,
+    ChangePasswordComponent,
+    BulkUserUploadComponent
   ],
   imports: [
     UserRoutingModule,

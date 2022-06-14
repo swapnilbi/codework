@@ -6,6 +6,7 @@ import { AppConfig } from 'src/app/common/app.config';
 import { Response } from 'src/app/challenge/model/response.model';
 import { User } from '../model/user.model';
 import { HttpHelper } from 'src/app/common/utility/utility';
+import { ChangePasswordModel } from '../model/change-password.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,17 @@ export class UserService {
     .pipe(
       map((data) => {
         return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public changePassword(changePasswordInput : ChangePasswordModel): Observable<any>{        
+    const serviceUrl = AppConfig.SERVICE_URL.CHANGE_USER_PASSWORD_URL;        
+    return this.httpClient.put<Response<any>>(serviceUrl, changePasswordInput)
+    .pipe(
+      map((data) => {
+        return data;
       }),
       tap(event => {})
     );
