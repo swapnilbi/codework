@@ -131,7 +131,7 @@ public class LiveChallengeController {
 	 *
 	 */
 	@PostMapping(value = "/solution/compile")
-	public Response<ProblemSolutionResult> compileSolution(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
+	public Response<ProblemSolutionResult> compileSolution(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException, InterruptedException {
 		return new Response<>(problemSolutionService.compileSolution(problemSolution, SecurityHelper.getUserId()));
 	}
 
@@ -140,7 +140,7 @@ public class LiveChallengeController {
 	 *
 	 */
 	@PostMapping(value = "/solution/run")
-	public Response<ProblemSolutionResult> runAllTests(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException {
+	public Response<ProblemSolutionResult> runAllTests(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException, InterruptedException {
 		return new Response<>(problemSolutionService.runAllTests(problemSolution, SecurityHelper.getUserId()));
 	}
 

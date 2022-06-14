@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 public interface IProblemSolutionService {
 
-    ProblemSolutionResult compileSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException, IOException;
+    ProblemSolutionResult compileSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException, IOException, InterruptedException;
 
     ProblemSolution saveSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException;
 
@@ -22,7 +22,7 @@ public interface IProblemSolutionService {
 
     ProblemSolution submitSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException;
 
-    ProblemSolutionResult runAllTests(ProblemSolutionInput problemSolution, Long userId) throws BusinessException, IOException;
+    ProblemSolutionResult runAllTests(ProblemSolutionInput problemSolution, Long userId) throws BusinessException, IOException, InterruptedException;
 
     List<SubmissionResult> evaluateSolution(Problem problem, ProblemSolution problemSolution) throws IOException;
 
