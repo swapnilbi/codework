@@ -26,7 +26,10 @@
                 <span class="font-weight-bold">  Limits : </span>
             </p>
             <p class="text-secondary">          
-                <small> Time(sec) : {{ compileResult.timeLimit }}, &nbsp; Memory(KB) :  {{ compileResult.memoryLimit }}  </small>
+                <small> 
+                   <p *ngIf="compileResult.timeLimit">CPU Time:{{ compileResult.timeLimit }} sec(s), </p>
+                   <p *ngIf="compileResult.memoryLimit">Memory:{{ compileResult.memoryLimit }} kilobyte(s) </p>
+                </small>
             </p>            
         </div>
 
@@ -51,7 +54,7 @@
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Result</th>
-                <th scope="col">Time(sec)</th>
+                <th scope="col">CPU Time(sec)</th>
                 <th scope="col">Memory(KB)</th>
                 <th scope="col">Remark</th>
               </tr>

@@ -33,7 +33,7 @@
               <div [ngClass]="{'text-success': testCase.status, 'text-danger': !testCase.status }" class="pull-left float-left">Test Case #{{i+1}}  
                    <i [ngClass]="{'fa-check-circle': testCase.status, 'fa-exclamation-circle': !testCase.status }" class="fa" aria-hidden="true"></i> 
               </div>                 
-              <span class="float-right text-secondary pull-right">Time(sec) : {{testCase.time}} &nbsp; Memory(KB) : {{testCase.memory}}</span>            
+              <span class="float-right text-secondary pull-right">CPU Time: {{testCase.time}} sec(s), Memory: {{testCase.memory}} kilobyte(s)</span>            
             </button>                          
               <table class="table table-borderless" style="width : 100%">
                 <thead>
