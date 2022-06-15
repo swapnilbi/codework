@@ -13,11 +13,7 @@ const routes: Routes = [
           {
             path : "manage",
             component : ManageUsersComponent
-          },          
-          {
-            path : "",
-            component : ManageUsersComponent
-          },
+          },                    
           {
             path : "change-password",
             component : ChangePasswordComponent
