@@ -8,11 +8,11 @@ import { SidebarService } from '../common/component/common/sidebar/sidebar.servi
 })
 export class ChallengeComponent implements OnInit {
   
-  constructor(private router: Router, 
+  constructor(private router: Router,     
     private sidebarService : SidebarService) { }
 
   ngOnInit(): void {    
-    
+
   }
   
   toggleSidebar() {
@@ -26,4 +26,6 @@ export class ChallengeComponent implements OnInit {
   hideSidebar() {
     this.sidebarService.setSidebarState(true);
   }
+
+
 }

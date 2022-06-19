@@ -1,26 +1,35 @@
-<div class="container-div">  
-    <form>
-        <div class="d-flex">
-        <div class="mr-auto p-2">
-            <h6> <a *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp;
-                 <strong>Bulk User Upload</strong>                 
-            </h6>
-        </div>
-        <div class="p-2">            
-            <button type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Upload</button>        
-        </div>    
-        </div>
+<div class="container-div">      
+    <div class="d-flex">
+    <div class="mr-auto p-2">
+        <h6> <a *ngIf="true" (click)="back()"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp;
+                <strong>Bulk User Upload</strong>                 
+        </h6>
+    </div>
+    <div class="p-2">            
+        <button type="submit" (click)="uploadUsers()" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Upload</button>        
+    </div>    
+    </div>
 
-        <div class="row">
-            <div class="col-12">        
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="name">Select File (csv)</label>
-                        <input type="file" class="form-control" id="name" placeholder="Select file">
-                    </div>                        
-                </div>                                                
-            </div>       
-        </div>
-    </form>
+    <div *ngIf="remarks && remarks.length > 0" class="alert alert-danger" role="alert">
+        <ul>
+            <li *ngFor="let remark of remarks">
+                {{remark.message}}
+            </li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="col-12">        
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="name">Select File (csv)</label>
+                    <input accept=".xlsx" (change)="onFileChange($event)" type="file" class="form-control" id="name" placeholder="Select file">
+                </div>  
+                <div class="invalid-feedback" [style.display]=" !file && isSubmitted ? 'block' : 'none'">
+                    Please select a valid xlsx file
+                </div>                      
+            </div>                                                
+        </div>       
+    </div>
   </div>
   

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserAuthService } from './service/user-auth.service';
 import { UserProfile } from './model/user-profile.model';
+import { timer } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -17,11 +19,13 @@ export class AuthenticationComponent implements OnInit {
     this.userAuthService.getUser().subscribe(response =>{
       if(response){                
         this.userProfile =  response;        
-        this.router.navigate(['challenges']);           
+        this.router.navigate(['challenges']);         
+
       }else{                
         this.router.navigate(['login']);           
       }      
     });    
   }
+
    
 }

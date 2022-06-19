@@ -1,10 +1,12 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { AlertService } from 'src/app/common/component/common/alert/alert-service.service';
 import { LoaderService } from 'src/app/common/component/common/loader/loader.service';
 import { User } from '../../model/user.model';
 import { UserService } from '../../service/user.service';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @Component({
   selector: 'app-manage-users',
@@ -16,12 +18,15 @@ export class ManageUsersComponent implements OnInit {
 
   constructor(private router : Router,
     private userService : UserService, 
+    private modalService: BsModalService,
     private location: Location,
     private alertService : AlertService, 
     private loaderService: LoaderService,
     private route: ActivatedRoute) {
     
   }
+
+
 
   back(){        
     this.location.back();
@@ -33,6 +38,15 @@ export class ManageUsersComponent implements OnInit {
 
   bulkUpload(): void {
     this.router.navigate(['user/bulk-upload']);                      
+  }
+
+  createUser(): void {
+    this.router.navigate(['user/create']);                      
+  }
+
+  editUser(user : User): void {
+    var url = '/user/'+user.id+'/edit';    
+    this.router.navigateByUrl(url);                      
   }
 
   getUsers(){
@@ -67,6 +81,13 @@ export class ManageUsersComponent implements OnInit {
       }, error => {
         this.loaderService.hide();       
       }); 
+  }
+
+  changePassword(user : User){
+    const initialState = {
+      user : user
+    };
+    this.modalService.show(ResetPasswordComponent, {initialState});  
   }
 
 }

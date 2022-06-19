@@ -1,4 +1,4 @@
 export interface ChangePasswordModel {    
-	oldPassword : string,
+	oldPassword? : string,
 	newPassword : string
   }

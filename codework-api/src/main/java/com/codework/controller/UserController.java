@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +35,7 @@ public class UserController {
 		return new Response<>(user);
 	}
 
-	@PutMapping
+	@PutMapping("/{userId}")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public Response<User> updateUser(@RequestBody User user) throws BusinessException {
 		Optional<User> existingUser = userService.getUserById(user.getId());
@@ -44,10 +46,30 @@ public class UserController {
 		return new Response<>(user);
 	}
 
+	@PostMapping("/bulk")
+	public Response bulkUserUpload(@RequestParam("file") MultipartFile file) throws BusinessException {
+		return userService.bulkUserUpload(file);
+	}
+
+	@GetMapping("/{userId}")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public Response<User> getUser(@PathVariable Long userId) throws BusinessException {
+		User user = userService.getUserById(userId).get();
+		user.setPassword(null);
+		return new Response<>(user);
+	}
+
 	@PutMapping("password/update")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public Response changePassword(@RequestBody PasswordChangeInput passwordChangeInput) throws BusinessException {
 		userService.changePassword(passwordChangeInput, SecurityHelper.getUserId());
+		return new Response<>();
+	}
+
+	@PutMapping("/{userId}/password/reset")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public Response resetPassword(@PathVariable Long userId, @RequestBody PasswordChangeInput passwordChangeInput) {
+		userService.resetPassword(userId,passwordChangeInput);
 		return new Response<>();
 	}
 

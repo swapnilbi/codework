@@ -7,10 +7,12 @@ import com.codework.model.EvaluateProblem;
 import com.codework.model.Response;
 import com.codework.model.UserSubmission;
 import com.codework.service.IChallengeInstanceService;
+import com.codework.service.IProblemEvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @PreAuthorize("hasAuthority('ADMIN')")
@@ -20,6 +22,9 @@ public class ChallengeInstanceController {
 
 	@Autowired
 	IChallengeInstanceService challengeInstanceService;
+
+	@Autowired
+	IProblemEvaluationService problemEvaluationService;
 
 	/**
 	 * Creates new challenge instance
@@ -122,6 +127,15 @@ public class ChallengeInstanceController {
 	public Response<List<ChallengeInstance>> getChallengeInstanceList(@PathVariable Long challengeId) throws SystemException {
 		List<ChallengeInstance> challengeInstanceList = challengeInstanceService.getChallengeInstanceList(challengeId);
 		return new Response<>(challengeInstanceList);
+	}
+
+	/**
+	 * evaluate challenge
+	 *
+	 */
+	@PostMapping(value = "/instance/{challengeInstanceId}/submissions/evaluate")
+	public void evaluateSolution(@PathVariable Long challengeInstanceId) throws IOException {
+		problemEvaluationService.checkAllSubmissionResult(challengeInstanceId);
 	}
 
 

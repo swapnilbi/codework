@@ -15,7 +15,7 @@
         <div [innerHTML]="challenge.longDescription"></div>                
         <ul ngbNav #nav="ngbNav" [activeId]="1" (navChange)="onNavChange($event)" class="nav-tabs justify-content-left">
           <li [ngbNavItem]="1">
-            <a ngbNavLink>My Submission</a>
+            <a ngbNavLink> <i class="far fa-file-code"></i> My Submission</a>
             <ng-template ngbNavContent>              
                 <table class="table table-hover">
                   <thead>
@@ -57,7 +57,7 @@
             </ng-template>
           </li>
           <li [ngbNavItem]="2">
-            <a ngbNavLink>Leaderboard</a>
+            <a ngbNavLink> <i class="fa fa-trophy"></i>  Leaderboard</a>
             <ng-template ngbNavContent>                    
               <div *ngIf="challengeLeaderboard && challengeLeaderboard.userSubmissionsList">
                   <ag-grid-angular                         

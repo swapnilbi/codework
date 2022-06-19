@@ -61,8 +61,8 @@ public class ProblemEvaluationService implements IProblemEvaluationService {
     }
 
     @Override
-    public void checkAllSubmissionResult() {
-        List<ProblemSolution> problemSolutionList = problemSolutionService.getProblemSolutions(EvaluationStatus.IN_PROGRESS);
+    public void checkAllSubmissionResult(Long challengeInstanceId) {
+        List<ProblemSolution> problemSolutionList = problemSolutionService.getProblemSolutionsByChallengeInstanceId(EvaluationStatus.IN_PROGRESS, challengeInstanceId);
         if(problemSolutionList!=null && !problemSolutionList.isEmpty()){
             for(ProblemSolution problemSolution : problemSolutionList){
                 try{

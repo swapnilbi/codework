@@ -10,7 +10,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppCommonModule } from './common/common.module';
-import { UserRoutingModule } from './authentication/authentication-routing.module';
 import { UserModule } from './user/user.module';
 
 export const isMock = environment.mock;
@@ -19,9 +18,9 @@ export const isMock = environment.mock;
   declarations: [
     AppComponent       
   ],
-  imports: [    
-    UserModule,        
+  imports: [             
     AppCommonModule,
+    UserModule,   
     BrowserModule,
     BrowserAnimationsModule,        
     AppRoutingModule,

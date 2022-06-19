@@ -79,6 +79,7 @@ public class AuthenticationService implements IAuthenticationService {
 		Optional<UserSession> existingSession = userSessionService.getActiveUserSession(userSession.getUserId());
 		if(existingSession.isPresent()){
 			userSession.setId(existingSession.get().getId());
+			userSession.setLoginTime(existingSession.get().getLoginTime());
 			userSessionService.updateUserSession(userSession);
 		}else{
 			userSessionService.createUserSession(userSession);

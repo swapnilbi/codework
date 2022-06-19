@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { UserSubmission } from 'src/app/challenge/model/user-submission.model';
 import { ChallengInstanceService } from 'src/app/challenge/service/challenge-instance.service';
+import { AlertService } from 'src/app/common/component/common/alert/alert-service.service';
 import { LoaderService } from 'src/app/common/component/common/loader/loader.service';
 import { ViewSubmissionComponent } from './view-submission/view-submission.component';
 
@@ -20,6 +21,7 @@ export class EvaluateChallengeInstanceComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private location: Location,
+    private alertService : AlertService,
     private loaderService: LoaderService) { }
 
   public submissionList: Array<UserSubmission> = [];
@@ -48,6 +50,17 @@ export class EvaluateChallengeInstanceComponent implements OnInit {
       this.loaderService.hide();
     }
     );    
+  }
+
+  checkSubmissionResult(){
+    this.loaderService.show();
+    this.challengeInstanceService.checkSubmissionResult(this.instanceId).subscribe(response => {      
+      this.alertService.success("Evaluation is in progress")
+      this.loaderService.hide();      
+    }, error => {
+      this.loaderService.hide();
+    }
+    ); 
   }
 
   back(){        

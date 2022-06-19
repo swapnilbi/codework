@@ -26,12 +26,12 @@ export class AuthenticationService {
     );
   }
 
-  public refreshToken(): Observable<Response<any>>{        
+  public refreshToken(): Observable<LoginResponse>{        
     const serviceUrl = AppConfig.SERVICE_URL.REFRESH_TOKEN_URL;
-    return this.httpClient.post<Response<any>>(serviceUrl,null)
+    return this.httpClient.post<Response<LoginResponse>>(serviceUrl,null)
     .pipe(
       map((data) => {
-        return data;
+        return data.data;
       }),
       tap(event => {})
     );

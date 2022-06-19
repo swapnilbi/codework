@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { AppConfig } from 'src/app/common/app.config';
 import { Response } from 'src/app/challenge/model/response.model';
 import { User } from '../model/user.model';
@@ -51,6 +51,21 @@ export class UserService {
     );
   }
 
+  public resetPassword(userId : number, changePasswordInput : ChangePasswordModel): Observable<any>{        
+    let queryParams: any = {
+      'userId' : userId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.RESET_USER_PASSWORD_URL,queryParams); 
+    return this.httpClient.put<Response<any>>(serviceUrl, changePasswordInput)
+    .pipe(
+      map((data) => {
+        return data;
+      }),
+      tap(event => {})
+    );
+  }
+
+
   public disableUser(userId : number): Observable<User>{    
     let queryParams: any = {
       'userId' : userId
@@ -65,5 +80,56 @@ export class UserService {
     );
   }
 
+  public getUser(userId : number): Observable<User>{    
+    let queryParams: any = {
+      'userId' : userId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_UPDATE_USER_URL,queryParams);        
+    return this.httpClient.get<Response<User>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public updateUser(userForm : User): Observable<User>{    
+    let queryParams: any = {
+      'userId' : userForm.id
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_UPDATE_USER_URL,queryParams);        
+    return this.httpClient.put<Response<User>>(serviceUrl,userForm)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public bulkUserUpload(file : File): Observable<Response<any>>{    
+    const formData: FormData = new FormData();
+    formData.append('file', file);     
+    const serviceUrl = AppConfig.SERVICE_URL.UPLOAD_BULK_USER_URL;        
+    return this.httpClient.post<Response<any>>(serviceUrl,formData)
+    .pipe(
+      map((data) => {
+        return data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public createUser(userForm : User): Observable<User>{        
+    const serviceUrl = AppConfig.SERVICE_URL.CREATE_USER_URL;        
+    return this.httpClient.post<Response<User>>(serviceUrl,userForm)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
 
 }

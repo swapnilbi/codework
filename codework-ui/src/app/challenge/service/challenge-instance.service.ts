@@ -154,4 +154,18 @@ export class ChallengInstanceService {
     );
   }
 
+  public checkSubmissionResult(challengeInstanceId : number): Observable<Response<any>>{        
+    let queryParams: any = {
+      'challengeInstanceId' : challengeInstanceId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.EVALUATE_CHALLENGE_INTANCE_SUBMISSIONS_URL,queryParams);
+    return this.httpClient.post<Response<any>>(serviceUrl,null)
+    .pipe(
+      map((data) => {
+        return data;
+      }),
+      tap(event => {})
+    );
+  }
+
 }

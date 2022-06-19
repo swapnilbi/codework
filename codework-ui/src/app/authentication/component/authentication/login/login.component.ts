@@ -34,16 +34,16 @@ export class LoginComponent implements OnInit {
         username : this.username,
         password :  this.password
       }
-      //this.loaderService.show();
+      this.loaderService.show();
       this.authenticationService.authenticate(userLogin).subscribe(response => {    
         this.userAuthService.setToken(response.token);
         this.authenticationService.getUserProfile().subscribe(response => {    
-          //this.loaderService.hide();          
+          this.loaderService.hide();          
           this.userAuthService.setUser(response);                 
           this.router.navigate(['challenges']);                      
         });        
       }, error => {                  
-        //this.loaderService.hide();
+        this.loaderService.hide();          
       });         
     }
   }

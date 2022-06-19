@@ -10,7 +10,7 @@ public interface IProblemEvaluationService {
 
     void evaluateChallengeInstance(ChallengeInstanceSubmission challengeInstanceSubmission);
 
-    void checkAllSubmissionResult() throws IOException;
+    void checkAllSubmissionResult(Long challengeInstanceId) throws IOException;
 
     void checkSubmissionResult(Problem problem, ProblemSolution problemSolution) throws IOException;
 }

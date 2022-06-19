@@ -10,13 +10,17 @@ import { ManageUsersComponent } from './component/manage-users/manage-users.comp
 import { UserRoutingModule } from './user-routing.module';
 import { ChangePasswordComponent } from './component/change-password/change-password.component';
 import { BulkUserUploadComponent } from './component/bulk-user-upload/bulk-user-upload.component';
+import { CreateUserComponent } from './component/create-user/create-user.component';
+import { ResetPasswordComponent } from './component/manage-users/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
     UserComponent,
     ManageUsersComponent,
     ChangePasswordComponent,
-    BulkUserUploadComponent
+    BulkUserUploadComponent,
+    CreateUserComponent,
+    ResetPasswordComponent
   ],
   imports: [
     UserRoutingModule,

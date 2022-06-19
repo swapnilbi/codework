@@ -1,0 +1,77 @@
+<div class="container-div">  
+    <form [formGroup]="userForm">
+        <div class="d-flex">
+            <div class="mr-auto p-2">
+                <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp;
+                    <strong *ngIf="!userId">Create User</strong>
+                    <strong *ngIf="userId">Update User</strong>
+                </h6>
+            </div>
+            <div class="p-2">
+                <button (click)="createUser(userForm.value)" *ngIf="!userId" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Create</button>        
+                <button (click)="updateUser(userForm.value)" *ngIf="userId" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Update</button>        
+            </div>    
+        </div>
+
+        <div class="row">
+            <div class="col-12">        
+                <div class="form-row">
+
+                    <div class="form-group col-md-6">
+                        <label for="name">Full Name </label>
+                        <input formControlName="fullName" type="text" class="form-control" id="fullName" placeholder="Full Name" aria-describedby="inputGroupPrepend" required>
+                        <div class="invalid-feedback" [style.display]="( userForm.controls.fullName?.invalid && (userForm.controls.fullName?.dirty || userForm.controls.fullName?.touched)) ? 'block' : 'none'">
+                            Please choose a username.
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="problemStatement">Gender</label>
+                        <select formControlName="gender" class="form-control" id="gender">
+                            <option *ngFor="let gender of genderList" [ngValue]="gender">
+                                {{ gender }}
+                            </option>                        
+                        </select> 
+                        <div class="invalid-feedback" [style.display]="( userForm.controls.gender?.invalid && (userForm.controls.gender?.dirty || userForm.controls.gender?.touched)) ? 'block' : 'none'">
+                            Please choose a gender.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Username</label>
+                        <input [readonly]="userId" formControlName="username" type="text" class="form-control" id="Username" placeholder="Username">
+                        <div class="invalid-feedback" [style.display]="( userForm.controls.username?.invalid && (userForm.controls.username?.dirty || userForm.controls.username?.touched)) ? 'block' : 'none'">
+                            Username must be at least 5 characters
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6" *ngIf="!userId">
+                        <label for="problemStatement">Password</label>
+                        <input formControlName="password" type="password" class="form-control" id="password" placeholder="Password">
+                         
+                    </div>
+                </div> 
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Email</label>
+                        <input formControlName="email" type="text" class="form-control" id="Email" placeholder="Email">
+                        <div class="invalid-feedback" [style.display]="( userForm.controls.email?.invalid && (userForm.controls.email?.dirty || userForm.controls.email?.touched)) ? 'block' : 'none'">
+                            Please choose valid email id
+                        </div>
+                    </div>                    
+                    <div class="form-group col-md-6">
+                        <label for="name">Roles</label>
+                        <select [compareWith]="rolesCompare" formControlName="roles" multiple class="form-control" id="roles">
+                            <option *ngFor="let role of rolesList" [ngValue]="role">
+                                {{ role }}
+                            </option>    
+                        </select> 
+                    </div>                    
+                </div> 
+
+            </div>       
+        </div>
+    </form>
+  </div>
+  

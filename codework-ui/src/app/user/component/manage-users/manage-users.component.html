@@ -5,7 +5,8 @@
          <h6> <a (click)="back()" *ngIf="true"><i class="fa fa-arrow-left" aria-hidden="true"></i></a> &nbsp; <strong>Manage Users</strong></h6>
       </div>
       <div class="p-2">
-        <button (click)="bulkUpload()" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> Bulk Upload</button>        
+        <button (click)="bulkUpload()" class="btn btn-info btn-sm"> <i class="fas fa-file-upload"></i> Bulk Upload</button>   &nbsp;     
+        <button (click)="createUser()" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> New</button>        
       </div>    
     </div>
     
@@ -39,7 +40,9 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">                
                   <a *ngIf="user.active" (click)="disableUser(user)" class="dropdown-item"> <i class='fas fa-ban'></i> &nbsp; Disable </a>
+                  <a class="dropdown-item" (click)="changePassword(user)"> <i class='fas fa-key'></i> &nbsp; Change Password </a>
                   <a  *ngIf="!user.active" (click)="enableUser(user)" class="dropdown-item"><i class='fas fa-trash'></i> &nbsp; Enable </a>
+                  <a (click)="editUser(user)" class="dropdown-item"><i class='fas fa-edit'></i> &nbsp; Edit </a>                  
                 </div>
               </div>                        
             </td>          
