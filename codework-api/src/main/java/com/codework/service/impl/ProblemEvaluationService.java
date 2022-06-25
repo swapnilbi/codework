@@ -41,6 +41,7 @@ public class ProblemEvaluationService implements IProblemEvaluationService {
                 if(problemSolution.getSolution()==null || problemSolution.getSolution().trim().length() == 0){
                     problemSolution.setPoints(0f);
                     problemSolution.setSolutionResult(SolutionResult.FAIL);
+                    problemSolution.setEvaluationStatus(EvaluationStatus.COMPLETED);
                 }else{
                     Problem problem = problemService.getProblem(problemSolution.getProblemId());
                     switch(problem.getType()){
@@ -109,18 +110,18 @@ public class ProblemEvaluationService implements IProblemEvaluationService {
                     ProblemPointSystem pointSystem = problem.getPointSystem();
                     long passedTestCases = testCaseResults.stream().filter(t-> t.isStatus()).count();
                     int minNumberOfTc = pointSystem.getMinNumberOfTc()!=null ? pointSystem.getMinNumberOfTc():problem.getTestCases().size();
-                    int pointsForCorrectAnswer = pointSystem.getCorrectAnswer()!=null ? pointSystem.getCorrectAnswer() : 100;
-                    Float points = 0f;
+                    Float pointsForCorrectAnswer = Float.valueOf(pointSystem.getCorrectAnswer()!=null ? pointSystem.getCorrectAnswer() : 100);
+                    float points = 0f;
                     if(passedTestCases >= minNumberOfTc){
                         double avgExecutionTime = testCaseResults.stream().filter(t-> t.isStatus()).mapToDouble(t-> Double.valueOf(t.getTime())).average().getAsDouble();
                         if(pointSystem.isSplitPointsByTc()){
-                            Float pointsPerTestCase = (float)(pointsForCorrectAnswer/passedTestCases);
+                            float pointsPerTestCase = pointsForCorrectAnswer/passedTestCases;
                             points = pointsPerTestCase * passedTestCases;
                         }else {
-                            points = Float.valueOf(pointsForCorrectAnswer);
+                            points = pointsForCorrectAnswer;
                         }
                         problemSolution.setAvgExecutionTime(avgExecutionTime);
-                        problemSolution.setPoints(points);
+                        problemSolution.setPoints(Float.valueOf(Math.round(points)));
                         problemSolution.setSolutionResult(SolutionResult.PASS);
                     }else{
                         problemSolution.setPoints(points);

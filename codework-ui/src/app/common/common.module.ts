@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   declarations: [
     AlertComponent,
     LoaderComponent,
-    SidebarComponent,
+    SidebarComponent
   ],
   imports: [
     CommonModule,

@@ -1,12 +1,15 @@
 package com.codework.entity;
 
 import com.codework.enums.ChallengeStatus;
+import com.codework.model.ChallengeInstruction;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @Document(collection = "Challenge")
@@ -20,6 +23,8 @@ public class Challenge {
 	private String name;
 	private String shortDescription;
 	private String longDescription;
+	private String commonInstructions;
+	private List<ChallengeInstruction> questionSpecificInstructions;
 	private Date startDate;
 	private Date endDate;
 	private String bannerImage;

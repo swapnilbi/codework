@@ -34,6 +34,8 @@ import { HtmlPreviewComponent } from './component/challenge/manage-challenge/htm
 import { EvaluateChallengeInstanceComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/evaluate-challenge-instance.component';
 import { ViewSubmissionComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/view-submission/view-submission.component';
 import { AgGridRowNumberComponent } from './component/challenge/challenge-details/ag-grid-row-number/ag-grid-row-number.component';
+import { TimerComponent } from './component/challenge/live-challenge/timer/timer.component';
+import { CdTimerModule } from 'angular-cd-timer';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -62,7 +64,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HtmlPreviewComponent, 
     EvaluateChallengeInstanceComponent, 
     ViewSubmissionComponent, 
-    AgGridRowNumberComponent        
+    AgGridRowNumberComponent, TimerComponent        
   ],
   imports: [    
     CommonModule,
@@ -79,7 +81,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MonacoEditorModule.forRoot(CodeEditorConfig), // use forRoot() in main app module only.      
     SweetAlert2Module.forRoot(),    
     ModalModule.forRoot(),
-    AccordionModule.forRoot(),        
+    AccordionModule.forRoot(),   
+    CdTimerModule     
   ],
   providers: [
     {

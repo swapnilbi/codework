@@ -3,3 +3,6 @@ env: standard
 instance_class: F2
 runtime_config:
   jdk: openjdk8
+automatic_scaling:
+  min_instances: 0
+  max_instances: 1

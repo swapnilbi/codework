@@ -2,14 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridEvent, ColDef, FirstDataRenderedEvent, GridApi, GridReadyEvent, PostSortRowsParams } from 'ag-grid-community';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { ChallengeInstance } from 'src/app/challenge/model/challenge-instance.model';
 import { ChallengeLeaderboard } from 'src/app/challenge/model/challenge-leaderboard';
 import { ChallengeSubscriptionStatus } from 'src/app/challenge/model/challenge-subscription.modal';
 import { Challenge, ChallengeStatus } from 'src/app/challenge/model/challenge.model';
 import { UserSubmission } from 'src/app/challenge/model/user-submission.model';
+import { ChallengInstanceService } from 'src/app/challenge/service/challenge-instance.service';
 import { AlertService } from '../../../../common/component/common/alert/alert-service.service';
 import { LoaderService } from '../../../../common/component/common/loader/loader.service';
 import { ChallengeService } from '../../../service/challenge.service';
+import { ViewSubmissionComponent } from '../manage-challenge/evaluate-challenge-instance/view-submission/view-submission.component';
 import { AgGridRowNumberComponent } from './ag-grid-row-number/ag-grid-row-number.component';
 
 @Component({
@@ -49,8 +52,10 @@ export class ChallengeDetailsComponent implements OnInit {
 
   constructor(private router: Router, 
     private route: ActivatedRoute, 
+    private challengeInstanceService : ChallengInstanceService,
     private challengeService : ChallengeService, 
     protected alertService: AlertService, 
+    private modalService: BsModalService,
     private loaderService: LoaderService) {     
   }
 
@@ -163,6 +168,23 @@ export class ChallengeDetailsComponent implements OnInit {
     if(userSubmission){
       var url = '/challenge/'+userSubmission.challengeInstanceId+'/live';
       this.router.navigateByUrl(url);    
+    }    
+  }
+
+  viewSubmission(userSubmission:  UserSubmission){    
+    if(userSubmission){
+      this.loaderService.show();
+      this.challengeInstanceService.getUserSubmittedProblems(userSubmission.id).subscribe(response => {      
+        this.loaderService.hide();
+        const initialState = {
+          viewMode : true,
+          submittedProblems : response 
+        };
+        this.modalService.show(ViewSubmissionComponent, {initialState, class: 'modal-xl modal-dialog-scrollable'});              
+        }, error => {
+          this.loaderService.hide();
+        }
+      );    
     }    
   }
 

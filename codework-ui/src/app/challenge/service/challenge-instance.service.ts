@@ -140,6 +140,20 @@ export class ChallengInstanceService {
     );
   }
 
+  public getUserSubmittedProblems(challengeInstanceSubmissionId : number): Observable<Array<EvaluateProblem>>{        
+    let queryParams: any = {
+      'challengeInstanceSubmissionId' : challengeInstanceSubmissionId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.GET_USER_SUBMITTED_PROBLEMS_URL,queryParams);
+    return this.httpClient.get<Response<Array<EvaluateProblem>>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
   public updateProblemSolution(problemSolution : ProblemSolution): Observable<UserSubmission>{        
     let queryParams: any = {
       'problemSubmissionId' : problemSolution.id

@@ -204,6 +204,30 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		return evaluateProblems;
 	}
 
+	@Override
+	public List<EvaluateProblem> getUserSubmittedProblems(Long challengeInstanceSubmissionId, Long userId) throws BusinessException {
+		ChallengeInstanceSubmission challengeInstanceSubmission = challengeInstanceSubmissionRepository.findById(challengeInstanceSubmissionId).get();
+		if(!SubmissionStatus.SUBMITTED.equals(challengeInstanceSubmission.getSubmissionStatus())) {
+			throw new BusinessException("Solution is not submitted yet");
+		}
+		ChallengeInstance challengeInstance = getChallengeInstance(challengeInstanceSubmission.getChallengeInstanceId());
+		if(!userId.equals(challengeInstanceSubmission.getUserId()) && ChallengeInstanceStatus.EXPIRED.equals(challengeInstance.getInstanceStatus())) {
+			throw new BusinessException("Challenge is not completed yet");
+		}
+		List<EvaluateProblem> evaluateProblems = getSubmittedProblems(challengeInstanceSubmissionId);
+		if(evaluateProblems!=null && !evaluateProblems.isEmpty()){
+			if(!ChallengeInstanceStatus.EXPIRED.equals(challengeInstance.getInstanceStatus())) {
+				for(EvaluateProblem evaluateProblem: evaluateProblems){
+					if(evaluateProblem.getProblemSolution()!=null){
+						evaluateProblem.getProblemSolution().setTestCaseResults(null);
+						evaluateProblem.getProblemSolution().setEvaluationRemarks(null);
+					}
+				}
+			}
+		}
+		return evaluateProblems;
+	}
+
 	private EvaluateProblem getEvaluateProblem(ProblemSolution problemSolution){
 		EvaluateProblem evaluateProblem = new EvaluateProblem();
 		evaluateProblem.setProblemSolution(problemSolution);
@@ -254,6 +278,21 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 			}
 		}
 		return challengeInstancePoints;
+	}
+
+	@Override
+	public EvaluationDetails getUserEvaluationDetails(ChallengeInstanceSubmission challengeInstanceSubmission){
+		EvaluationDetails evaluationDetails = null;
+		List<ProblemSolution> problemSolutionList = problemSolutionService.getProblemSolutions(challengeInstanceSubmission.getId());
+		if(problemSolutionList!=null){
+			evaluationDetails = new EvaluationDetails();
+			if(problemSolutionList.stream().allMatch(t -> EvaluationStatus.COMPLETED.equals(t.getEvaluationStatus()))){
+				Double points = problemSolutionList.stream().mapToDouble(ProblemSolution::getPoints).sum();
+				evaluationDetails.setEvaluationStatus(EvaluationStatus.COMPLETED);
+				evaluationDetails.setPoints(points);
+			}
+		}
+		return evaluationDetails;
 	}
 
 	@Override

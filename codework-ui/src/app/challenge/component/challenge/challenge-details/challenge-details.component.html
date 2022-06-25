@@ -23,10 +23,11 @@
                       <th scope="col">#</th>
                       <th scope="col">Problem</th>
                       <th scope="col">Type</th>                                            
-                      <th scope="col">Start Date</th>
-                      <th scope="col">End Date</th>
+                      <th scope="col">Starts On</th>
+                      <th scope="col">Ends On</th>
                       <th scope="col">Status</th>
-                      <th scope="col">Submitted Date</th>
+                      <th scope="col">Points</th>
+                      <th scope="col">Submitted On</th>
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
@@ -34,22 +35,31 @@
                     <tr *ngFor="let submission of challenge.userSubmissions;  let i = index ">             
                       <th scope="row">{{i+1}}</th>
                       <td>{{submission.problem}}</td>
-                      <td>{{submission.problemType}}</td>
-                      <td>{{submission.startTime | date:'dd/MM/yyyy hh:mm a' }}</td>
-                      <td>{{submission.endTime | date:'dd/MM/yyyy hh:mm a'}}</td>
+                      <td>          
+                        <span *ngIf="submission.problemType == 'Puzzle'"><i class="fa fa-solid fa-puzzle-piece"></i> Puzzle</span>
+                        <span *ngIf="submission.problemType == 'Program'"><i class="fa fa-solid fa-code"></i> Program</span>
+                      </td>
+                      <td>{{submission.startTime | date:'MMM d, hh:mm a' }}</td>
+                      <td>{{submission.endTime | date:'MMM d, hh:mm a'}}</td>
                       <td>
                           <span *ngIf="submission.submissionStatus == 'NOT_STARTED'" class="badge badge-secondary">Not Started</span>
-                          <span *ngIf="submission.submissionStatus == 'IN_PROGRESS'" class="badge badge-primary">In Progress</span>
-                          <span *ngIf="submission.submissionStatus == 'LIVE'" class="badge badge-success">Live</span>
-                          <span *ngIf="submission.submissionStatus == 'SUBMITTED'" class="badge badge-success">Submitted</span>                                                    
+                          <span *ngIf="submission.submissionStatus == 'IN_PROGRESS'" class="badge badge-info">In Progress</span>
+                          <span *ngIf="submission.submissionStatus == 'LIVE'" class="badge badge-primary">Live</span>
+                          <span *ngIf="submission.submissionStatus == 'SUBMITTED' && submission.evaluationStatus != 'COMPLETED'" class="badge badge-info">Under Review</span>                                                                                            
+                          <span *ngIf="submission.evaluationStatus == 'COMPLETED'" class="badge badge-success">Evaluated</span>
                           <span *ngIf="submission.submissionStatus == 'EXPIRED'" class="badge badge-danger">Expired</span>
                       </td>
+                      <td>                        
+                        <span *ngIf="submission.evaluationStatus == 'COMPLETED'">{{submission.totalPoints}}</span>
+                        <span *ngIf="submission.evaluationStatus != 'COMPLETED'">-</span>
+                      </td>
                       <td> <div *ngIf="submission.submittedTime">
-                        {{submission.submittedTime | date:'dd/MM/yyyy hh:mm a'}}                          
+                        {{submission.submittedTime | date:'MMM d, hh:mm a'}}                          
                       </div></td>
                       <td>
                         <button *ngIf="isRegistered(challenge) && submission.submissionStatus == 'LIVE'" class="btn btn-info btn-sm" (click)="startChallenge(submission)">Start</button>        
                         <button *ngIf="isRegistered(challenge) && submission.submissionStatus == 'IN_PROGRESS'" class="btn btn-info btn-sm" (click)="startChallenge(submission)">Resume</button>        
+                        <button *ngIf="submission.submissionStatus == 'SUBMITTED'" class="btn btn-success btn-sm" (click)="viewSubmission(submission)">View Submission</button>        
                       </td>
                     </tr>                                                          
                   </tbody>

@@ -1,22 +1,19 @@
 package com.codework.service.impl;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-import com.codework.entity.ChallengeInstance;
-import com.codework.entity.ChallengeInstanceSubmission;
+import com.codework.entity.*;
 import com.codework.enums.ChallengeInstanceStatus;
+import com.codework.enums.ProblemType;
 import com.codework.enums.SubmissionStatus;
-import com.codework.model.Leaderboard;
-import com.codework.model.LiveChallengeDetails;
-import com.codework.model.UserSubmission;
+import com.codework.model.*;
 import com.codework.service.IChallengeInstanceService;
+import com.codework.service.IProblemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.codework.entity.Challenge;
-import com.codework.entity.ChallengeSubscription;
 import com.codework.enums.ChallengeStatus;
-import com.codework.model.ChallengeDetails;
 import com.codework.repository.ChallengeRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.IChallengeService;
@@ -30,6 +27,9 @@ public class ChallengeService implements IChallengeService {
 
 	@Autowired
 	IChallengeInstanceService challengeInstanceService;
+
+	@Autowired
+	IProblemService problemService;
 
 	@Autowired
 	SequenceGenerator sequenceGenerator;
@@ -50,17 +50,18 @@ public class ChallengeService implements IChallengeService {
 			 if(challengeInstances!=null && !challengeInstances.isEmpty()){
 				 List<UserSubmission> userSubmissionList = new ArrayList<>();
 				 for(ChallengeInstance challengeInstance : challengeInstances){
-					 UserSubmission userSubmission = new UserSubmission();
-					 userSubmission.setProblem(challengeInstance.getName());
-					 userSubmission.setChallengeInstanceId(challengeInstance.getId());
-					 userSubmission.setStartTime(challengeInstance.getStartDate());
-					 userSubmission.setEndTime(challengeInstance.getEndDate());
-					 userSubmission.setProblemType(challengeInstance.getType());
+					 UserSubmission userSubmission = new UserSubmission(challengeInstance);
 					 Optional<ChallengeInstanceSubmission> existingInstanceSubmission = challengeInstanceService.getChallengeInstanceSubmission(challengeInstance.getId(),userId);
 					 if(existingInstanceSubmission.isPresent()){
 						 ChallengeInstanceSubmission challengeInstanceSubmission = existingInstanceSubmission.get();
 						 userSubmission.setSubmissionStatus(challengeInstanceSubmission.getSubmissionStatus());
+						 userSubmission.setId(challengeInstanceSubmission.getId());
 						 userSubmission.setSubmittedTime(challengeInstanceSubmission.getSubmissionTime());
+						 if(SubmissionStatus.SUBMITTED.equals(userSubmission.getSubmissionStatus())){
+							 EvaluationDetails evaluationDetails = challengeInstanceService.getUserEvaluationDetails(challengeInstanceSubmission);
+							 userSubmission.setTotalPoints(evaluationDetails.getPoints());
+							 userSubmission.setEvaluationStatus(evaluationDetails.getEvaluationStatus());
+						 }
 					 }else if(challengeInstance.getInstanceStatus().equals(ChallengeInstanceStatus.EXPIRED)){
 						 userSubmission.setSubmissionStatus(SubmissionStatus.EXPIRED);
 					 }else if(challengeInstance.getInstanceStatus().equals(ChallengeInstanceStatus.LIVE)){
@@ -84,6 +85,9 @@ public class ChallengeService implements IChallengeService {
 			if(challengeSubscription.isPresent()) {
 				challengeDetails.setChallengeSubscription(challengeSubscription.get());
 			}
+			List<ChallengeSubscription> challengeSubscriptionList = challengeSubscriptionService.getChallengeSubscription(id);
+			Long registrationCount = challengeSubscriptionList!=null ? challengeSubscriptionList.stream().count() : 0l;
+			challengeDetails.setRegistrationCount(registrationCount.intValue());
 			return Optional.of(challengeDetails);
 		}
 		return Optional.empty();
@@ -120,6 +124,8 @@ public class ChallengeService implements IChallengeService {
 		challenge.setStatus(ChallengeStatus.SCHEDULED);
 		challenge.setShortDescription(challengeInput.getShortDescription());
 		challenge.setName(challengeInput.getName());
+		challenge.setCommonInstructions(challengeInput.getCommonInstructions());
+		challenge.setQuestionSpecificInstructions(challengeInput.getQuestionSpecificInstructions());
 		challenge.setBannerImage(challengeInput.getBannerImage());
 		challenge.setLongDescription(challengeInput.getLongDescription());
 		challenge.setStartDate(challengeInput.getStartDate());
@@ -133,9 +139,14 @@ public class ChallengeService implements IChallengeService {
 	public LiveChallengeDetails getLiveChallengeDetails(Long challengeInstanceId, Long userId) {
 		ChallengeInstance challengeInstance = challengeInstanceService.getChallengeInstance(challengeInstanceId);
 		ChallengeDetails challengeDetails = getChallengeDetails(challengeInstance.getChallengeId(),userId).get();
+		List<Problem> problemList = problemService.getProblems(challengeInstanceId);
+		List<ProblemType> problemTypes = new ArrayList<>();
+		if(problemList!=null){
+			problemTypes = problemList.stream().map(t-> t.getType()).collect(Collectors.toList());
+		}
 		Optional<ChallengeInstanceSubmission> challengeInstanceSubmission = challengeInstanceService.getChallengeInstanceSubmission(challengeInstanceId,userId);
 		ChallengeInstanceSubmission instanceSubmission = challengeInstanceSubmission.orElse(null);
-		return new LiveChallengeDetails(challengeDetails,challengeInstance, instanceSubmission);
+		return new LiveChallengeDetails(challengeDetails,challengeInstance, instanceSubmission,problemTypes);
 	}
 
 	@Override
@@ -159,6 +170,8 @@ public class ChallengeService implements IChallengeService {
 		Challenge challenge = challengeRepository.findById(challengeDetails.getId()).get();
 		challenge.setShortDescription(challengeDetails.getShortDescription());
 		challenge.setName(challengeDetails.getName());
+		challenge.setCommonInstructions(challengeDetails.getCommonInstructions());
+		challenge.setQuestionSpecificInstructions(challengeDetails.getQuestionSpecificInstructions());
 		challenge.setBannerImage(challengeDetails.getBannerImage());
 		challenge.setLongDescription(challengeDetails.getLongDescription());
 		challenge.setStartDate(challengeDetails.getStartDate());

@@ -8,25 +8,25 @@ import { UserService } from '../../service/user.service';
 
 @Component({
   selector: 'app-change-password',
-  templateUrl: './change-password.component.html'  
+  templateUrl: './change-password.component.html'
 })
 export class ChangePasswordComponent implements OnInit {
 
   changePasswordForm: FormGroup;
-  
-  constructor(private route: ActivatedRoute,    
-    private router : Router,    
+
+  constructor(private route: ActivatedRoute,
+    private router : Router,
     private location : Location,
     private fb:FormBuilder,
-    private userService : UserService, 
-    private alertService : AlertService, 
-    private loaderService: LoaderService) {  
+    private userService : UserService,
+    private alertService : AlertService,
+    private loaderService: LoaderService) {
 
       this.changePasswordForm = this.fb.group({
         "oldPassword": new FormControl("", Validators.required),
         "newPassword": new FormControl("", Validators.required),
-        "confirmPassword": new FormControl(null, Validators.required),        
-     });     
+        "confirmPassword": new FormControl(null, Validators.required),
+     });
   }
 
   changePassword(changePasswordInput : any){
@@ -38,23 +38,23 @@ export class ChangePasswordComponent implements OnInit {
       oldPassword : changePasswordInput.oldPassword,
       newPassword : changePasswordInput.newPassword
     }
-    //this.loaderService.show();       
-    this.userService.changePassword(changeaPasswordForm).subscribe(response => {    
-      //this.loaderService.hide();       
-      if(response){                   
-          this.alertService.success("Password has been changed successfully");  
-          this.changePasswordForm.reset();                  
-        }                
+    this.loaderService.show();
+    this.userService.changePassword(changeaPasswordForm).subscribe(response => {
+      this.loaderService.hide();
+      if(response){
+          this.alertService.success("Password has been changed successfully");
+          this.changePasswordForm.reset();
+        }
       }, error => {
-        this.loaderService.hide();       
-    }); 
+        this.loaderService.hide();
+    });
   }
 
   ngOnInit(): void {
 
   }
 
-  back(){        
+  back(){
     this.location.back();
   }
 

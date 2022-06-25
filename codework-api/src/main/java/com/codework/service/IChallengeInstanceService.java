@@ -5,10 +5,7 @@ import com.codework.entity.ChallengeInstanceSubmission;
 import com.codework.entity.ProblemSolution;
 import com.codework.exception.BusinessException;
 import com.codework.exception.SystemException;
-import com.codework.model.ChallengeSubmitInput;
-import com.codework.model.EvaluateProblem;
-import com.codework.model.Leaderboard;
-import com.codework.model.UserSubmission;
+import com.codework.model.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +38,11 @@ public interface IChallengeInstanceService {
 
     List<EvaluateProblem> getSubmittedProblems(Long challengeInstanceSubmissionId);
 
+    List<EvaluateProblem> getUserSubmittedProblems(Long challengeInstanceSubmissionId, Long userId) throws BusinessException;
+
     EvaluateProblem updateProblemSolution(ProblemSolution problemSolution);
+
+    EvaluationDetails getUserEvaluationDetails(ChallengeInstanceSubmission challengeInstanceSubmission);
 
     Leaderboard getChallengeLeaderboard(Long challengeId);
 }

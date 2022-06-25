@@ -1,7 +1,7 @@
 <div *ngIf="selectedProblem">
   
   <div class="editor-header" *ngIf="selectedProblem">  
-    <span class="language">Language : </span>      
+    <span class="dropdown-label">Language : </span>      
     <select [(ngModel)]="language" class="editor-header-select" (change)="onLanguageChange(language)">
       <option *ngFor="let lang of selectedProblem.languagesAllowed" [ngValue]="lang">
         {{lang.name}}

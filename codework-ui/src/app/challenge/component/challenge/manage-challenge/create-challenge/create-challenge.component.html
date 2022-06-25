@@ -74,7 +74,44 @@
                         </div>                        
                     </div>
 
-                </div>         
+                </div> 
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="name">Common Instruction</label>                        
+                        <textarea formControlName="commonInstructions" class="form-control" id="longDescription" placeholder="Common Instruction" rows="5"></textarea>      
+                        <button *ngIf="challengeForm.value && challengeForm.value.commonInstructions" (click)="previewLongDescription(challengeForm.value.commonInstructions)" type="button" class="btn btn-info btn-sm mt-1"> <i class="fas fa-search"></i> Preview</button>        
+                    </div>                          
+                </div>
+                                            
+                <strong>Problem Specific Instruction</strong>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <div class="card">
+                            <div class="card-body" formArrayName="questionSpecificInstructions">                                           
+                                <div class="" *ngFor="let questionSpecificInstruction of questionSpecificInstructions.controls; let i = index">
+                                    <ng-container [formGroupName]="i">
+                                        #{{i+1}} &nbsp;
+                                        <label class="sr-only" for="input">Problem Type</label>                                        
+                                        <select [compareWith]="problemTypeCompare" formControlName="problemType" class="form-control mb-2 mr-sm-2">
+                                            <option *ngFor="let problemType of problemTypes" [ngValue]="problemType">
+                                                {{ problemType }}
+                                            </option>    
+                                        </select>     
+
+                                        <label class="sr-only" for="c">Instruction</label>
+                                        <textarea formControlName="instruction" class="form-control mb-2 mr-sm-6" placeholder="Instruction" rows="4"></textarea>                                                                                          
+                                        <button *ngIf="questionSpecificInstruction.value.instruction" (click)="previewLongDescription(questionSpecificInstruction.value.instruction)" type="button" class="btn btn-info btn-sm mb-2 mr-2"> <i class="fas fa-search"></i> Preview</button>        
+                                        <button *ngIf="i == questionSpecificInstructions.controls.length - 1" (click)="addQuestionSpecificInstruction()" type="submit" class="btn btn-primary btn-sm mb-2">Add</button>
+                                        <button *ngIf="i != questionSpecificInstructions.controls.length - 1" (click)="deleteQuestionSpecificInstruction(i)" type="submit" class="btn btn-danger btn-sm mb-2">Remove</button>
+                                    </ng-container>
+                                </div>                                 
+                            </div>
+                        </div>
+                    </div>                    
+                </div>                
+                
             </div>       
         </div>
     </form>

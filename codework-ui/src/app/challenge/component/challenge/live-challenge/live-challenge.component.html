@@ -1,14 +1,23 @@
-<app-challenge-instruction (challengeStartEvent)="startChallenge()" *ngIf="showInstruction"></app-challenge-instruction>
+<app-challenge-instruction 
+  (challengeStartEvent)="startChallenge()" 
+  [challenge]="liveChallenge.challengeDetails" 
+  [problemTypes]="liveChallenge.problemTypes"  
+  *ngIf="showInstruction && liveChallenge">
+</app-challenge-instruction>
+
 <div class="challenge-live" *ngIf="showLiveChallenge">
     <as-split direction="horizontal">
-      <as-split-area class="problem-details-wrapper" [size]="30" [minSize]="10" [maxSize]="40">
+      <as-split-area class="problem-details-wrapper" [size]="25" [minSize]="20" [maxSize]="40">
           <div class="problem-select-header">
-            <span class="language">Problem : </span>
+            <span class="dropdown-label">Problem : </span>
             <select [(ngModel)]="selectedProblem" class="problem-select">
               <option *ngFor="let problem of problems; let i = index" [ngValue]="problem">
                 {{problem.name}}
               </option>
             </select>
+            <span class="text-right float-right mt-1"> 
+              <app-timer [startTime]="liveChallenge?.challengeInstanceSubmission?.startTime"></app-timer>
+            </span>            
           </div>
           <div class="problem-details" *ngIf="selectedProblem">
             <div class="title">Problem Statement</div>
@@ -17,7 +26,7 @@
             </div>
           </div>
       </as-split-area>
-      <as-split-area class="challenge-editor" [size]="70" [minSize]="60" [maxSize]="90">
+      <as-split-area class="challenge-editor" [size]="75" [minSize]="50" [maxSize]="80">
         <div *ngIf="selectedProblem && liveChallenge">
 
           <code-editor *ngIf="selectedProblem.type == 'PROGRAM'" (finishChallengeEvent)="finishChallenge($event)" #codeEditor [problem]="selectedProblem" [liveChallenge]="liveChallenge"></code-editor>

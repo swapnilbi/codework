@@ -1,12 +1,12 @@
 <div class="card card-inverse card-info" (click)="viewChallenge()">
     <div class="card-header" style="background-image: url('assets/images/widget.png')">            
-        <!--
-        <div class="card-container text-center">
+        
+        <div class="card-container text-right">
             <div class="registrations tool-tip align-left">
-                <i class="fa fa-user"></i> 0
+                <i class="fa fa-user"></i> {{ challenge.registrationCount || 0 }}
             </div>
         </div>
-        -->
+        
     </div>            
     <div class="card-block">                
         <h4 class="card-title">{{ challenge.name }}</h4>

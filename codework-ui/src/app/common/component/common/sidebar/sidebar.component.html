@@ -1,7 +1,7 @@
 <div class="dashboard-nav" *ngIf="userProfile">  
   <div class="sidebar-profile">
     <div class="user-pic">
-      <img class="img-responsive img-rounded" src="assets/images/user.jpg" alt="User picture">
+      <img class="img-responsive img-rounded" [src]="getUserImage()" alt="User picture">      
     </div>
     <div class="user-info">
       <span class="user-name"><strong>{{userProfile.fullName}}</strong>

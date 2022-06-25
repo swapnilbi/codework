@@ -1,5 +1,6 @@
 package com.codework.model;
 
+import com.codework.entity.ChallengeInstance;
 import com.codework.entity.ChallengeInstanceSubmission;
 import com.codework.enums.EvaluationStatus;
 import com.codework.enums.ProblemType;
@@ -29,6 +30,14 @@ public class UserSubmission {
 
 	public UserSubmission(){
 
+	}
+
+	public UserSubmission(ChallengeInstance challengeInstance){
+		this.setProblem(challengeInstance.getName());
+		this.setChallengeInstanceId(challengeInstance.getId());
+		this.setStartTime(challengeInstance.getStartDate());
+		this.setEndTime(challengeInstance.getEndDate());
+		this.setProblemType(challengeInstance.getType());
 	}
 
 	public UserSubmission(ChallengeInstanceSubmission challengeInstanceSubmission){

@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotBlank;
 
@@ -21,6 +22,9 @@ public class ChallengeDetails {
 	private Date startDate;
 	private Date endDate;
 	private String bannerImage;
+	private String commonInstructions;
+	private Integer registrationCount;
+	private List<ChallengeInstruction> questionSpecificInstructions;
 	private ChallengeStatus status;
 	private ChallengeSubscription challengeSubscription;
 	private List<UserSubmission> userSubmissions;
@@ -32,6 +36,8 @@ public class ChallengeDetails {
 	public ChallengeDetails(Challenge challenge){
 		this.id = challenge.getId();
 		this.name = challenge.getName();
+		this.commonInstructions = challenge.getCommonInstructions();
+		this.questionSpecificInstructions = challenge.getQuestionSpecificInstructions();
 		this.shortDescription = challenge.getShortDescription();
 		this.longDescription = challenge.getLongDescription();
 		this.startDate = challenge.getStartDate();

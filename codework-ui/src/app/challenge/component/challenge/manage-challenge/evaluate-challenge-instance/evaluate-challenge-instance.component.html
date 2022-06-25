@@ -22,8 +22,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let userSubmission of submissionList">   
-          <td>1</td>       
+        <tr *ngFor="let userSubmission of submissionList;  let i = index">   
+          <td>{{i+1}}</td>       
           <td *ngIf="userSubmission.userDetails">{{ userSubmission.userDetails.fullName }}</td>
           <td>{{ userSubmission.startTime  | date :  "dd/MM/yy hh:mm:ss a" }}</td>         
           <td>{{ userSubmission.submittedTime  | date :  "dd/MM/yy hh:mm:ss a" }}</td>

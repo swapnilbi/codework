@@ -106,6 +106,14 @@ export class SidebarComponent implements OnInit {
     return false;
   }
 
+  getUserImage(){
+    let userImage = "assets/images/user.jpg";
+    if(this.userProfile?.gender && this.userProfile?.gender == 'FEMALE'){
+      userImage = "assets/images/female-user.jpg";
+    }
+    return userImage;
+  }
+
   changePassword(){
     this.router.navigate(['user/change-password']);
   }

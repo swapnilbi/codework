@@ -1,6 +1,7 @@
 package com.codework.service.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import com.codework.service.IProblemSolutionService;
@@ -42,5 +43,10 @@ public class ChallengeSubscriptionService implements IChallengeSubscriptionServi
 	public Optional<ChallengeSubscription> getChallengeSubscription(Long challengeId, Long userId) {
 		return challengeSubscriptionRepository.findByChallengeIdAndUserId(challengeId, userId);
 	}
-	
+
+	@Override
+	public List<ChallengeSubscription> getChallengeSubscription(Long challengeId) {
+		return challengeSubscriptionRepository.findByChallengeId(challengeId);
+	}
+
 }

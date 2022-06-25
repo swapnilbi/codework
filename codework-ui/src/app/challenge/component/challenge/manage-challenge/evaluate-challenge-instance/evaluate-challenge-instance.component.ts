@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { UserSubmission } from 'src/app/challenge/model/user-submission.model';
 import { ChallengInstanceService } from 'src/app/challenge/service/challenge-instance.service';
 import { AlertService } from 'src/app/common/component/common/alert/alert-service.service';
@@ -28,7 +28,11 @@ export class EvaluateChallengeInstanceComponent implements OnInit {
 
   ngOnInit(): void {    
     this.instanceId = this.route.snapshot.paramMap.get('instanceId');    
-    this.loaderService.show();
+    this.loaderService.show();    
+    this.getChallengeInstanceSubmissions();
+  }
+
+  getChallengeInstanceSubmissions(){
     this.challengeInstanceService.getChallengeInstanceSubmissions(this.instanceId).subscribe(response => {      
       this.loaderService.hide();
       this.submissionList = response;      
@@ -45,7 +49,12 @@ export class EvaluateChallengeInstanceComponent implements OnInit {
       const initialState = {
         submittedProblems : response 
       };
-      this.modalService.show(ViewSubmissionComponent, {initialState, class: 'modal-xl modal-dialog-scrollable'});              
+      let modalRef: BsModalRef = this.modalService.show(ViewSubmissionComponent, {initialState, class: 'modal-xl modal-dialog-scrollable'});            
+      if(modalRef.onHidden){
+        modalRef.onHidden.subscribe((result : any) => {
+          this.getChallengeInstanceSubmissions();
+        })
+      }      
     }, error => {
       this.loaderService.hide();
     }

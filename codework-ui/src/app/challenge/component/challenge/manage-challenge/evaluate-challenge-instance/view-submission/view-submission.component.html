@@ -23,19 +23,19 @@
                 </div>                
             </div>
 
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    <label for="problemStatement">Name </label>
-                    <input formControlName="name" readonly type="text" class="form-control">                    
-                </div>
+            <div class="form-row">                
                 <div class="form-group col-md-3">                        
                     <label for="inputEmail4">Type</label>
                     <input formControlName="type" readonly type="text" class="form-control">                    
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="problemStatement">Time Taken (Min) </label>
-                    <input formControlName="timeTaken" readonly type="text" class="form-control">                    
+                </div>                                
+                <div class="form-group col-md-3" *ngIf="selectedProblem.type == 'PROGRAM'">
+                    <label for="language">Language </label>
+                    <input formControlName="language" readonly type="text" class="form-control">                    
                 </div>                
+                <div class="form-group col-md-3">
+                    <label for="problemStatement">Time Taken</label>
+                    <input formControlName="timeTaken" readonly type="text" class="form-control">                    
+                </div>
             </div>
 
             <div class="form-row">
@@ -47,18 +47,18 @@
                         [options]="editorOptions"  
                         formControlName="solution"                          
                   ></ngx-monaco-editor>
-                  <textarea *ngIf="selectedProblem.type != 'PROGRAM'"  formControlName="solution" class="form-control" rows="5"></textarea>      
+                  <textarea *ngIf="selectedProblem.type != 'PROGRAM'" readonly  formControlName="solution" class="form-control" rows="5"></textarea>      
                 </div>                
             </div>
         
             <div class="form-row" *ngIf="selectedProblem.type == 'PROGRAM' && selectedProblem.problemSolution.evaluationStatus == 'COMPLETED'">
                 <div class="form-group col-md-6">
-                    <label for="problemStatement">Avg Execution Time </label>
+                    <label for="problemStatement">Avg Execution Time (Sec) </label>
                     <input formControlName="avgExecutionTime" readonly type="text" class="form-control">                    
                 </div>                
             </div>
 
-            <button *ngIf="selectedProblem.type == 'PROGRAM' && selectedProblem.problemSolution.evaluationStatus == 'COMPLETED'" class="btn btn-primary btn-sm mb-3" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" type="button"> Test Results</button>
+            <button *ngIf="selectedProblem.type == 'PROGRAM' && selectedProblem.problemSolution.evaluationStatus == 'COMPLETED' && selectedProblem.problemSolution.testCaseResults" class="btn btn-primary btn-sm mb-3" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" type="button"> Test Results</button>
 
             <div *ngIf="selectedProblem.type == 'PROGRAM' && selectedProblem.problemSolution" class="collapse" id="collapseExample">
                 <div class="card card-body">
@@ -96,31 +96,41 @@
 
             <div class="form-row">
                 <div class="form-group col-md-3">
-                    <label for="problemStatement">Evaluation Status </label>
-                    <select formControlName="evaluationStatus" class="form-control" id="type">
-                        <option *ngFor="let evaluationStatus of evaluationStatusList" [ngValue]="evaluationStatus">
-                            {{ evaluationStatus }}
-                        </option>                        
-                    </select>
+                    <label for="problemStatement">Evaluation Status </label>                                        
+                    <ng-container *ngIf="!viewMode">
+                        <select formControlName="evaluationStatus" class="form-control" id="type">
+                            <option *ngFor="let evaluationStatus of evaluationStatusList" [ngValue]="evaluationStatus">
+                                {{ evaluationStatus }}
+                            </option>                        
+                        </select>
+                    </ng-container>
+                    <ng-container *ngIf="viewMode">                        
+                        <input formControlName="evaluationStatus" readonly type="text" class="form-control">                    
+                    </ng-container>
                 </div>
                 <div class="form-group col-md-3">                        
                     <label for="inputEmail4">Result</label>
-                    <select formControlName="solutionResult" class="form-control" id="type">
-                        <option *ngFor="let result of resultList" [ngValue]="result">
-                            {{ result }}
-                        </option>                        
-                    </select>                    
+                    <ng-container *ngIf="!viewMode">                        
+                        <select formControlName="solutionResult" class="form-control" id="type">
+                            <option *ngFor="let result of resultList" [ngValue]="result">
+                                {{ result }}
+                            </option>                        
+                        </select>    
+                    </ng-container>  
+                    <ng-container *ngIf="viewMode">                        
+                        <input formControlName="solutionResult" readonly type="text" class="form-control">                    
+                    </ng-container>              
                 </div>
                 <div class="form-group col-md-3">                        
-                    <label for="inputEmail4">Points</label>
-                    <input formControlName="points" type="text" class="form-control">                    
+                    <label for="inputEmail4">Points</label>                                        
+                    <input formControlName="points" [readonly]="viewMode" type="text" class="form-control">                       
                 </div>                
             </div>
 
             <div class="form-row">                
                 <div class="form-group col-md-6">
                     <label for="problemStatement">Remarks </label>
-                    <input formControlName="evaluationRemarks" type="text" class="form-control">                    
+                    <input formControlName="evaluationRemarks" [readonly]="viewMode" type="text" class="form-control">                    
                 </div>                
             </div>
 
@@ -128,7 +138,7 @@
 	</div>
 
   <div class="modal-footer">        
-    <button [disabled]="!evaluationForm.valid" (click)="evaluateChallenge(evaluationForm.value)" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Save</button>        
+    <button [disabled]="!evaluationForm.valid" *ngIf="!viewMode" (click)="evaluateChallenge(evaluationForm.value)" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Save</button>        
     <button type="button" class="btn btn-secondary" (click)="onCancel()">Close</button>
   </div>
 

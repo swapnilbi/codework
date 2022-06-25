@@ -160,4 +160,15 @@ public class LiveChallengeController {
 	}
 
 
+	/**
+	 * get problem solution associated with submission
+	 * @param challengeInstanceSubmissionId
+	 * @return ChallengeInstance
+	 */
+	@GetMapping("/instance/submission/{challengeInstanceSubmissionId}/solution")
+	public Response<List<EvaluateProblem>> getSubmittedProblems(@PathVariable Long challengeInstanceSubmissionId) throws BusinessException {
+		return new Response<>(challengeInstanceService.getUserSubmittedProblems(challengeInstanceSubmissionId, SecurityHelper.getUserId()));
+	}
+
+
 }

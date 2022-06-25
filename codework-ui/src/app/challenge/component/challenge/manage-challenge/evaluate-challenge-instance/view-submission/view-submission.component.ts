@@ -3,7 +3,6 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { EvaluateProblem } from 'src/app/challenge/model/evaluate-problem.model';
 import { ChallengInstanceService } from '../../../../../service/challenge-instance.service';
-import { UserSubmission } from 'src/app/challenge/model/user-submission.model';
 import { LoaderService } from 'src/app/common/component/common/loader/loader.service';
 import { AlertService } from 'src/app/common/component/common/alert/alert-service.service';
 import { ProblemSolution } from 'src/app/challenge/model/problem-solution.model';
@@ -16,8 +15,9 @@ export class ViewSubmissionComponent implements OnInit {
 
   selectedProblem? : EvaluateProblem;
   evaluationForm: FormGroup;
+  viewMode : boolean = false;
   submittedProblems? : Array<EvaluateProblem>;
-  evaluationStatusList? : Array<string> = ["NOT_STARTED","COMPLETED","IN_PROGRESS"];
+  evaluationStatusList? : Array<string> = ["COMPLETED","IN_PROGRESS"];
   resultList? : Array<string> = ["PASS","FAIL"];
   editorOptions = {
     language: 'java',
@@ -34,6 +34,7 @@ export class ViewSubmissionComponent implements OnInit {
     this.evaluationForm = this.fb.group({
       "id" : new FormControl("", Validators.required),   
       "name": new FormControl("", Validators.required),   
+      "language": new FormControl(""),
       "type": new FormControl("", Validators.required),   
       "timeTaken": new FormControl("", Validators.required),               
       "solution": new FormControl(null),
@@ -53,7 +54,14 @@ export class ViewSubmissionComponent implements OnInit {
 
   evaluateChallenge(evaluateForm : any): void {    
     this.loaderService.show();         
-    this.challengeInstanceService.updateProblemSolution(evaluateForm).subscribe(response => {    
+    let evaluateInput : ProblemSolution = {
+      id : evaluateForm.id,
+      evaluationStatus : evaluateForm.evaluationStatus,
+      evaluationRemarks : evaluateForm.evaluationRemarks,
+      solutionResult : evaluateForm.solutionResult,
+      points : evaluateForm.points
+    }
+    this.challengeInstanceService.updateProblemSolution(evaluateInput).subscribe(response => {    
       if(response){         
           this.loaderService.hide();       
           this.alertService.success("Submission has been updated successfully");          
@@ -64,16 +72,27 @@ export class ViewSubmissionComponent implements OnInit {
   }
 
   updateForm(selectedProblem : EvaluateProblem){
-     let timeTaken : number = 0;
+     let timeTaken : string = '0';
      if(selectedProblem.language){
       this.editorOptions.language = selectedProblem.language.editorCode;              
      }     
      if(selectedProblem.problemSolution.timeTaken){
-        timeTaken = (selectedProblem.problemSolution.timeTaken / 1000)/60;        
-     }
+        let totalTimeTaken = selectedProblem.problemSolution.timeTaken / 1000;
+        if(totalTimeTaken < 60){
+          timeTaken = totalTimeTaken + ' Sec';
+        }else{
+          let totalMinTaken = totalTimeTaken/60;          
+          let rem = totalTimeTaken % 60;
+          timeTaken = Math.floor(totalMinTaken) + ' Min '+Math.round(rem)+ " Sec";
+        }        
+     }     
+    if(selectedProblem.problemSolution.avgExecutionTime){
+       selectedProblem.problemSolution.avgExecutionTime = parseFloat(selectedProblem.problemSolution.avgExecutionTime.toFixed(2));
+    }     
     let challengeForm = {    
       "id" :   selectedProblem.problemSolution.id,
       "name": selectedProblem.name,
+      "language": selectedProblem.language?.name,
       "type": selectedProblem.type,
       "timeTaken": timeTaken,
       "solution": selectedProblem.problemSolution.solution,
@@ -93,8 +112,8 @@ export class ViewSubmissionComponent implements OnInit {
     }    
   }
 
-  public onCancel(): void {      
-    this._bsModalRef.hide();
+  public onCancel(): void {     
+    this._bsModalRef.hide();    
   }
 
 }
