@@ -45,4 +45,6 @@ public interface IChallengeInstanceService {
     EvaluationDetails getUserEvaluationDetails(ChallengeInstanceSubmission challengeInstanceSubmission);
 
     Leaderboard getChallengeLeaderboard(Long challengeId);
+
+    void resetProblemSolution(Long problemSolutionId);
 }

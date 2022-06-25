@@ -2,6 +2,7 @@ package com.codework.service.impl;
 
 import com.codework.entity.*;
 import com.codework.enums.SubmissionStatus;
+import com.codework.exception.BusinessException;
 import com.codework.model.ProblemDetails;
 import com.codework.model.TestCase;
 import com.codework.repository.ProblemRepository;
@@ -90,7 +91,11 @@ public class ProblemService implements IProblemService {
 	}
 
 	@Override
-	public void deleteProblem(Long problemId) {
+	public void deleteProblem(Long problemId) throws BusinessException {
+		List<ProblemSolution> problemList = problemSolutionService.getProblemSolutionsByProblemId(problemId);
+		if(problemList!=null && !problemList.isEmpty()){
+			throw new BusinessException("Problem can not be deleted.");
+		}
 		problemRepository.deleteById(problemId);
 	}
 

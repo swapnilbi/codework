@@ -34,6 +34,7 @@ export const AppConfig = {
     GET_SUBMITTED_PROBLEMS_URL : '/api/challenge/instance/submission/:challengeInstanceSubmissionId/problems',    
     GET_USER_SUBMITTED_PROBLEMS_URL : '/api/challenge/instance/submission/:challengeInstanceSubmissionId/solution',    
     UPDATE_PROBLEM_SUBMISSION_URL : '/api/challenge/instance/submission/problem/:problemSubmissionId',    
+    RESET_PROBLEM_SUBMISSION_URL : '/api/challenge/instance/submission/problem/:problemSolutionId/reset',    
     GET_CHALLENGE_INSTANCE_LIST_URL : '/api/challenge/:challengeId/instance/list',    
     GET_LIVE_CHALLENGE_DETAILS_URL : '/api/challenge/live/:challengeInstanceId',    
     START_CHALLENGE_URL : '/api/challenge/instance/:challengeInstanceId/start',

@@ -25,4 +25,6 @@ public class ChallengeInstanceSubmission {
 	private Long timeTaken;
 	private Date startTime;
 	private Date submissionTime;
+
+
 }

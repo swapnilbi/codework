@@ -30,6 +30,8 @@ public interface IProblemSolutionService {
 
     List<ProblemSolution> getProblemSolutions(Long userId, Long challengeInstanceId); // TODO remove
 
+    List<ProblemSolution> getProblemSolutionsByProblemId(Long problemId);
+
     ProblemSolution getProblemSolution(Long problemSolutionId);
 
     List<ProblemSolution> getProblemSolutions(Long challengeInstanceSubmissionId);
@@ -39,4 +41,6 @@ public interface IProblemSolutionService {
     List<ProblemSolution> getProblemSolutions(EvaluationStatus evaluationStatus);
 
     List<TestCaseResult> evaluateBatchSubmission(List<TestCaseResult> testCases) throws IOException;
+
+    void deleteProblemSolution(Long problemSolutionId);
 }

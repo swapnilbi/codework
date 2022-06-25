@@ -97,6 +97,17 @@ public class ChallengeInstanceController {
 		return new Response<>(challengeInstanceService.updateProblemSolution(problemSolution));
 	}
 
+	/**
+	 * reset problem solution
+	 * @param problemSolutionId
+	 * @return ChallengeInstance
+	 */
+	@DeleteMapping("/instance/submission/problem/{problemSolutionId}/reset")
+	public Response resetProblemSolution(@PathVariable Long problemSolutionId) {
+		challengeInstanceService.resetProblemSolution(problemSolutionId);
+		return new Response<>();
+	}
+
 
 	/**
 	 * start challenge instance

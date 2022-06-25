@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.codework.entity.Language;
 import com.codework.entity.Problem;
+import com.codework.exception.BusinessException;
 import com.codework.model.ProblemDetails;
 
 public interface IProblemService {
@@ -21,7 +22,7 @@ public interface IProblemService {
 
     Problem createProblem(ProblemDetails problem);
 
-    void deleteProblem(Long problemId);
+    void deleteProblem(Long problemId) throws BusinessException;
 
     void deleteProblems(List<Long> problemIds);
 }

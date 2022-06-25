@@ -299,6 +299,11 @@ public class ProblemSolutionService implements IProblemSolutionService {
     }
 
     @Override
+    public List<ProblemSolution> getProblemSolutionsByProblemId(Long problemId) {
+        return problemSolutionRepository.findByProblemId(problemId);
+    }
+
+    @Override
     public ProblemSolution getProblemSolution(Long problemSolutionId) {
         return problemSolutionRepository.findById(problemSolutionId).get();
     }
@@ -342,6 +347,11 @@ public class ProblemSolutionService implements IProblemSolutionService {
             }
         }
         return testCases;
+    }
+
+    @Override
+    public void deleteProblemSolution(Long problemSolutionId) {
+        problemSolutionRepository.deleteById(problemSolutionId);
     }
 
 }

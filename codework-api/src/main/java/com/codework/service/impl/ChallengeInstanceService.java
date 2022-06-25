@@ -330,4 +330,11 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		return leaderboard;
 	}
 
+	@Override
+	public void resetProblemSolution(Long problemSolutionId) {
+		ProblemSolution problemSolution = problemSolutionService.getProblemSolution(problemSolutionId);
+		challengeInstanceSubmissionRepository.deleteById(problemSolution.getChallengeInstanceSubmissionId());
+		problemSolutionService.deleteProblemSolution(problemSolutionId);
+	}
+
 }

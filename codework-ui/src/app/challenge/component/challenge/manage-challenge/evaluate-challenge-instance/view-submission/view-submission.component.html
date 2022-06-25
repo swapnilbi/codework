@@ -138,6 +138,7 @@
 	</div>
 
   <div class="modal-footer">        
+    <button *ngIf="!viewMode && selectedProblem" (click)="resetSubmission(selectedProblem)" class="btn btn-danger btn-sm"> <i class="fas fa-refresh"></i> Reset Submission</button>        
     <button [disabled]="!evaluationForm.valid" *ngIf="!viewMode" (click)="evaluateChallenge(evaluationForm.value)" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Save</button>        
     <button type="button" class="btn btn-secondary" (click)="onCancel()">Close</button>
   </div>

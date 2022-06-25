@@ -2,6 +2,7 @@ package com.codework.controller;
 
 import com.codework.entity.Language;
 import com.codework.entity.Problem;
+import com.codework.exception.BusinessException;
 import com.codework.model.ProblemDetails;
 import com.codework.model.Response;
 import com.codework.service.ILanguageService;
@@ -51,7 +52,7 @@ public class ProblemController {
 	}
 
 	@DeleteMapping("{problemId}")
-	public Response deleteProblem(@PathVariable Long problemId) {
+	public Response deleteProblem(@PathVariable Long problemId) throws BusinessException {
 		problemService.deleteProblem(problemId);
 		return new Response<>();
 	}

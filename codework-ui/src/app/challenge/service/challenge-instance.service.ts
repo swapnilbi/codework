@@ -168,6 +168,20 @@ export class ChallengInstanceService {
     );
   }
 
+  public resetProblemSolution(problemSolutionId : number): Observable<any>{        
+    let queryParams: any = {
+      'problemSolutionId' : problemSolutionId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.RESET_PROBLEM_SUBMISSION_URL,queryParams);
+    return this.httpClient.delete<Response<any>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data;
+      }),
+      tap(event => {})
+    );
+  }
+
   public checkSubmissionResult(challengeInstanceId : number): Observable<Response<any>>{        
     let queryParams: any = {
       'challengeInstanceId' : challengeInstanceId

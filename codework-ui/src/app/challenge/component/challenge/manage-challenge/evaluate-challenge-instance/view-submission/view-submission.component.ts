@@ -71,6 +71,21 @@ export class ViewSubmissionComponent implements OnInit {
     }); 
   }
 
+  resetSubmission(selectedProblem : EvaluateProblem): void {    
+    this.loaderService.show();             
+    if(selectedProblem && selectedProblem.problemSolution && selectedProblem.problemSolution.id){
+      this.challengeInstanceService.resetProblemSolution(selectedProblem.problemSolution.id).subscribe(response => {    
+        if(response){         
+            this.loaderService.hide();       
+            this.alertService.success("Submission has been deleted successfully");     
+            this.onCancel();     
+          }                
+        }, error => {
+          this.loaderService.hide();       
+      }); 
+    }    
+  }
+
   updateForm(selectedProblem : EvaluateProblem){
      let timeTaken : string = '0';
      if(selectedProblem.language){
