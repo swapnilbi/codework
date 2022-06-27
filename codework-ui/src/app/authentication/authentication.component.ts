@@ -18,9 +18,8 @@ export class AuthenticationComponent implements OnInit {
   ngOnInit(): void {        
     this.userAuthService.getUser().subscribe(response =>{
       if(response){                
-        this.userProfile =  response;        
+        this.userProfile =  response;                
         this.router.navigate(['challenges']);         
-
       }else{                
         this.router.navigate(['login']);           
       }      

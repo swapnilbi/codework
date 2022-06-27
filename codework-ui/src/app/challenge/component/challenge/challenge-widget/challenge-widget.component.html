@@ -20,8 +20,8 @@
             {{ challenge.shortDescription }}
         </div>
     </div>    
-    <div class="card-footer text-right">        
+    <div class="card-footer text-center">        
         <button *ngIf="!isRegistered(challenge)" class="btn btn-info btn-sm" (click)="viewChallenge()">Register</button>        
-        <span *ngIf="isRegistered(challenge)" class="text-primary"> <i class="far fa-calendar-check"></i> Registered</span>        
+        <button *ngIf="isRegistered(challenge)" class="btn btn-success btn-sm" (click)="viewChallenge()">Participate</button>                
     </div>
 </div>

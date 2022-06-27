@@ -33,7 +33,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="problemStatement">Problem Statement</label>
-                            <textarea formControlName="problemStatement" class="form-control" id="problemStatement" placeholder="Problem Statement" rows="3"></textarea>      
+                            <textarea formControlName="problemStatement" class="form-control" id="problemStatement" placeholder="Problem Statement" rows="5"></textarea>      
                             <button *ngIf="problemForm.value && problemForm.value.problemStatement" (click)="previewProblemStatement(problemForm.value.problemStatement)" type="button" class="btn btn-info btn-sm mt-1"> <i class="fas fa-search"></i> Preview</button>        
                         </div>
                         <div class="form-group col-md-6" *ngIf="problemForm.value.type == 'PROGRAM'">                        
@@ -68,7 +68,7 @@
                                             <label for="correctAnswer">Points for correct Answer</label>
                                             <input formControlName="correctAnswer" type="number" class="form-control" id="correctAnswer" placeholder="Points for correct Answer">
                                         </div>
-                                        <div class="form-group col-md-2" *ngIf="problemForm.value.type == 'PROGRAM'">
+                                        <div class="form-group col-md-2" [hidden]="true">
                                             <label for="bestSolutionBonus">Best solution bonus</label>
                                             <input formControlName="bestSolutionBonus" type="number" class="form-control" id="bestSolutionBonus" placeholder="Best solution bonus">                          
                                         </div>
@@ -76,7 +76,7 @@
                                             <label for="minNumberOfTc">Minimum number of TCs</label>
                                             <input formControlName="minNumberOfTc" type="number" class="form-control" id="minNumberOfTc" placeholder="Minimum number of TCs">                          
                                         </div>                    
-                                        <div class="form-group col-md-2" *ngIf="problemForm.value.type == 'PROGRAM'">                        
+                                        <div class="form-group col-md-2" [hidden]="true">                        
                                             <label for="quickSolutionBonus">Quick submission bonus</label>                        
                                             <input formControlName="quickSolutionBonus" type="number" class="form-control" id="quickSolutionBonus" placeholder="Quick submission bonus">                          
                                         </div>

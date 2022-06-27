@@ -2,8 +2,8 @@
     <div class="event-header">        
         <div class="inline-block event-title-block">
             <h3 class="font-weight-bold">Code Work Challenge 1</h3>
-            <div class="regular light">Opens At:  <span style="font-weight: 500"> {{ challenge.startDate | date: 'MMM d, h:mm a' }} </span></div>
-            <div class="regular light">Closes At:  <span style="font-weight: 500"> {{ challenge.endDate | date: 'MMM d, h:mm a' }} </span></div>
+            <span class="badge badge-secondary p-2"><span style="font-weight: 500"> Opens At:   {{ challenge.startDate | date: 'MMM d, h:mm a' }} </span> </span>
+            <span class="badge badge-secondary p-2 ml-2"><span style="font-weight: 500"> Closes At:   {{ challenge.endDate | date: 'MMM d, h:mm a' }} </span> </span>            
         </div>
         <p class="lead text-right">
           <a *ngIf="!isRegistered(challenge)" class="btn btn-primary btn-sm ml-3" (click)="registerChallenge()" role="button">Register</a>                        

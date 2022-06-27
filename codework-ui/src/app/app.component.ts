@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
     this.userAuthService.getUser().subscribe(response =>{
       if(!response){
         this.router.navigate(['login']);
-      }else{
+      }else{        
         this.refreshTokenChecker();      
       }
     });
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
 
   refreshTokenChecker(){
     const reloadInterval = 15 * 60 * 1000; // 15 mins
-    timer(reloadInterval, reloadInterval).pipe(
+    timer(0, reloadInterval).pipe(
       tap(() => this.refreshToken())
     ).subscribe()
   }

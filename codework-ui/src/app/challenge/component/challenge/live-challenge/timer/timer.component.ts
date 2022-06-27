@@ -10,7 +10,7 @@ export class TimerComponent implements OnInit {
 
   constructor() { }
 
-  startTimer : number = 100;
+  startTimer : number = 0;
 
   @Input() set startTime(startTime: Date | undefined) {           
     if(startTime){
