@@ -15,8 +15,10 @@ export class TimerComponent implements OnInit {
   @Input() set startTime(startTime: Date | undefined) {           
     if(startTime){
       var currentTime = new Date();                  
-      var difference = (currentTime.getTime() -  new Date(startTime).getTime()) / 1000;            
-      this.startTimer = difference;
+      var difference = (currentTime.getTime() -  new Date(startTime).getTime()) / 1000;       
+      if(difference >= 1){
+        this.startTimer = difference;
+      }      
     }
   }
 
