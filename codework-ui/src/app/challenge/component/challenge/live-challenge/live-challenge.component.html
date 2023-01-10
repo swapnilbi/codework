@@ -7,7 +7,7 @@
 
 <div class="challenge-live" *ngIf="showLiveChallenge">
     <as-split direction="horizontal">
-      <as-split-area class="problem-details-wrapper" [size]="25" [minSize]="20" [maxSize]="40">
+      <as-split-area class="problem-details-wrapper" [size]="35" [minSize]="30" [maxSize]="40">
           <div class="problem-select-header">
             <span class="dropdown-label">Problem : </span>
             <select [(ngModel)]="selectedProblem" class="problem-select">
@@ -26,7 +26,7 @@
             </div>
           </div>
       </as-split-area>
-      <as-split-area class="challenge-editor" [size]="75" [minSize]="50" [maxSize]="80">
+      <as-split-area class="challenge-editor" [size]="65" [minSize]="50" [maxSize]="80">
         <div *ngIf="selectedProblem && liveChallenge">
 
           <code-editor *ngIf="selectedProblem.type == 'PROGRAM'" (finishChallengeEvent)="finishChallenge($event)" #codeEditor [problem]="selectedProblem" [liveChallenge]="liveChallenge"></code-editor>
