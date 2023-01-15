@@ -14,6 +14,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 })
 export class ManageUsersComponent implements OnInit {
 
+  searchKey: string = "";
   users : Array<User> = [];
 
   constructor(private router : Router,
@@ -65,6 +66,17 @@ export class ManageUsersComponent implements OnInit {
         this.loaderService.hide();       
         this.alertService.success('User has been enabled');
         }                
+      }, error => {
+        this.loaderService.hide();       
+      }); 
+  }
+
+  deleteUser(user : User){
+    this.loaderService.show();       
+    this.userService.deleteUser(user.id).subscribe(response => {                  
+        this.loaderService.hide();       
+        this.alertService.success('User has been deleted');      
+        this.getUsers();
       }, error => {
         this.loaderService.hide();       
       }); 

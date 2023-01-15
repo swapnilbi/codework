@@ -1,0 +1,107 @@
+<div class="container-fluid body-background">
+    <img src="../../../../../assets/images/codework.png" class="codework-logo"/>
+    <div class="d-flex justify-content-center">
+		<div class="col-lg-3 col-md-6">			
+			<div class="codework-label">
+				
+			</div>
+    		<div class="card login-card">
+			  	<div class="card-header">
+			    	<h3 class="card-title">Sign Up</h3>
+			 	</div>
+			  	<div class="card-body">
+			    	<form [formGroup]="signupForm" accept-charset="UTF-8" role="form">
+                    
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="name">First Name</label>
+                                <input formControlName="firstName" type="text" class="form-control" id="name" placeholder="First Name" maxlength="30">
+
+                                <div *ngIf="signupForm.controls['firstName'].invalid && (signupForm.controls['firstName'].dirty || signupForm.controls['firstName'].touched)">                                    
+                                    <div *ngIf="signupForm.controls['firstName'].errors?.['required']" class="invalid-feedback d-block">
+                                        Please enter a first name.
+                                    </div> 
+                                    <div *ngIf="!signupForm.controls['firstName'].errors?.['required'] && signupForm.controls['firstName'].invalid" class="invalid-feedback d-block">
+                                        First Name should contain only characters
+                                    </div>                                 
+                                </div>                                
+                            </div>                                
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="name">Last Name</label>
+                                <input formControlName="lastName" type="text" class="form-control" id="name" placeholder="Last Name" maxlength="30">
+
+                                <div *ngIf="signupForm.controls['lastName'].invalid && (signupForm.controls['lastName'].dirty || signupForm.controls['lastName'].touched)">                                    
+                                    <div *ngIf="signupForm.controls['lastName'].errors?.['required']" class="invalid-feedback d-block">
+                                        Please enter a last name.
+                                    </div>   
+                                    <div *ngIf="!signupForm.controls['lastName'].errors?.['required'] && signupForm.controls['lastName'].invalid" class="invalid-feedback d-block">
+                                        Last Name should contain only characters
+                                    </div>                               
+                                </div> 
+                                
+                            </div>                                     
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="name">Email</label>
+                                <input formControlName="email" type="email" class="form-control" id="name" placeholder="Email" maxlength="30">
+
+                                <div *ngIf="signupForm.controls['email'].invalid && (signupForm.controls['email'].dirty || signupForm.controls['email'].touched)">                                    
+                                    <div *ngIf="signupForm.controls['email'].errors?.['required']" class="invalid-feedback d-block">
+                                        Please enter a email
+                                    </div>  
+                                    <div *ngIf="signupForm.controls['email'].errors?.['email']" class="invalid-feedback d-block">
+                                        Please enter valid email
+                                    </div>                          
+                                </div> 
+
+                            </div>                                     
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="name">Password</label>
+                                <input formControlName="password" type="password" class="form-control" id="name" placeholder="Password" maxlength="15">
+
+                                <div *ngIf="signupForm.controls['password'].invalid && (signupForm.controls['password'].dirty || signupForm.controls['password'].touched)">                                    
+                                    <div *ngIf="signupForm.controls['password'].errors?.['required']" class="invalid-feedback d-block">
+                                        Please enter a password
+                                    </div> 
+                                    <div *ngIf="signupForm.controls['password'].errors?.['minlength']" class="invalid-feedback d-block">
+                                        Password must be atleast 6 characters
+                                    </div>                                                 
+                                </div> 
+
+                            </div>                                     
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="name">Confirm Password</label>
+                                <input formControlName="confirmPassword" type="password" class="form-control" id="name" placeholder="Confirm Password" maxlength="15">
+
+                                <div *ngIf="signupForm.controls['confirmPassword'].invalid && (signupForm.controls['confirmPassword'].dirty || signupForm.controls['confirmPassword'].touched)">                                    
+                                    <div *ngIf="signupForm.controls['confirmPassword'].errors?.['required']" class="invalid-feedback d-block">
+                                        Please enter a confirm password.
+                                    </div>      
+                                    <div *ngIf="signupForm.controls['confirmPassword'].errors?.['confirmedValidator']" class="invalid-feedback d-block">
+                                        Password and Confirm Password must be same
+                                    </div>                                                                     
+                                </div> 
+
+                            </div>                                     
+                        </div>   
+                        <input (click)="signup(signupForm.value)" [disabled]="!signupForm.valid" class="btn btn-lg btn-primary btn-block" type="submit" value="Register">                                         
+			      	</form>
+			    </div>
+                <div class="text-center signup">
+                    Already have an account ? <a (click)="showLogin()" class="link">Login Here</a>
+                </div>
+			</div>			
+		</div>
+	</div>
+</div>

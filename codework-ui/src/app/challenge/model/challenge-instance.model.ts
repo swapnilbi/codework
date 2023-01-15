@@ -13,5 +13,6 @@ export interface ChallengeInstance {
 export enum ChallengeInstanceStatus {
     CREATED = "CREATED",
     LIVE = 'LIVE',
-    EXPIRED = "EXPIRED"    
+    EXPIRED = "EXPIRED",
+	INACTIVE = "INACTIVE"    
   }

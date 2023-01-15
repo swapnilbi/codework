@@ -141,8 +141,7 @@ export class LiveChallengeComponent implements OnInit {
           challengeInstanceId : this.liveChallenge?.challengeInstance?.id,
           challengeInstanceSubmissionId : this.liveChallenge?.challengeInstanceSubmission?.id,
           solutionList : [solution]
-        }        
-        console.log(challengeSolution);
+        }                
         if(challengeSolution){          
           this.loaderService.show();
           this.liveChallengeService.finishChallenge(challengeSolution).subscribe(response => {    

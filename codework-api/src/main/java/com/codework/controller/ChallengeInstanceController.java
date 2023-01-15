@@ -2,12 +2,15 @@ package com.codework.controller;
 
 import com.codework.entity.ChallengeInstance;
 import com.codework.entity.ProblemSolution;
+import com.codework.exception.BusinessException;
 import com.codework.exception.SystemException;
 import com.codework.model.EvaluateProblem;
 import com.codework.model.Response;
 import com.codework.model.UserSubmission;
 import com.codework.service.IChallengeInstanceService;
 import com.codework.service.IProblemEvaluationService;
+import com.codework.utility.SecurityHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,7 @@ import java.util.List;
 @PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping(value = "api/challenge")
 @RestController
+@Slf4j
 public class ChallengeInstanceController {
 
 	@Autowired
@@ -33,6 +37,7 @@ public class ChallengeInstanceController {
 	 */
 	@PostMapping("/instance")
 	public Response<ChallengeInstance> createChallengeInstance(@RequestBody ChallengeInstance challengeInstance) {
+		log.info("createChallengeInstance "+challengeInstance);
 		return new Response<>(challengeInstanceService.createChallengeInstance(challengeInstance));
 	}
 
@@ -42,17 +47,19 @@ public class ChallengeInstanceController {
 	 * @return ChallengeInstance
 	 */
 	@PutMapping("/instance/{challengeInstanceId}")
-	public Response<ChallengeInstance> updateChallengeInstance(@RequestBody ChallengeInstance challengeInstance) {
+	public Response<ChallengeInstance> updateChallengeInstance(@RequestBody ChallengeInstance challengeInstance) throws BusinessException {
+		log.info("updateChallengeInstance "+challengeInstance);
 		return new Response<>(challengeInstanceService.updateChallengeInstance(challengeInstance));
 	}
 
 	/**
-	 * Deletes existing challenge istance
+	 * Deletes existing challenge instance
 	 * @param challengeInstanceId
 	 * @return ChallengeInstance
 	 */
 	@DeleteMapping("/instance/{challengeInstanceId}")
 	public Response deleteChallengeInstance(@PathVariable Long challengeInstanceId) {
+		log.info("deleteChallengeInstance "+challengeInstanceId);
 		challengeInstanceService.deleteChallengeInstance(challengeInstanceId);
 		return new Response<>();
 	}
@@ -63,7 +70,8 @@ public class ChallengeInstanceController {
 	 * @return ChallengeInstance
 	 */
 	@GetMapping("/instance/{challengeInstanceId}/publish")
-	public Response<ChallengeInstance> startChallengeInstance(@PathVariable Long challengeInstanceId) {
+	public Response<ChallengeInstance> startChallengeInstance(@PathVariable Long challengeInstanceId) throws BusinessException {
+		log.info("startChallengeInstance "+challengeInstanceId);
 		return new Response<>(challengeInstanceService.startChallengeInstance(challengeInstanceId));
 	}
 
@@ -104,6 +112,7 @@ public class ChallengeInstanceController {
 	 */
 	@DeleteMapping("/instance/submission/problem/{problemSolutionId}/reset")
 	public Response resetProblemSolution(@PathVariable Long problemSolutionId) {
+		log.info("resetProblemSolution "+problemSolutionId);
 		challengeInstanceService.resetProblemSolution(problemSolutionId);
 		return new Response<>();
 	}
@@ -115,7 +124,7 @@ public class ChallengeInstanceController {
 	 * @return ChallengeInstance
 	 */
 	@GetMapping("/instance/{challengeInstanceId}")
-	public Response<ChallengeInstance> getChallengeInstance(@PathVariable Long challengeInstanceId) {
+	public Response<ChallengeInstance> getChallengeInstance(@PathVariable Long challengeInstanceId) throws BusinessException {
 		return new Response<>(challengeInstanceService.getChallengeInstance(challengeInstanceId));
 	}
 
@@ -125,7 +134,8 @@ public class ChallengeInstanceController {
 	 * @return ChallengeInstance
 	 */
 	@GetMapping("/instance/{challengeInstanceId}/stop")
-	public Response<ChallengeInstance> stopChallengeInstance(@PathVariable Long challengeInstanceId) {
+	public Response<ChallengeInstance> stopChallengeInstance(@PathVariable Long challengeInstanceId) throws BusinessException {
+		log.info("stopChallengeInstance "+challengeInstanceId);
 		return new Response<>(challengeInstanceService.stopChallengeInstance(challengeInstanceId));
 	}
 
@@ -146,8 +156,8 @@ public class ChallengeInstanceController {
 	 */
 	@PostMapping(value = "/instance/{challengeInstanceId}/submissions/evaluate")
 	public void evaluateSolution(@PathVariable Long challengeInstanceId) throws IOException {
+		log.info("evaluateSolution "+challengeInstanceId);
 		problemEvaluationService.checkAllSubmissionResult(challengeInstanceId);
 	}
-
 
 }

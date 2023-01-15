@@ -4,6 +4,7 @@ import com.codework.enums.ProblemType;
 import com.codework.model.ProblemPointSystem;
 import com.codework.model.TestCase;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
+@ToString
 @Document(collection = "Problem")
 public class Problem {
 	@Transient

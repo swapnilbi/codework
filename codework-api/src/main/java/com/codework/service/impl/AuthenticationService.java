@@ -6,6 +6,7 @@ import com.codework.entity.UserSession;
 import com.codework.exception.SecurityException;
 import com.codework.model.LoginInput;
 import com.codework.service.IAuthenticationService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class AuthenticationService implements IAuthenticationService {
 
 	@Autowired
@@ -34,13 +36,14 @@ public class AuthenticationService implements IAuthenticationService {
 	@Override
 	public String authenticate(LoginInput loginInput) throws SecurityException {
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginInput.getUsername(), loginInput.getPassword()));
-			final User user = userService.getUserByUsername(loginInput.getUsername()).get();
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginInput.getUsername().toLowerCase(), loginInput.getPassword()));
+			final User user = userService.getUserByUsername(loginInput.getUsername().toLowerCase()).get();
 			UserSession userSession = createUserSession(user);
 			userSessionService.createUserSession(userSession);
 			return userSession.getToken();
 		} catch (DisabledException e) {
-			throw new SecurityException("Your account has been disabled. Please contact administrator", e);
+			log.info("Account is disabled "+loginInput.getUsername());
+			throw new SecurityException("Your account is disabled. Please contact administrator", e);
 		} catch (BadCredentialsException e) {
 			throw new SecurityException("Invalid username or password", e);
 		}

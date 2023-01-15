@@ -3,36 +3,29 @@ package com.codework.exception;
 import com.codework.enums.RemarkType;
 import com.codework.model.Remark;
 import com.codework.model.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
+@Slf4j
 public class CodeWorkExceptionHandler {
-
-    private static Logger logger = LoggerFactory.getLogger(CodeWorkExceptionHandler.class);
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException exception) {
+        log.error("handleValidationExceptions ",exception);
         Map<String, String> errors = new HashMap<>();
         exception.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
@@ -44,7 +37,7 @@ public class CodeWorkExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity handleBusinessException(BusinessException businessException) {
-        logger.warn(businessException.getMessage());
+        log.error("handleBusinessException ",businessException);
         Response response = new Response();
         Remark remark = new Remark();
         remark.setMessage(businessException.getMessage());
@@ -55,7 +48,7 @@ public class CodeWorkExceptionHandler {
 
     @ExceptionHandler(SecurityException.class)
     public ResponseEntity handleBadCredentialsException(SecurityException securityException) {
-        logger.warn(securityException.getMessage());
+        log.error("handleBadCredentialsException ",securityException);
         Response response = new Response();
         Remark remark = new Remark();
         remark.setMessage(securityException.getMessage());
@@ -66,7 +59,7 @@ public class CodeWorkExceptionHandler {
 
     @ExceptionHandler(LockedException.class)
     public ResponseEntity handleAccessDeniedException(LockedException lockedException) {
-        logger.warn(lockedException.getMessage());
+        log.error("handleAccessDeniedException ",lockedException);
         Response response = new Response();
         Remark remark = new Remark();
         remark.setMessage(lockedException.getMessage());
@@ -77,7 +70,7 @@ public class CodeWorkExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity handleAccessDeniedException(AccessDeniedException accessDeniedException) {
-        logger.warn(accessDeniedException.getMessage());
+        log.error("AccessDeniedException ",accessDeniedException);
         Response response = new Response();
         Remark remark = new Remark();
         remark.setMessage(accessDeniedException.getMessage());
@@ -88,7 +81,7 @@ public class CodeWorkExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity handleGenericException(Exception businessException) {
-        logger.error("Exception ",businessException);
+        log.error("handleGenericException ",businessException);
         Response response = new Response();
         Remark remark = new Remark();
         remark.setMessage("Something went wrong. Please try again");
@@ -99,7 +92,7 @@ public class CodeWorkExceptionHandler {
 
     @ExceptionHandler(SystemException.class)
     public ResponseEntity handleSystemException(SystemException systemException) {
-        logger.error(systemException.getMessage());
+        log.error("handleSystemException ",systemException);
         Response response = new Response();
         Remark remark = new Remark();
         remark.setMessage(systemException.getMessage());

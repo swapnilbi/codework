@@ -9,25 +9,25 @@
         <button (click)="createUser()" class="btn btn-info btn-sm"> <i class="fas fa-plus"></i> New</button>        
       </div>    
     </div>
-    
+    <input class="form-control" [(ngModel)]="searchKey" placeholder="Search" name="username" type="text">
     <table class="table table-striped">
           <thead>
           <tr>          
-            <th scope="col">Name</th>
+            <th scope="col">Full Name</th>
             <th scope="col">Username</th>            
             <th scope="col">Email</th>
-            <th scope="col">Gender</th>
+            <!--<th scope="col">Gender</th>-->
             <th scope="col">Roles</th>
             <th scope="col">Status</th>
             <th scope="col">Action</th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let user of users">          
+          <tr *ngFor="let user of users | filter : searchKey ">          
             <td> {{ user.fullName }}</td>
             <td> {{ user.username }}</td>
             <td> {{ user.email }}</td>
-            <td> {{ user.gender }}</td>
+            <!--<td> {{ user.gender }}</td>-->
             <td> {{ user.roles }}</td>            
             <td>                
                 <span *ngIf="user.active" class="badge badge-success">Active</span>
@@ -40,6 +40,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">                
                   <a *ngIf="user.active" (click)="disableUser(user)" class="dropdown-item"> <i class='fas fa-ban'></i> &nbsp; Disable </a>
+                  <a *ngIf="user.active" (click)="deleteUser(user)" class="dropdown-item"> <i class='fas fa-trash'></i> &nbsp; Delete </a>
                   <a class="dropdown-item" (click)="changePassword(user)"> <i class='fas fa-key'></i> &nbsp; Change Password </a>
                   <a  *ngIf="!user.active" (click)="enableUser(user)" class="dropdown-item"><i class='fas fa-trash'></i> &nbsp; Enable </a>
                   <a (click)="editUser(user)" class="dropdown-item"><i class='fas fa-edit'></i> &nbsp; Edit </a>                  

@@ -7,6 +7,7 @@ import { Response } from 'src/app/challenge/model/response.model';
 import { LoginResponse } from 'src/app/authentication/model/user-login-response.model';
 import { UserLogin } from 'src/app/authentication/model/user-login.model';
 import { UserProfile } from 'src/app/authentication/model/user-profile.model';
+import { UserRegistration } from '../model/user-register.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,17 @@ export class AuthenticationService {
   public authenticate(loginInput : UserLogin): Observable<LoginResponse>{        
     const serviceUrl = AppConfig.SERVICE_URL.AUTHENTICATE_URL;
     return this.httpClient.post<Response<LoginResponse>>(serviceUrl,loginInput)
+    .pipe(
+      map((data) => {
+        return data.data;
+      }),
+      tap(event => {})
+    );
+  }
+
+  public register(userRegistrationInput : UserRegistration): Observable<LoginResponse>{        
+    const serviceUrl = AppConfig.SERVICE_URL.USER_SIGNUP_URL;
+    return this.httpClient.post<Response<any>>(serviceUrl,userRegistrationInput)
     .pipe(
       map((data) => {
         return data.data;

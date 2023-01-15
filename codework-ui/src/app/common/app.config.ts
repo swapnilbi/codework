@@ -1,12 +1,14 @@
 
 export const AppConfig = {
   SERVICE_URL : {
+    USER_SIGNUP_URL : 'api/user/register',
     AUTHENTICATE_URL : 'api/authenticate',
     REFRESH_TOKEN_URL : 'api/authenticate/refresh',
     LOGOUT_URL : 'api/logout',
     GET_USER_PROFILE_URL : '/api/user/profile',
     GET_USERS_LIST_URL : 'api/user/list',
     ENABLE_USER_URL : 'api/user/:userId/enable',    
+    DELETE_USER_URL : 'api/user/:userId',    
     DISABLE_USER_URL : 'api/user/:userId/disable',  
     RESET_USER_PASSWORD_URL : 'api/user/:userId/password/reset',  
     GET_UPDATE_USER_URL : 'api/user/:userId',  

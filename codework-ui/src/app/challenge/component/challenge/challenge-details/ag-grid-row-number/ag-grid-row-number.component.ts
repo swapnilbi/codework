@@ -12,8 +12,7 @@ export class AgGridRowNumberComponent implements ICellRendererAngularComp {
     return true;
   }
 
-  agInit(params: import('ag-grid-community').ICellRendererParams): void {
-    console.log(params);
+  agInit(params: import('ag-grid-community').ICellRendererParams): void {    
     this.rowNumber = params.rowIndex + 1;
   }
   afterGuiAttached?(params?: import('ag-grid-community').IAfterGuiAttachedParams): void {

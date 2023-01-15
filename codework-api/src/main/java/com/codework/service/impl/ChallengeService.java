@@ -1,23 +1,24 @@
 package com.codework.service.impl;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.codework.entity.*;
 import com.codework.enums.ChallengeInstanceStatus;
+import com.codework.enums.ChallengeStatus;
 import com.codework.enums.ProblemType;
 import com.codework.enums.SubmissionStatus;
-import com.codework.model.*;
-import com.codework.service.IChallengeInstanceService;
-import com.codework.service.IProblemService;
+import com.codework.exception.BusinessException;
+import com.codework.model.ChallengeDetails;
+import com.codework.model.EvaluationDetails;
+import com.codework.model.LiveChallengeDetails;
+import com.codework.model.UserSubmission;
+import com.codework.repository.ChallengeRepository;
+import com.codework.repository.SequenceGenerator;
+import com.codework.service.*;
+import com.codework.utility.DateUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.codework.enums.ChallengeStatus;
-import com.codework.repository.ChallengeRepository;
-import com.codework.repository.SequenceGenerator;
-import com.codework.service.IChallengeService;
-import com.codework.service.IChallengeSubscriptionService;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ChallengeService implements IChallengeService {
@@ -32,17 +33,25 @@ public class ChallengeService implements IChallengeService {
 	IProblemService problemService;
 
 	@Autowired
+	IUserService userService;
+
+	@Autowired
 	SequenceGenerator sequenceGenerator;
 	
 	@Autowired
 	IChallengeSubscriptionService challengeSubscriptionService;
 
 	@Override
-	public Optional<ChallengeDetails> getChallengeDetails(Long challengeId, Long userId) {
+	public Optional<ChallengeDetails> getChallengeDetails(Long challengeId, Long userId) throws BusinessException {
 		 Optional<Challenge> challenge = challengeRepository.findById(challengeId);
 		 if(challenge.isPresent()){
-			 Optional<ChallengeSubscription> challengeSubscription = challengeSubscriptionService.getChallengeSubscription(challengeId,userId);
 			 ChallengeDetails challengeDetails = new ChallengeDetails(challenge.get());
+			 if(challengeDetails.getStatus().equals(ChallengeStatus.INACTIVE)){
+				 if(!userService.isBetaUser(userId)){
+					 throw new BusinessException("This challenge is open for only beta user");
+				 }
+			 }
+			 Optional<ChallengeSubscription> challengeSubscription = challengeSubscriptionService.getChallengeSubscription(challengeId,userId);
 			 if(challengeSubscription.isPresent()) {
 				 challengeDetails.setChallengeSubscription(challengeSubscription.get());
 			 }
@@ -50,6 +59,9 @@ public class ChallengeService implements IChallengeService {
 			 if(challengeInstances!=null && !challengeInstances.isEmpty()){
 				 List<UserSubmission> userSubmissionList = new ArrayList<>();
 				 for(ChallengeInstance challengeInstance : challengeInstances){
+					 if(challengeInstance.getInstanceStatus().equals(ChallengeInstanceStatus.INACTIVE) && !userService.isBetaUser(userId)){
+						 continue;
+					 }
 					 UserSubmission userSubmission = new UserSubmission(challengeInstance);
 					 Optional<ChallengeInstanceSubmission> existingInstanceSubmission = challengeInstanceService.getChallengeInstanceSubmission(challengeInstance.getId(),userId);
 					 if(existingInstanceSubmission.isPresent()){
@@ -57,6 +69,7 @@ public class ChallengeService implements IChallengeService {
 						 userSubmission.setSubmissionStatus(challengeInstanceSubmission.getSubmissionStatus());
 						 userSubmission.setId(challengeInstanceSubmission.getId());
 						 userSubmission.setSubmittedTime(challengeInstanceSubmission.getSubmissionTime());
+						 userSubmission.setTimeTaken(challengeInstanceSubmission.getTimeTaken());
 						 if(SubmissionStatus.SUBMITTED.equals(userSubmission.getSubmissionStatus())){
 							 EvaluationDetails evaluationDetails = challengeInstanceService.getUserEvaluationDetails(challengeInstanceSubmission);
 							 userSubmission.setTotalPoints(evaluationDetails.getPoints());
@@ -73,7 +86,7 @@ public class ChallengeService implements IChallengeService {
 			 }
 			 return Optional.of(challengeDetails);
 		 }
-		 return Optional.empty();
+		throw new BusinessException("Challenge could not found");
 	}
 
 	@Override
@@ -96,7 +109,11 @@ public class ChallengeService implements IChallengeService {
 	@Override
 	public List<ChallengeDetails> getChallenges(Long userId) {
 		List<ChallengeDetails> challengeDetailsList = new ArrayList<>();
-		List<Challenge> challengeList = challengeRepository.findByStatusIn(Arrays.asList(ChallengeStatus.LIVE));
+		List<ChallengeStatus> challengeStatusList = new ArrayList<>(Arrays.asList(ChallengeStatus.LIVE,ChallengeStatus.SCHEDULED,ChallengeStatus.EXPIRED));
+		if(this.userService.isBetaUser(userId)){
+			challengeStatusList.add(ChallengeStatus.INACTIVE);
+		}
+		List<Challenge> challengeList = challengeRepository.findByStatusIn(challengeStatusList);
 		if(challengeList!= null && challengeList.size() > 0){
 			for(Challenge challenge : challengeList){
 				challengeDetailsList.add(getChallenge(challenge.getId(), userId).get());
@@ -121,7 +138,7 @@ public class ChallengeService implements IChallengeService {
 	public Optional<ChallengeDetails> createChallenge(ChallengeDetails challengeInput) {
 		Challenge challenge = new Challenge();
 		challenge.setId(sequenceGenerator.generateSequence(Challenge.SEQUENCE_NAME));
-		challenge.setStatus(ChallengeStatus.SCHEDULED);
+		challenge.setStatus(ChallengeStatus.INACTIVE);
 		challenge.setShortDescription(challengeInput.getShortDescription());
 		challenge.setName(challengeInput.getName());
 		challenge.setCommonInstructions(challengeInput.getCommonInstructions());
@@ -136,8 +153,13 @@ public class ChallengeService implements IChallengeService {
 	}
 
 	@Override
-	public LiveChallengeDetails getLiveChallengeDetails(Long challengeInstanceId, Long userId) {
+	public LiveChallengeDetails getLiveChallengeDetails(Long challengeInstanceId, Long userId) throws BusinessException {
 		ChallengeInstance challengeInstance = challengeInstanceService.getChallengeInstance(challengeInstanceId);
+		if(challengeInstance.getInstanceStatus().equals(ChallengeInstanceStatus.INACTIVE)){
+			if(!userService.isBetaUser(userId)){
+				throw new BusinessException("This challenge is open for only Beta user");
+			}
+		}
 		ChallengeDetails challengeDetails = getChallengeDetails(challengeInstance.getChallengeId(),userId).get();
 		List<Problem> problemList = problemService.getProblems(challengeInstanceId);
 		List<ProblemType> problemTypes = new ArrayList<>();
@@ -152,7 +174,12 @@ public class ChallengeService implements IChallengeService {
 	@Override
 	public Challenge startChallenge(Long challengeId) {
 		Challenge challenge = challengeRepository.findById(challengeId).get();
-		challenge.setStatus(ChallengeStatus.LIVE);
+		Date currentDate = DateUtility.currentDate();
+		ChallengeStatus challengeStatus = ChallengeStatus.SCHEDULED;
+		if(currentDate.after(challenge.getStartDate()) && currentDate.before(challenge.getEndDate())){
+			challengeStatus = ChallengeStatus.LIVE;
+		}
+		challenge.setStatus(challengeStatus);
 		challengeRepository.save(challenge);
 		return challenge;
 	}
@@ -160,7 +187,7 @@ public class ChallengeService implements IChallengeService {
 	@Override
 	public Challenge stopChallenge(Long challengeId) {
 		Challenge challenge = challengeRepository.findById(challengeId).get();
-		challenge.setStatus(ChallengeStatus.SCHEDULED);
+		challenge.setStatus(ChallengeStatus.INACTIVE);
 		challengeRepository.save(challenge);
 		return challenge;
 	}
@@ -187,6 +214,17 @@ public class ChallengeService implements IChallengeService {
 			challengeInstanceList.stream().forEach(t -> challengeInstanceService.deleteChallengeInstance(t.getId()));
 		}
 		challengeRepository.deleteById(challengeId);
+	}
+
+	@Override
+	public void finishChallenge(Long challengeId) {
+		List<ChallengeInstance> challengeInstanceList = challengeInstanceService.getChallengeInstanceList(challengeId);
+		if(challengeInstanceList!=null && !challengeInstanceList.isEmpty()){
+			challengeInstanceList.stream().forEach(t -> challengeInstanceService.finishChallengeInstance(t));
+		}
+		Challenge challenge = challengeRepository.findById(challengeId).get();
+		challenge.setStatus(ChallengeStatus.EXPIRED);
+		challengeRepository.save(challenge);
 	}
 
 }

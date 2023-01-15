@@ -3,14 +3,15 @@ package com.codework.model;
 import com.codework.entity.ChallengeInstance;
 import com.codework.entity.ChallengeInstanceSubmission;
 import com.codework.enums.EvaluationStatus;
-import com.codework.enums.ProblemType;
 import com.codework.enums.SolutionResult;
 import com.codework.enums.SubmissionStatus;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Data
+@ToString
 public class UserSubmission {
 
 	private Long id;

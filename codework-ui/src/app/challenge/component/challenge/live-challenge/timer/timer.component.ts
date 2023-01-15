@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { LiveChallenge } from 'src/app/challenge/model/live-challenge.model';
 
 @Component({
   selector: 'app-timer',

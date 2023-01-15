@@ -59,7 +59,7 @@ public class ProblemService implements IProblemService {
 
 
 	@Override
-	public Problem createProblem(ProblemDetails problemDetails) {
+	public Problem createProblem(ProblemDetails problemDetails) throws BusinessException {
 		ChallengeInstance challengeInstance = challengeInstanceService.getChallengeInstance(problemDetails.getChallengeInstanceId());
 		Problem problem = new Problem();
 		List<Integer> languages = new ArrayList<>();

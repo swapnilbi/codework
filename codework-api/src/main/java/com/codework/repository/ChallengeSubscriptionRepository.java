@@ -1,11 +1,10 @@
 package com.codework.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.codework.entity.ChallengeSubscription;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.codework.entity.ChallengeSubscription;
+import java.util.List;
+import java.util.Optional;
 
 public interface ChallengeSubscriptionRepository extends MongoRepository<ChallengeSubscription, Long>{
 	Optional<ChallengeSubscription> findByChallengeIdAndUserId(long challengeId, Long userId);

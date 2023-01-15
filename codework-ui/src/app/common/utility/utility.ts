@@ -20,8 +20,7 @@ export class Utility {
            var character = object.charCodeAt(i);
            hash = ((hash<<5)-hash)+character;
            hash = hash & hash; // Convert to 32bit integer
-       }
-       console.log(hash);
+       }       
        return hash;
     }
 

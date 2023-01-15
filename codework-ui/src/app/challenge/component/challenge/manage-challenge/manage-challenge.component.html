@@ -26,9 +26,10 @@
             {{ challenge.name }}
           </td>
           <td>{{ challenge.shortDescription}}</td>         
-          <td>{{ challenge.startDate | date :  "dd/MM/yy hh:mm a" }}</td>
-          <td>{{ challenge.endDate | date :  "dd/MM/yy hh:mm a" }}</td>
+          <td><span class="badge badge-secondary"> {{ challenge.startDate | date :  "dd/MM/yyyy hh:mm a" }}</span></td>
+          <td><span class="badge badge-secondary">{{ challenge.endDate | date :  "dd/MM/yyyy hh:mm a" }}</span></td>
           <td>
+            <span *ngIf="challenge.status == 'INACTIVE'" class="badge badge-secondary"> {{ challenge.status}}</span>
             <span *ngIf="challenge.status == 'LIVE'" class="badge badge-success"> {{ challenge.status}}</span>
             <span *ngIf="challenge.status == 'SCHEDULED'" class="badge badge-primary"> {{ challenge.status}}</span>
             <span *ngIf="challenge.status == 'EXPIRED'" class="badge badge-danger"> {{ challenge.status}}</span>
@@ -40,8 +41,8 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a *ngIf="true" class="dropdown-item" (click)="editChallenge(challenge)"><i class='fas fa-edit'></i> &nbsp; Edit</a>
-                <a *ngIf="challenge.status == 'SCHEDULED'" (click)="publishChallenge(challenge)" class="dropdown-item"><i class='fas fa-play'></i> &nbsp; Publish</a>
-                <a *ngIf="challenge.status == 'LIVE'" (click)="stopChallenge(challenge)" class="dropdown-item"><i class='fas fa-stop'></i> &nbsp; Stop</a>                
+                <a *ngIf="challenge.status == 'INACTIVE'" (click)="publishChallenge(challenge)" class="dropdown-item"><i class='fas fa-play'></i> &nbsp; Publish</a>
+                <a *ngIf="challenge.status != 'INACTIVE'" (click)="stopChallenge(challenge)" class="dropdown-item"><i class='fas fa-stop'></i> &nbsp; Stop</a>                
                 <a *ngIf="true" class="dropdown-item" (click)="viewChallengeInstance(challenge)"><i class="fas fa-list" aria-hidden="true"></i> &nbsp; Challenge Instances</a>                                
               </div>
             </div>                                       

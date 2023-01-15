@@ -2,12 +2,13 @@
     <div class="event-header">        
         <div class="inline-block event-title-block">
             <h3 class="font-weight-bold">Code Work Challenge 1</h3>
-            <span class="badge badge-secondary p-2"><span style="font-weight: 500"> Opens At:   {{ challenge.startDate | date: 'MMM d, h:mm a' }} </span> </span>
-            <span class="badge badge-secondary p-2 ml-2"><span style="font-weight: 500"> Closes At:   {{ challenge.endDate | date: 'MMM d, h:mm a' }} </span> </span>            
+            <span class="badge badge-primary p-2"><span style="font-weight: 500"> Opens At:   {{ challenge.startDate | date: 'MMM d yyyy, h:mm a' }} </span> </span>
+            <span class="badge badge-danger p-2 ml-2"><span style="font-weight: 500"> Closes At:   {{ challenge.endDate | date: 'MMM d yyyy, h:mm a' }} </span> </span>            
         </div>
-        <p class="lead text-right">
-          <a *ngIf="!isRegistered(challenge)" class="btn btn-primary btn-sm ml-3" (click)="registerChallenge()" role="button">Register</a>                        
-          <span *ngIf="isRegistered(challenge)" class="text-primary btn-lg" role="button"> <i class="far fa-calendar-check"></i> Registered</span>
+        <p class="lead text-right">          
+          <span *ngIf="challenge.status == 'EXPIRED'" class="text-danger btn-lg" role="button"> <i class="far fa-calendar-check"></i> Challenge Expired</span>
+          <a *ngIf="challenge.status != 'EXPIRED' && !isRegistered(challenge)" class="btn btn-primary btn-sm ml-3" (click)="registerChallenge()" role="button">Register</a>                        
+          <span *ngIf="challenge.status != 'EXPIRED' && isRegistered(challenge)" class="text-primary btn-lg" role="button"> <i class="far fa-calendar-check"></i> Registered</span>
         </p>
         <div class="clear"></div>
     </div>
@@ -26,8 +27,9 @@
                       <th scope="col">Starts On</th>
                       <th scope="col">Ends On</th>
                       <th scope="col">Status</th>
-                      <th scope="col">Points</th>
-                      <th scope="col">Submitted On</th>
+                      <th scope="col">Submission Time</th>
+                      <th scope="col">Time Taken</th>
+                      <th scope="col">Points</th>                      
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
@@ -38,9 +40,10 @@
                       <td>          
                         <span *ngIf="submission.problemType == 'Puzzle'"><i class="fa fa-solid fa-puzzle-piece"></i> Puzzle</span>
                         <span *ngIf="submission.problemType == 'Program'"><i class="fa fa-solid fa-code"></i> Program</span>
+                        <span *ngIf="submission.problemType != 'Program' && submission.problemType != 'Program'"> {{submission.problemType}}</span>
                       </td>
-                      <td>{{submission.startTime | date:'MMM d, hh:mm a' }}</td>
-                      <td>{{submission.endTime | date:'MMM d, hh:mm a'}}</td>
+                      <td><span class="badge badge-secondary">  {{submission.startTime | date:'MMM d yyyy, hh:mm a' }} </span></td>
+                      <td><span class="badge badge-secondary">{{submission.endTime | date:'MMM d yyyy, hh:mm a'}} </span> </td>
                       <td>
                           <span *ngIf="submission.submissionStatus == 'NOT_STARTED'" class="badge badge-secondary">Not Started</span>
                           <span *ngIf="submission.submissionStatus == 'IN_PROGRESS'" class="badge badge-info">In Progress</span>
@@ -49,13 +52,18 @@
                           <span *ngIf="submission.evaluationStatus == 'COMPLETED'" class="badge badge-success">Evaluated</span>
                           <span *ngIf="submission.submissionStatus == 'EXPIRED'" class="badge badge-danger">Expired</span>
                       </td>
+                      <td> 
+                        <div *ngIf="submission.submittedTime">
+                            {{submission.submittedTime | date:'MMM d yyyy, hh:mm a'}}                          
+                         </div>
+                      </td>
+                      <td>                        
+                        {{submission.timeTaken | timeTaken }}
+                      </td>                      
                       <td>                        
                         <span *ngIf="submission.evaluationStatus == 'COMPLETED'">{{submission.totalPoints}}</span>
                         <span *ngIf="submission.evaluationStatus != 'COMPLETED'">-</span>
-                      </td>
-                      <td> <div *ngIf="submission.submittedTime">
-                        {{submission.submittedTime | date:'MMM d, hh:mm a'}}                          
-                      </div></td>
+                      </td>                      
                       <td>
                         <button *ngIf="isRegistered(challenge) && submission.submissionStatus == 'LIVE'" class="btn btn-info btn-sm" (click)="startChallenge(submission)">Start</button>        
                         <button *ngIf="isRegistered(challenge) && submission.submissionStatus == 'IN_PROGRESS'" class="btn btn-info btn-sm" (click)="startChallenge(submission)">Resume</button>        

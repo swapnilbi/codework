@@ -5,11 +5,9 @@ import com.codework.entity.ChallengeSubscription;
 import com.codework.enums.ChallengeStatus;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-import javax.validation.constraints.NotBlank;
 
 @Data
 public class ChallengeDetails {

@@ -1,13 +1,15 @@
 package com.codework.model;
 
-import java.util.Base64;
-
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.Base64;
 
 @Data
 @NoArgsConstructor
+@ToString
 public class SubmissionRequest {
 
 	@SerializedName("language_id")

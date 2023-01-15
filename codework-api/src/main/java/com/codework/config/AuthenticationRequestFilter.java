@@ -4,6 +4,7 @@ import com.codework.entity.User;
 import com.codework.service.impl.AuthenticationService;
 import com.codework.service.impl.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -62,6 +63,7 @@ public class AuthenticationRequestFilter extends OncePerRequestFilter {
 				// After setting the Authentication in the context, we specify
 				// that the current user is authenticated. So it passes the Spring Security Configurations successfully.
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+				MDC.put("userId", userId);
 			}
 		}
 		chain.doFilter(request, response);

@@ -1,28 +1,25 @@
 package com.codework.service.impl;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
-import com.codework.model.SubmissionBatch;
-import com.codework.model.SubmissionBatchStatus;
-import com.codework.model.SubmissionRequest;
-import com.codework.model.SubmissionResult;
-import com.codework.model.SubmissionStatus;
+import com.codework.model.*;
 import com.codework.service.ICodeExecutorService;
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CodeExecutorService implements ICodeExecutorService {
 
 
@@ -39,8 +36,8 @@ public class CodeExecutorService implements ICodeExecutorService {
     
     private OkHttpClient getHttpClient() {
     	OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(30, TimeUnit.SECONDS); // connect timeout
-        client.setReadTimeout(30, TimeUnit.SECONDS);
+        client.setConnectTimeout(20, TimeUnit.SECONDS); // connect timeout
+        client.setReadTimeout(60, TimeUnit.SECONDS);
         return client;
     }
     
@@ -50,7 +47,7 @@ public class CodeExecutorService implements ICodeExecutorService {
         client.setConnectTimeout(15, TimeUnit.SECONDS); // connect timeout
         client.setReadTimeout(15, TimeUnit.SECONDS);
         com.squareup.okhttp.MediaType mediaType = com.squareup.okhttp.MediaType.parse("application/json");
-        System.out.println(new Gson().toJson(submissionRequest));
+        log.debug("evaluateSubmission "+ new Gson().toJson(submissionRequest));
         RequestBody body = RequestBody.create(mediaType, new Gson().toJson(submissionRequest));
         Request request = new Request.Builder()
             .url(judgeHostUrl+ "submissions?base64_encoded=true&wait=true&fields="+GET_SUBMISSION_STATUS_FIELDS)
@@ -60,7 +57,7 @@ public class CodeExecutorService implements ICodeExecutorService {
             .addHeader("x-rapidapi-key", judgeApiKey)
             .build();
         Response response = client.newCall(request).execute();
-        System.out.println(response.code());
+        log.debug("responseCode "+response.code());
         if(response.code() == HttpStatus.OK.value()){
             return new Gson().fromJson(response.body().string(),SubmissionStatus.class);
         }
@@ -71,7 +68,7 @@ public class CodeExecutorService implements ICodeExecutorService {
     public List<SubmissionResult> createSubmissionBatch(SubmissionBatch submissionBatch) throws IOException {
         OkHttpClient client = getHttpClient();
         com.squareup.okhttp.MediaType mediaType = com.squareup.okhttp.MediaType.parse("application/json");
-        System.out.println(new Gson().toJson(submissionBatch));
+        log.debug("createSubmissionBatch="+ new Gson().toJson(submissionBatch));
         RequestBody body = RequestBody.create(mediaType, new Gson().toJson(submissionBatch));
         Request request = new Request.Builder()
                 .url(judgeHostUrl+ "submissions/batch?base64_encoded=true&fields=*")
@@ -81,7 +78,7 @@ public class CodeExecutorService implements ICodeExecutorService {
                 .addHeader("x-rapidapi-key", judgeApiKey)
                 .build();
         Response response = client.newCall(request).execute();
-        System.out.println(response.code());
+        log.debug("responseCode "+response.code());
         if(response.code() == HttpStatus.CREATED.value()){
             SubmissionResult[] submissionResults = new Gson().fromJson(response.body().string(),SubmissionResult[].class);
             return Arrays.asList(submissionResults);
@@ -93,6 +90,7 @@ public class CodeExecutorService implements ICodeExecutorService {
     public SubmissionStatus getSubmissionStatus(String token) throws IOException {
         OkHttpClient client = getHttpClient();
         String url = judgeHostUrl+ "submissions/"+token+"?base64_encoded=true&fields="+GET_SUBMISSION_STATUS_FIELDS;
+        log.debug("getSubmissionStatus "+url);
         Request request = new Request.Builder()
                 .url(url)
                 .get()
@@ -101,7 +99,7 @@ public class CodeExecutorService implements ICodeExecutorService {
                 .addHeader("x-rapidapi-key", judgeApiKey)
                 .build();
         Response response = client.newCall(request).execute();
-        System.out.println(response.code());
+        log.debug("responseCode "+response.code());
         if(response.code() == HttpStatus.OK.value()){
             return new Gson().fromJson(response.body().string(),SubmissionStatus.class);
         }
@@ -113,7 +111,7 @@ public class CodeExecutorService implements ICodeExecutorService {
         OkHttpClient client = getHttpClient();
         String tokens = token.stream().collect(Collectors.joining(","));
         String url = judgeHostUrl+ "submissions/batch?tokens="+tokens+"&base64_encoded=true&fields="+GET_SUBMISSION_STATUS_FIELDS;
-        System.out.println(url);
+        log.debug("getSubmissionBatchStatus "+url);
         Request request = new Request.Builder()
                 .url(url)
                 .get()
@@ -122,7 +120,7 @@ public class CodeExecutorService implements ICodeExecutorService {
                 .addHeader("x-rapidapi-key", judgeApiKey)
                 .build();
         Response response = client.newCall(request).execute();
-        System.out.println(response.code());
+        log.debug("responseCode "+response.code());
         if(response.code() == HttpStatus.OK.value()){
             return new Gson().fromJson(response.body().string(),SubmissionBatchStatus.class);
         }

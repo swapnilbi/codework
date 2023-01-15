@@ -1,8 +1,8 @@
 package com.codework.entity;
 
 import com.codework.enums.ChallengeInstanceStatus;
-import com.codework.enums.ChallengeStatus;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Data
+@ToString
 @Document(collection = "ChallengeInstance")
 public class ChallengeInstance {
 

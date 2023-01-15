@@ -1,10 +1,9 @@
 package com.codework.repository;
 
-import java.util.List;
-
+import com.codework.entity.Problem;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.codework.entity.Problem;
+import java.util.List;
 
 public interface ProblemRepository extends MongoRepository<Problem, Long>{
 

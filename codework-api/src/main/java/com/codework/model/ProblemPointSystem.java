@@ -1,11 +1,13 @@
 package com.codework.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 
 @Data
+@ToString
 public class ProblemPointSystem {
 	@NotNull
 	@Digits(fraction = 0, integer = 10)

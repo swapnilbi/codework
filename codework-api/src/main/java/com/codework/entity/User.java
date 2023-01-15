@@ -2,6 +2,7 @@ package com.codework.entity;
 
 import com.codework.enums.Gender;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 
 @Data
+@ToString
 @Document(collection = "User")
 public class User implements UserDetails {
 

@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 @Configuration
 public class CodeWorkConfig {
 
-    @Bean
+    @Bean("evaluationTaskExecutor")
     public TaskExecutor problemEvaluationTaskExecutor() {
         ConcurrentTaskExecutor executor = new ConcurrentTaskExecutor(
                 Executors.newFixedThreadPool(3));

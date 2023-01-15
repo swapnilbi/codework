@@ -12,6 +12,7 @@ import { ChangePasswordComponent } from './component/change-password/change-pass
 import { BulkUserUploadComponent } from './component/bulk-user-upload/bulk-user-upload.component';
 import { CreateUserComponent } from './component/create-user/create-user.component';
 import { ResetPasswordComponent } from './component/manage-users/reset-password/reset-password.component';
+import { FilterPipe } from './pipe/filter-pipe';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ResetPasswordComponent } from './component/manage-users/reset-password/
     ChangePasswordComponent,
     BulkUserUploadComponent,
     CreateUserComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    FilterPipe
   ],
   imports: [
     UserRoutingModule,

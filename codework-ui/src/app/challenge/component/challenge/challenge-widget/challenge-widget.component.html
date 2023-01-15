@@ -1,27 +1,36 @@
 <div class="card card-inverse card-info" (click)="viewChallenge()">
-    <div class="card-header" style="background-image: url('assets/images/widget.png')">            
-        
+    <div class="card-header" style="background-image: url('assets/images/widget.png')">                    
         <div class="card-container text-right">
             <div class="registrations tool-tip align-left">
                 <i class="fa fa-user"></i> {{ challenge.registrationCount || 0 }}
             </div>
-        </div>
-        
+        </div>        
     </div>            
+
     <div class="card-block">                
+        <div class="challenge-status">
+            <div class="registrations tool-tip align-left">
+                <span *ngIf="challenge.status == 'INACTIVE'" class="text-secondary">Inactive</span>
+                <span *ngIf="challenge.status == 'SCHEDULED'" class="text-info">Not Started</span>
+                <span *ngIf="challenge.status == 'LIVE'" class="text-success">Live</span>
+                <span *ngIf="challenge.status == 'EXPIRED'" class="text-danger">Expired</span>
+            </div>
+        </div> 
         <h4 class="card-title">{{ challenge.name }}</h4>
         <div class="meta">
-            <a >Starts On : {{ challenge.startDate | date: 'MMM d, h:mm a' }}</a>            
+           <a> STARTS ON : <span class="badge badge-secondary"> {{ challenge.startDate | date: 'MMM d yyyy, h:mm a' }} </span> </a>            
         </div>
         <div class="meta">
-            <a >Ends On : {{ challenge.endDate | date: 'MMM d, h:mm a' }}</a>
+            <a>ENDS ON &nbsp; &nbsp; : <span class="badge badge-secondary">  {{ challenge.endDate | date: 'MMM d yyyy, h:mm a' }} </span> </a>
         </div>        
         <div class="card-text">
             {{ challenge.shortDescription }}
         </div>
     </div>    
+
     <div class="card-footer text-center">        
-        <button *ngIf="!isRegistered(challenge)" class="btn btn-info btn-sm" (click)="viewChallenge()">Register</button>        
-        <button *ngIf="isRegistered(challenge)" class="btn btn-success btn-sm" (click)="viewChallenge()">Participate</button>                
+        <button *ngIf="challenge.status == 'EXPIRED'" class="btn btn-danger btn-sm" (click)="viewChallenge()">View</button>        
+        <button *ngIf="challenge.status != 'EXPIRED' && !isRegistered(challenge)" class="btn btn-info btn-sm" (click)="viewChallenge()">Register</button>        
+        <button *ngIf="challenge.status != 'EXPIRED' && isRegistered(challenge)" class="btn btn-success btn-sm" (click)="viewChallenge()">Participate</button>                
     </div>
 </div>

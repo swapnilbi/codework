@@ -12,6 +12,7 @@ import com.codework.service.IChallengeInstanceService;
 import com.codework.service.IProblemEvaluationService;
 import com.codework.service.IProblemService;
 import com.codework.service.IProblemSolutionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.util.List;
 
 
 @Service
+@Slf4j
 public class ProblemEvaluationService implements IProblemEvaluationService {
 
     @Autowired
@@ -62,6 +64,21 @@ public class ProblemEvaluationService implements IProblemEvaluationService {
     }
 
     @Override
+    public void checkAllPendingSubmissionResult() {
+        List<ProblemSolution> problemSolutionList = problemSolutionService.getProblemSolutions(EvaluationStatus.IN_PROGRESS);
+        if(problemSolutionList!=null && !problemSolutionList.isEmpty()){
+            for(ProblemSolution problemSolution : problemSolutionList){
+                try{
+                    Problem problem = problemService.getProblem(problemSolution.getProblemId());
+                    checkSubmissionResult(problem,problemSolution);
+                }catch(Exception exception){
+                    log.error("Exception while checking submission status problemSolutionId="+problemSolution.getId(),exception);
+                }
+            }
+        }
+    }
+
+    @Override
     public void checkAllSubmissionResult(Long challengeInstanceId) {
         List<ProblemSolution> problemSolutionList = problemSolutionService.getProblemSolutionsByChallengeInstanceId(EvaluationStatus.IN_PROGRESS, challengeInstanceId);
         if(problemSolutionList!=null && !problemSolutionList.isEmpty()){
@@ -70,7 +87,7 @@ public class ProblemEvaluationService implements IProblemEvaluationService {
                     Problem problem = problemService.getProblem(problemSolution.getProblemId());
                     checkSubmissionResult(problem,problemSolution);
                 }catch(Exception exception){
-                    exception.printStackTrace();;
+                    log.error("Exception while checking submission status "+challengeInstanceId,exception);
                 }
             }
         }
@@ -93,8 +110,9 @@ public class ProblemEvaluationService implements IProblemEvaluationService {
                 problemSolution.setEvaluationStatus(EvaluationStatus.IN_PROGRESS);
             }
         }catch (Exception exception){
+            log.error("Exception while evaluating problem "+problemSolution.getId(),exception);
             problemSolution.setEvaluationStatus(EvaluationStatus.FAILED);
-            problemSolution.setEvaluationRemarks(exception.getMessage());
+            problemSolution.setEvaluationRemarks("System Error");
         }
         return problemSolution;
     }

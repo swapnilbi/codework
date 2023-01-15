@@ -7,6 +7,7 @@ import com.codework.model.ProblemDetails;
 import com.codework.model.Response;
 import com.codework.service.ILanguageService;
 import com.codework.service.IProblemService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping(value = "api/problem")
 @RestController
+@Slf4j
 public class ProblemController {
 
 	@Autowired
@@ -32,7 +34,8 @@ public class ProblemController {
 	 * @return ProblemDetails
 	 */
 	@PostMapping
-	public Response<Problem> createProblem(@Valid @RequestBody ProblemDetails problemDetails) {
+	public Response<Problem> createProblem(@Valid @RequestBody ProblemDetails problemDetails) throws BusinessException {
+		log.info("createProblem "+problemDetails);
 		return new Response<>(problemService.createProblem(problemDetails));
 	}
 
@@ -43,6 +46,7 @@ public class ProblemController {
 	 */
 	@PutMapping("{problemId}")
 	public Response<Problem> updateProblem(@Valid @RequestBody ProblemDetails problemDetails) {
+		log.info("updateProblem "+problemDetails);
 		return new Response<>(problemService.updateProblem(problemDetails));
 	}
 

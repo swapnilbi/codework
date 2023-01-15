@@ -1,10 +1,12 @@
 package com.codework.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 
 @Data
+@ToString
 public class ProblemSolutionInput {
 
 	@NotNull

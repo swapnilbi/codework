@@ -3,10 +3,12 @@ package com.codework.model;
 import com.codework.entity.User;
 import com.codework.enums.Gender;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
+@ToString
 public class UserProfile {
 
 	private long id;

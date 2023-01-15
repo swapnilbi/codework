@@ -1,12 +1,11 @@
 package com.codework.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.codework.entity.Language;
 import com.codework.entity.Problem;
 import com.codework.exception.BusinessException;
 import com.codework.model.ProblemDetails;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface IProblemService {
 
@@ -20,7 +19,7 @@ public interface IProblemService {
 
     Optional<ProblemDetails> getProblemDetails(Long problemId);
 
-    Problem createProblem(ProblemDetails problem);
+    Problem createProblem(ProblemDetails problem) throws BusinessException;
 
     void deleteProblem(Long problemId) throws BusinessException;
 

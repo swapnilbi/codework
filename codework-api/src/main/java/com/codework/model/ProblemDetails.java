@@ -1,20 +1,22 @@
 package com.codework.model;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.codework.entity.Language;
 import com.codework.entity.Problem;
 import com.codework.entity.ProblemSolution;
 import com.codework.enums.ProblemType;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Data
+@ToString
 @NoArgsConstructor
 public class ProblemDetails {
 	private long id;

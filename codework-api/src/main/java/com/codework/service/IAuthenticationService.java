@@ -3,7 +3,6 @@ package com.codework.service;
 import com.codework.entity.User;
 import com.codework.exception.SecurityException;
 import com.codework.model.LoginInput;
-import org.springframework.security.core.Authentication;
 
 public interface IAuthenticationService {
 

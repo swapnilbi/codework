@@ -5,6 +5,7 @@ import com.codework.enums.Gender;
 import com.codework.exception.BusinessException;
 import com.codework.model.PasswordChangeInput;
 import com.codework.model.Response;
+import com.codework.model.UserRegistrationInput;
 import com.codework.repository.SequenceGenerator;
 import com.codework.repository.UserRepository;
 import com.codework.service.IUserService;
@@ -23,7 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class UserService implements IUserService {
@@ -55,9 +55,22 @@ public class UserService implements IUserService {
 		if(existingUser.isPresent()){
 			throw new BusinessException("User already exist with username "+user.getUsername());
 		}
+		user.setUsername(user.getUsername().toLowerCase());
 		user.setId(sequenceGenerator.generateSequence(User.SEQUENCE_NAME));
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
+	}
+
+	@Override
+	public void registerUser(UserRegistrationInput registrationInput) {
+		User user = new User();
+		user.setFullName(registrationInput.getFirstName()+ " "+registrationInput.getLastName());
+		user.setUsername(registrationInput.getEmail().toLowerCase());
+		user.setRoles(Arrays.asList("USER"));
+		user.setEmail(registrationInput.getEmail());
+		user.setId(sequenceGenerator.generateSequence(User.SEQUENCE_NAME));
+		user.setPassword(passwordEncoder.encode(registrationInput.getPassword()));
+		userRepository.save(user);
 	}
 
 	@Override
@@ -192,5 +205,16 @@ public class UserService implements IUserService {
 		String newPassword = passwordEncoder.encode(passwordChangeInput.getNewPassword());
 		user.setPassword(newPassword);
 		userRepository.save(user);
+	}
+
+	@Override
+	public boolean isBetaUser(Long userId) {
+		User user = getUserById(userId).get();
+		return user.getRoles().contains("ADMIN");
+	}
+
+	@Override
+	public void deleteUser(Long userId) {
+		userRepository.deleteById(userId);
 	}
 }

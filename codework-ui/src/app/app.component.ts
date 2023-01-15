@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {    
     this.userAuthService.getUser().subscribe(response =>{
       if(!response){
-        this.router.navigate(['login']);
+        this.router.navigate(['auth']);
       }else{        
         this.refreshTokenChecker();      
       }
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
           if(response && response.token){
             this.userAuthService.setToken(response.token);
           }else{
-            this.router.navigate(['login']);
+            this.router.navigate(['auth']);
           }
       })
     }    

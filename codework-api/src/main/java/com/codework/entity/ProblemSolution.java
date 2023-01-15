@@ -1,9 +1,10 @@
 package com.codework.entity;
+
 import com.codework.enums.EvaluationStatus;
 import com.codework.enums.SolutionResult;
 import com.codework.model.TestCaseResult;
-import com.codework.utility.DateUtility;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@ToString
 @Document(collection = "ProblemSolution")
 public class ProblemSolution {
 

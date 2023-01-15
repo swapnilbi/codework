@@ -4,7 +4,6 @@ import com.codework.entity.ChallengeInstance;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Data

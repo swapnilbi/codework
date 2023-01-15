@@ -2,8 +2,10 @@ package com.codework.model;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class SubmissionResult {
 	String token;
 	String error;

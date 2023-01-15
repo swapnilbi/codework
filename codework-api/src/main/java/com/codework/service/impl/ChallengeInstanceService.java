@@ -13,7 +13,10 @@ import com.codework.repository.ChallengeInstanceSubmissionRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.*;
 import com.codework.task.ProblemEvaluationTask;
+import com.codework.utility.DateUtility;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ChallengeInstanceService implements IChallengeInstanceService {
 
 	@Autowired
@@ -48,12 +52,13 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	SequenceGenerator sequenceGenerator;
 
 	@Autowired
+	@Qualifier("evaluationTaskExecutor")
 	private TaskExecutor executor;
 
 	@Override
 	public ChallengeInstanceSubmission startChallenge(Long challengeInstanceId, Long userId) throws BusinessException {
 		ChallengeInstance challengeInstance = challengeInstanceRepository.findById(challengeInstanceId).get();
-		validateChallengeStatus(challengeInstance);
+		validateChallengeStatus(challengeInstance,userId);
 		ChallengeInstanceSubmission challengeInstanceSubmission = null;
 		Optional<ChallengeInstanceSubmission> existingSubmission = challengeInstanceSubmissionRepository.findByChallengeInstanceIdAndUserId(challengeInstanceId,userId);
 		if(existingSubmission.isPresent()){
@@ -74,16 +79,21 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		return challengeInstanceSubmission;
 	}
 
-	private void validateChallengeStatus(ChallengeInstance challengeInstance) throws BusinessException {
+	private void validateChallengeStatus(ChallengeInstance challengeInstance, Long userId) throws BusinessException {
 		if(challengeInstance.getInstanceStatus() == ChallengeInstanceStatus.EXPIRED){
 			throw new BusinessException("Sorry! This Challenge is expired");
+		}
+		if(challengeInstance.getInstanceStatus().equals(ChallengeInstanceStatus.INACTIVE)){
+			if(!userService.isBetaUser(userId)){
+				throw new BusinessException("This challenge is open for only Beta user");
+			}
 		}
 	}
 
 	@Override
 	public ChallengeInstanceSubmission submitChallenge(ChallengeSubmitInput submitInput, Long userId) throws SystemException, BusinessException {
 		ChallengeInstance challengeInstance = getChallengeInstance(submitInput.getChallengeInstanceId());
-		validateChallengeStatus(challengeInstance);
+		validateChallengeStatus(challengeInstance,userId);
 		ChallengeInstanceSubmission challengeInstanceSubmission = getChallengeInstanceSubmission(submitInput.getChallengeInstanceId(),userId).get();
 		if(challengeInstanceSubmission.getSubmissionStatus().equals(SubmissionStatus.SUBMITTED)){
 			throw new BusinessException("Sorry! You have already submitted this challenge");
@@ -120,18 +130,23 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	}
 
 	@Override
-	public ChallengeInstance getChallengeInstance(Long id) {
-		return challengeInstanceRepository.findById(id).get();
+	public ChallengeInstance getChallengeInstance(Long id) throws BusinessException {
+		Optional<ChallengeInstance> challengeInstance = challengeInstanceRepository.findById(id);
+		if(!challengeInstance.isPresent()){
+			throw new BusinessException("Challenge does not found");
+		}
+		return challengeInstance.get();
 	}
 
 	@Override
 	public ChallengeInstance createChallengeInstance(ChallengeInstance challengeInstance) {
+		challengeInstance.setInstanceStatus(ChallengeInstanceStatus.INACTIVE);
 		challengeInstance.setId(sequenceGenerator.generateSequence(ChallengeInstance.SEQUENCE_NAME));
 		return challengeInstanceRepository.save(challengeInstance);
 	}
 
 	@Override
-	public ChallengeInstance updateChallengeInstance(ChallengeInstance challengeInstanceForm) {
+	public ChallengeInstance updateChallengeInstance(ChallengeInstance challengeInstanceForm) throws BusinessException {
 		ChallengeInstance challengeInstance = getChallengeInstance(challengeInstanceForm.getId());
 		challengeInstance.setName(challengeInstanceForm.getName());
 		challengeInstance.setType(challengeInstanceForm.getType());
@@ -141,16 +156,21 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	}
 
 	@Override
-	public ChallengeInstance startChallengeInstance(Long instanceId) {
+	public ChallengeInstance startChallengeInstance(Long instanceId) throws BusinessException {
 		ChallengeInstance challengeInstance = getChallengeInstance(instanceId);
-		challengeInstance.setInstanceStatus(ChallengeInstanceStatus.LIVE);
+		ChallengeInstanceStatus challengeInstanceStatus = ChallengeInstanceStatus.CREATED;
+		Date currentDate = DateUtility.currentDate();
+		if(currentDate.after(challengeInstance.getStartDate()) && currentDate.before(challengeInstance.getEndDate())){
+			challengeInstanceStatus = ChallengeInstanceStatus.LIVE;
+		}
+		challengeInstance.setInstanceStatus(challengeInstanceStatus);
 		return challengeInstanceRepository.save(challengeInstance);
 	}
 
 	@Override
-	public ChallengeInstance stopChallengeInstance(Long instanceId) {
+	public ChallengeInstance stopChallengeInstance(Long instanceId) throws BusinessException {
 		ChallengeInstance challengeInstance = getChallengeInstance(instanceId);
-		challengeInstance.setInstanceStatus(ChallengeInstanceStatus.CREATED);
+		challengeInstance.setInstanceStatus(ChallengeInstanceStatus.INACTIVE);
 		return challengeInstanceRepository.save(challengeInstance);
 	}
 
@@ -332,9 +352,32 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 
 	@Override
 	public void resetProblemSolution(Long problemSolutionId) {
+		log.info("resetProblemSolution "+problemSolutionId);
 		ProblemSolution problemSolution = problemSolutionService.getProblemSolution(problemSolutionId);
 		challengeInstanceSubmissionRepository.deleteById(problemSolution.getChallengeInstanceSubmissionId());
 		problemSolutionService.deleteProblemSolution(problemSolutionId);
+	}
+
+	@Override
+	public void finishChallengeInstance(ChallengeInstance challengeInstance) {
+		log.info("finishChallengeInstance "+challengeInstance.getId());
+		if(!challengeInstance.getInstanceStatus().equals(ChallengeInstanceStatus.EXPIRED)){
+			List<ChallengeInstanceSubmission> inProgressSubmissions = challengeInstanceSubmissionRepository.findByChallengeInstanceIdAndSubmissionStatus(challengeInstance.getId(), SubmissionStatus.IN_PROGRESS);
+			if(inProgressSubmissions!=null & !inProgressSubmissions.isEmpty()){
+				for(ChallengeInstanceSubmission challengeInstanceSubmission : inProgressSubmissions){
+					try {
+						ChallengeSubmitInput challengeSubmitInput = new ChallengeSubmitInput();
+						challengeSubmitInput.setChallengeInstanceId(challengeInstanceSubmission.getChallengeInstanceId());
+						log.info("Auto submitting challenge instance submission "+challengeInstanceSubmission.getId());
+						submitChallenge(challengeSubmitInput, challengeInstanceSubmission.getUserId());
+					}catch (Exception exception){
+						log.error("Exception while submitting solution "+challengeInstanceSubmission,exception);
+					}
+				}
+			}
+			challengeInstance.setInstanceStatus(ChallengeInstanceStatus.EXPIRED);
+			challengeInstanceRepository.save(challengeInstance);
+		}
 	}
 
 }

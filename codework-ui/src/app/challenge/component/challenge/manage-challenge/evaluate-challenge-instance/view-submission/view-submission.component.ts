@@ -6,6 +6,7 @@ import { ChallengInstanceService } from '../../../../../service/challenge-instan
 import { LoaderService } from 'src/app/common/component/common/loader/loader.service';
 import { AlertService } from 'src/app/common/component/common/alert/alert-service.service';
 import { ProblemSolution } from 'src/app/challenge/model/problem-solution.model';
+import { TimeTakenPipe } from 'src/app/challenge/pipe/time-taken-pipe';
 
 @Component({
   selector: 'app-view-submission',
@@ -27,6 +28,7 @@ export class ViewSubmissionComponent implements OnInit {
 
   constructor(private _bsModalRef: BsModalRef,
     private loaderService : LoaderService,
+    private timeTakenPipe: TimeTakenPipe,
     private alertService : AlertService,
     private challengeInstanceService : ChallengInstanceService,
     private fb:FormBuilder) { 
@@ -86,21 +88,10 @@ export class ViewSubmissionComponent implements OnInit {
     }    
   }
 
-  updateForm(selectedProblem : EvaluateProblem){
-     let timeTaken : string = '0';
-     if(selectedProblem.language){
+  updateForm(selectedProblem : EvaluateProblem){     
+    if(selectedProblem.language){
       this.editorOptions.language = selectedProblem.language.editorCode;              
-     }     
-     if(selectedProblem.problemSolution.timeTaken){
-        let totalTimeTaken = selectedProblem.problemSolution.timeTaken / 1000;
-        if(totalTimeTaken < 60){
-          timeTaken = totalTimeTaken + ' Sec';
-        }else{
-          let totalMinTaken = totalTimeTaken/60;          
-          let rem = totalTimeTaken % 60;
-          timeTaken = Math.floor(totalMinTaken) + ' Min '+Math.round(rem)+ " Sec";
-        }        
-     }     
+    }              
     if(selectedProblem.problemSolution.avgExecutionTime){
        selectedProblem.problemSolution.avgExecutionTime = parseFloat(selectedProblem.problemSolution.avgExecutionTime.toFixed(2));
     }     
@@ -109,7 +100,7 @@ export class ViewSubmissionComponent implements OnInit {
       "name": selectedProblem.name,
       "language": selectedProblem.language?.name,
       "type": selectedProblem.type,
-      "timeTaken": timeTaken,
+      "timeTaken": this.timeTakenPipe.transform(selectedProblem.problemSolution.timeTaken),
       "solution": selectedProblem.problemSolution.solution,
       "avgExecutionTime": selectedProblem.problemSolution.avgExecutionTime,
       "evaluationStatus": selectedProblem.problemSolution.evaluationStatus,

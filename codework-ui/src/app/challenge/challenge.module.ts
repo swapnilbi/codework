@@ -36,6 +36,7 @@ import { ViewSubmissionComponent } from './component/challenge/manage-challenge/
 import { AgGridRowNumberComponent } from './component/challenge/challenge-details/ag-grid-row-number/ag-grid-row-number.component';
 import { TimerComponent } from './component/challenge/live-challenge/timer/timer.component';
 import { CdTimerModule } from 'angular-cd-timer';
+import { TimeTakenPipe } from './pipe/time-taken-pipe';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -64,11 +65,12 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HtmlPreviewComponent, 
     EvaluateChallengeInstanceComponent, 
     ViewSubmissionComponent, 
-    AgGridRowNumberComponent, TimerComponent        
+    AgGridRowNumberComponent, 
+    TimerComponent,
+    TimeTakenPipe    
   ],
   imports: [    
     CommonModule,
-    FormsModule,      
     AppCommonModule,        
     ChallengeRoutingModule,
     BsDatepickerModule.forRoot(),
@@ -82,13 +84,14 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SweetAlert2Module.forRoot(),    
     ModalModule.forRoot(),
     AccordionModule.forRoot(),   
-    CdTimerModule     
+    CdTimerModule    
   ],
   providers: [
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
-    }    
+    },
+    TimeTakenPipe    
   ]  
 })
 export class ChallengeModule { }

@@ -2,11 +2,13 @@ package com.codework.model;
 
 import com.codework.enums.RemarkType;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@ToString
 public class Response<T> {
 
 	T data;

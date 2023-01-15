@@ -27,6 +27,7 @@ export interface ChallengeInstruction{
 }
 
 export enum ChallengeStatus {
+    INACTIVE = "INACTIVE",
     SCHEDULED = "SCHEDULED",
     LIVE = 'LIVE',
     EXPIRED = "EXPIRED"

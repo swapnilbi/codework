@@ -18,11 +18,11 @@ import com.codework.utility.DateUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -43,6 +43,18 @@ public class ProblemSolutionService implements IProblemSolutionService {
 
     @Autowired
     SequenceGenerator sequenceGenerator;
+
+    @Value("${judge0.pullResult.initialDelay:#{5000l}}")
+    private Long initialDelay;
+
+    @Value("${judge0.pullResult.executionDelay:#{2500l}}")
+    private Long executionDelay;
+
+    @Value("${judge0.pullResult.maxDelay:#{20000l}}")
+    private Long maxDelay;
+
+    @Value("${judge0.apiKey}")
+    private String judgeApiKey;
 
     private static Logger logger = LoggerFactory.getLogger(CodeWorkExceptionHandler.class);
 
@@ -80,7 +92,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
             }
             List<SubmissionResult> submissionResults = codeExecutorService.createSubmissionBatch(submissionBatch);
             List<String> tokens = submissionResults.stream().filter(t-> t.getToken()!=null).map(t-> t.getToken()).collect(Collectors.toList());
-            Thread.sleep(5000);
+            Thread.sleep(initialDelay);
             SubmissionBatchStatus submissionBatchStatus = getSubmissionBatchStatus(tokens);
             int i = 0;
             for(SubmissionStatus submissionStatus : submissionBatchStatus.getSubmissions()){
@@ -114,8 +126,10 @@ public class ProblemSolutionService implements IProblemSolutionService {
 
     private SubmissionBatchStatus getSubmissionBatchStatus(List<String> tokens) throws IOException, InterruptedException {
         SubmissionBatchStatus submissionBatchStatus = codeExecutorService.getSubmissionBatchStatus(tokens);
+        String uniqueId = UUID.randomUUID().toString();
+        logger.debug("getSubmissionBatchStatus "+uniqueId+" "+submissionBatchStatus);
         if(submissionBatchStatus!=null && submissionBatchStatus.getSubmissions()!=null){
-            long executionDelay = 2500;
+            long executionDelay = this.executionDelay;
             long delay = executionDelay;
             while(true){
                 boolean executionInProgress = false;
@@ -129,10 +143,11 @@ public class ProblemSolutionService implements IProblemSolutionService {
                 if(!executionInProgress){
                     break;
                 }
-                if(executionDelay > 20000){
+                if(delay > maxDelay){
                     throw new SystemException("Something went wrong. Please try again");
                 }
                 Thread.sleep(delay);
+                logger.debug("Fetching SubmissionBatchStatus"+ uniqueId+" retrying after "+delay+" ms");
                 submissionBatchStatus = codeExecutorService.getSubmissionBatchStatus(tokens);
                 delay = delay + executionDelay;
             }
@@ -190,7 +205,7 @@ public class ProblemSolutionService implements IProblemSolutionService {
     private ProblemSolutionResult evaluateCustomInput(ProblemSolutionInput problemSolution, ProblemSolutionResult problemSolutionResult) throws IOException {
         SubmissionRequest submissionRequest = new SubmissionRequest(problemSolution.getLanguageId(),problemSolution.getSolution(),problemSolution.getCustomInput());
         SubmissionStatus submissionStatus = codeExecutorService.evaluateSubmission(submissionRequest);
-        logger.debug(submissionStatus.toString());
+        logger.debug("submissionStatus "+ submissionStatus);
         problemSolutionResult.setStatusCode(submissionStatus.getStatus().getId());
         problemSolutionResult.setCustomInput(problemSolution.getCustomInput());
         if(ChallengeUtility.isCompilationError(submissionStatus.getStatus().getId())) {
@@ -217,8 +232,9 @@ public class ProblemSolutionService implements IProblemSolutionService {
             submissionBatch.getSubmissions().add(submissionRequest);
         }
         List<SubmissionResult> submissionResults = codeExecutorService.createSubmissionBatch(submissionBatch);
+        logger.debug("evaluateSampleTestCases "+submissionResults);
         List<String> tokens = submissionResults.stream().filter(t-> t.getToken()!=null).map(t-> t.getToken()).collect(Collectors.toList());
-        Thread.sleep(5000);
+        Thread.sleep(initialDelay);
         SubmissionBatchStatus submissionBatchStatus = getSubmissionBatchStatus(tokens);
         int i = 0;
         for(SubmissionStatus submissionStatus : submissionBatchStatus.getSubmissions()){

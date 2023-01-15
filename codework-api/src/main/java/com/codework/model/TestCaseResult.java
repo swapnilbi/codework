@@ -1,8 +1,10 @@
 package com.codework.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class TestCaseResult {
 
 	private String submissionId;

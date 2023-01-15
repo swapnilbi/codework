@@ -62,8 +62,7 @@ export class CodeEditorComponent implements OnInit {
     if(editor){
       editor.onKeyUp(function (e : any) {
         counter++;
-        if(counter % 30 == 0){
-          console.log('Save solution');
+        if(counter % 30 == 0){          
           saveSolutionEvent.emit(false);
         }
       });
@@ -111,8 +110,7 @@ export class CodeEditorComponent implements OnInit {
     }
   }
 
-  updateSolution(language : Language){
-    console.log(this.selectedProblem);
+  updateSolution(language : Language){    
     if(this.selectedProblem){  
       if(this.selectedProblem.placeHolderSolution && this.selectedProblem.placeHolderSolution[language.id]){
         this.code = this.selectedProblem.placeHolderSolution[language.id];        

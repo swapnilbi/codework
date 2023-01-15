@@ -1,7 +1,5 @@
 package com.codework.utility;
 
-import org.apache.commons.codec.binary.Base64;
-
 import java.util.Calendar;
 import java.util.Date;
 

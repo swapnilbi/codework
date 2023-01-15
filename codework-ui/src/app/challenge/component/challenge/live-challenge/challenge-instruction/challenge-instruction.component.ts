@@ -13,8 +13,7 @@ export class ChallengeInstructionComponent implements OnInit {
   @Output() challengeStartEvent = new EventEmitter<string>();
   instructionsList : Array<string> = [];
 
-  @Input() set problemTypes(problemTypes: Array<ProblemType> | undefined) {       
-    console.log(problemTypes);
+  @Input() set problemTypes(problemTypes: Array<ProblemType> | undefined) {           
     if(problemTypes){
       this.instructionsList = [];
       let _this = this;

@@ -40,6 +40,20 @@ export class UserService {
     );
   }
 
+  public deleteUser(userId : number): Observable<any>{    
+    let queryParams: any = {
+      'userId' : userId
+    }     
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.DELETE_USER_URL,queryParams);        
+    return this.httpClient.delete<Response<any>>(serviceUrl)
+    .pipe(
+      map((data) => {
+        return data;
+      }),
+      tap(event => {})
+    );
+  }
+
   public changePassword(changePasswordInput : ChangePasswordModel): Observable<any>{        
     const serviceUrl = AppConfig.SERVICE_URL.CHANGE_USER_PASSWORD_URL;        
     return this.httpClient.put<Response<any>>(serviceUrl, changePasswordInput)
@@ -131,5 +145,6 @@ export class UserService {
       tap(event => {})
     );
   }
+
 
 }

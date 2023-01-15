@@ -22,15 +22,15 @@ public interface IChallengeInstanceService {
 
     List<ChallengeInstance> getChallengeInstanceList(Long challengeId);
 
-    ChallengeInstance getChallengeInstance(Long id);
+    ChallengeInstance getChallengeInstance(Long id) throws BusinessException;
 
     ChallengeInstance createChallengeInstance(ChallengeInstance challengeInstance);
 
-    ChallengeInstance updateChallengeInstance(ChallengeInstance challengeInstance);
+    ChallengeInstance updateChallengeInstance(ChallengeInstance challengeInstance) throws BusinessException;
 
-    ChallengeInstance startChallengeInstance(Long instanceId);
+    ChallengeInstance startChallengeInstance(Long instanceId) throws BusinessException;
 
-    ChallengeInstance stopChallengeInstance(Long instanceId);
+    ChallengeInstance stopChallengeInstance(Long instanceId) throws BusinessException;
 
     void deleteChallengeInstance(Long challengeInstanceId);
 
@@ -47,4 +47,6 @@ public interface IChallengeInstanceService {
     Leaderboard getChallengeLeaderboard(Long challengeId);
 
     void resetProblemSolution(Long problemSolutionId);
+
+    void finishChallengeInstance(ChallengeInstance challengeInstance);
 }

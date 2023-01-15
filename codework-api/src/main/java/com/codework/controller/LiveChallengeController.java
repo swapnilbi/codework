@@ -8,6 +8,7 @@ import com.codework.exception.SystemException;
 import com.codework.model.*;
 import com.codework.service.*;
 import com.codework.utility.SecurityHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.List;
 @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
 @RequestMapping(value = "api/challenge")
 @RestController
+@Slf4j
 public class LiveChallengeController {
 
 	@Autowired
@@ -43,7 +45,7 @@ public class LiveChallengeController {
 	 * @return ChallengeDetails
 	 */
 	@GetMapping(value = "/{challengeId}")
-	public Response<ChallengeDetails> getChallenge(@PathVariable Long challengeId) {
+	public Response<ChallengeDetails> getChallenge(@PathVariable Long challengeId) throws BusinessException {
 		return new Response<>(challengeService.getChallengeDetails(challengeId, SecurityHelper.getUserId()).get());
 	}
 
@@ -54,6 +56,7 @@ public class LiveChallengeController {
 	 */
 	@GetMapping(value = "/{challengeId}/leaderboard")
 	public Response<Leaderboard> getChallengeLeaderboard(@PathVariable Long challengeId) {
+		log.info("getChallengeLeaderboard "+challengeId);
 		return new Response<>(challengeInstanceService.getChallengeLeaderboard(challengeId));
 	}
 
@@ -63,7 +66,8 @@ public class LiveChallengeController {
 	 * @return ChallengeDetails
 	 */
 	@GetMapping(value = "/live/{challengeInstanceId}")
-	public Response<LiveChallengeDetails> getLiveChallengeDetails(@PathVariable Long challengeInstanceId) {
+	public Response<LiveChallengeDetails> getLiveChallengeDetails(@PathVariable Long challengeInstanceId) throws BusinessException {
+		log.info("getLiveChallengeDetails "+challengeInstanceId);
 		return new Response<>(challengeService.getLiveChallengeDetails(challengeInstanceId,SecurityHelper.getUserId()));
 	}
 
@@ -84,6 +88,7 @@ public class LiveChallengeController {
 	 */
 	@GetMapping(value = "/{challengeId}/register")
 	public Response<ChallengeDetails> registerChallenge(@PathVariable Long challengeId) throws BusinessException {
+		log.info("registerChallenge "+challengeId);
 		ChallengeSubscription challengeSubscription = challengeSubscriptionService.registerChallenge(challengeId,SecurityHelper.getUserId()).get();
 		ChallengeDetails challengeDetails = challengeService.getChallengeDetails(challengeId,SecurityHelper.getUserId()).get();
 		challengeDetails.setChallengeSubscription(challengeSubscription);
@@ -97,6 +102,7 @@ public class LiveChallengeController {
 	 */
 	@GetMapping(value = "/instance/{challengeInstanceId}/start")
 	public Response<LiveChallengeDetails> startUserChallenge(@PathVariable Long challengeInstanceId) throws BusinessException {
+		log.info("startUserChallenge "+challengeInstanceId);
 		ChallengeInstanceSubmission challengeInstanceSubmission = challengeInstanceService.startChallenge(challengeInstanceId,SecurityHelper.getUserId());
 		LiveChallengeDetails challengeDetails = challengeService.getLiveChallengeDetails(challengeInstanceSubmission.getChallengeInstanceId(),SecurityHelper.getUserId());
 		return new Response<>(challengeDetails);
@@ -109,6 +115,7 @@ public class LiveChallengeController {
 	 */
 	@PostMapping(value = "instance/{challengeInstanceId}/submit")
 	public Response<ChallengeDetails> submitChallenge(@RequestBody ChallengeSubmitInput submitInput) throws SystemException, BusinessException {
+		log.info("submitChallenge "+submitInput.getChallengeInstanceId());
 		ChallengeInstanceSubmission challengeInstanceSubmission = challengeInstanceService.submitChallenge(submitInput, SecurityHelper.getUserId());
 		ChallengeDetails challengeDetails = challengeService.getChallenge(challengeInstanceSubmission.getChallengeId(),SecurityHelper.getUserId()).get();
 		return new Response<>(challengeDetails);
@@ -129,6 +136,7 @@ public class LiveChallengeController {
 	 */
 	@PostMapping(value = "/solution/compile")
 	public Response<ProblemSolutionResult> compileSolution(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException, InterruptedException {
+		log.info("compileSolution "+problemSolution);
 		return new Response<>(problemSolutionService.compileSolution(problemSolution, SecurityHelper.getUserId()));
 	}
 
@@ -138,6 +146,7 @@ public class LiveChallengeController {
 	 */
 	@PostMapping(value = "/solution/run")
 	public Response<ProblemSolutionResult> runAllTests(@Valid @RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException, IOException, InterruptedException {
+		log.info("runAllTests "+problemSolution);
 		return new Response<>(problemSolutionService.runAllTests(problemSolution, SecurityHelper.getUserId()));
 	}
 
@@ -147,6 +156,7 @@ public class LiveChallengeController {
 	 */
 	@PostMapping(value = "/solution/save")
 	public Response<ProblemSolution> saveSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException {
+		log.info("saveSolution "+problemSolution);
 		return new Response<ProblemSolution>(problemSolutionService.saveSolution(problemSolution, SecurityHelper.getUserId()));
 	}
 
@@ -156,6 +166,7 @@ public class LiveChallengeController {
 	 */
 	@PostMapping(value = "/solution/submit")
 	public Response<ProblemSolution> submitSolution(@RequestBody ProblemSolutionInput problemSolution) throws SystemException, BusinessException {
+		log.info("submitSolution "+problemSolution.getChallengeInstanceId()+" userId="+SecurityHelper.getUserId());
 		return new Response<ProblemSolution>(problemSolutionService.submitSolution(problemSolution, SecurityHelper.getUserId()));
 	}
 

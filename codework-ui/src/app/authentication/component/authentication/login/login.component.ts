@@ -28,6 +28,10 @@ export class LoginComponent implements OnInit {
     
   }
 
+  showSignup(){    
+    this.router.navigate(['/signup']);  
+  }
+
   login(){
     if(this.username!='' && this.password!=''){ 
       let userLogin : UserLogin = {
