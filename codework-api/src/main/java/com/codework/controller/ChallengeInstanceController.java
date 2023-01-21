@@ -14,8 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 @PreAuthorize("hasAuthority('ADMIN')")
@@ -102,7 +104,7 @@ public class ChallengeInstanceController {
 	 */
 	@PostMapping("/instance/submission/problem/{problemSubmissionId}")
 	public Response<EvaluateProblem> updateProblemSolution(@RequestBody ProblemSolution problemSolution) {
-		return new Response<>(challengeInstanceService.updateProblemSolution(problemSolution));
+		return new Response<>(challengeInstanceService.updateProblemSolution(problemSolution,SecurityHelper.getUserId()));
 	}
 
 	/**
@@ -158,6 +160,11 @@ public class ChallengeInstanceController {
 	public void evaluateSolution(@PathVariable Long challengeInstanceId) throws IOException {
 		log.info("evaluateSolution "+challengeInstanceId);
 		problemEvaluationService.checkAllSubmissionResult(challengeInstanceId);
+	}
+
+	@PostMapping("/instance/{challengeInstanceId}/submissions/upload")
+	public Response bulkUploadSolutions(@RequestParam("file") MultipartFile file, @PathVariable Long challengeInstanceId) throws BusinessException, ParseException {
+		return challengeInstanceService.bulkUploadSolutions(file,challengeInstanceId);
 	}
 
 }

@@ -1,7 +1,7 @@
 <div *ngIf="challenge" class="container-div align-center" >
     <div class="event-header">        
         <div class="inline-block event-title-block">
-            <h3 class="font-weight-bold">Code Work Challenge 1</h3>
+            <h3 class="font-weight-bold">{{ challenge.shortDescription }}</h3>
             <span class="badge badge-primary p-2"><span style="font-weight: 500"> Opens At:   {{ challenge.startDate | date: 'MMM d yyyy, h:mm a' }} </span> </span>
             <span class="badge badge-danger p-2 ml-2"><span style="font-weight: 500"> Closes At:   {{ challenge.endDate | date: 'MMM d yyyy, h:mm a' }} </span> </span>            
         </div>
@@ -11,9 +11,10 @@
           <span *ngIf="challenge.status != 'EXPIRED' && isRegistered(challenge)" class="text-primary btn-lg" role="button"> <i class="far fa-calendar-check"></i> Registered</span>
         </p>
         <div class="clear"></div>
-    </div>
+    </div>       
     <div class="jumbotron details-container-body">
-        <div [innerHTML]="challenge.longDescription"></div>                
+        <div [innerHTML]="challenge.longDescription"></div>      
+        <!--<button class="btn btn-secondary btn-sm" (click)="exportAsExcel()">Export</button>-->                  
         <ul ngbNav #nav="ngbNav" [activeId]="1" (navChange)="onNavChange($event)" class="nav-tabs justify-content-left">
           <li [ngbNavItem]="1">
             <a ngbNavLink> <i class="far fa-file-code"></i> My Submission</a>
@@ -75,7 +76,7 @@
             </ng-template>
           </li>
           <li [ngbNavItem]="2">
-            <a ngbNavLink> <i class="fa fa-trophy"></i>  Leaderboard</a>
+            <a ngbNavLink> <i class="fa fa-trophy"></i>  Leaderboard </a>
             <ng-template ngbNavContent>                    
               <div *ngIf="challengeLeaderboard && challengeLeaderboard.userSubmissionsList">
                   <ag-grid-angular                         

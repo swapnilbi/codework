@@ -196,4 +196,20 @@ export class ChallengInstanceService {
     );
   }
 
+  public bulkUploadSolutions(file : File, instanceId : number): Observable<Response<any>>{    
+    const formData: FormData = new FormData();
+    formData.append('file', file);     
+    let queryParams: any = {
+      'challengeInstanceId' : instanceId
+    }
+    const serviceUrl = HttpHelper.getUrl(AppConfig.SERVICE_URL.BULK_UPLOAD_SOLUTION_SUBMISSIONS_URL,queryParams);        
+    return this.httpClient.post<Response<any>>(serviceUrl,formData)
+    .pipe(
+      map((data) => {
+        return data;
+      }),
+      tap(event => {})
+    );
+  }
+  
 }

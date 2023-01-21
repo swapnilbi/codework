@@ -20,7 +20,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AgGridModule } from 'ag-grid-angular';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularSplitModule } from 'angular-split';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
@@ -37,6 +37,7 @@ import { AgGridRowNumberComponent } from './component/challenge/challenge-detail
 import { TimerComponent } from './component/challenge/live-challenge/timer/timer.component';
 import { CdTimerModule } from 'angular-cd-timer';
 import { TimeTakenPipe } from './pipe/time-taken-pipe';
+import { BulkUploadSolutionsComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/bulk-upload-solutions/bulk-upload-solutions.component';
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -67,7 +68,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ViewSubmissionComponent, 
     AgGridRowNumberComponent, 
     TimerComponent,
-    TimeTakenPipe    
+    TimeTakenPipe,
+    BulkUploadSolutionsComponent    
   ],
   imports: [    
     CommonModule,
@@ -84,7 +86,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SweetAlert2Module.forRoot(),    
     ModalModule.forRoot(),
     AccordionModule.forRoot(),   
-    CdTimerModule    
+    CdTimerModule,
+    NgbTooltipModule    
   ],
   providers: [
     {

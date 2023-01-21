@@ -130,7 +130,15 @@
             <div class="form-row">                
                 <div class="form-group col-md-6">
                     <label for="problemStatement">Remarks </label>
-                    <input formControlName="evaluationRemarks" [readonly]="viewMode" type="text" class="form-control">                    
+                    <textarea formControlName="evaluationRemarks" [readonly]="viewMode" type="text" class="form-control">                    
+                        </textarea>
+                </div>                
+            </div>
+
+            <div class="form-row" *ngIf="!viewMode && selectedProblem.evaluatedBy">                
+                <div class="form-group col-md-6">                        
+                    <label for="inputEmail4">Evaluated By</label>                                        
+                    <input formControlName="evaluatedBy" readonly type="text" class="form-control">   
                 </div>                
             </div>
 

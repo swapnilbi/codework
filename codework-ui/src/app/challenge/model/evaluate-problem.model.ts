@@ -5,5 +5,6 @@ export interface EvaluateProblem {
     problemSolution : ProblemSolution,
     name? : String,
     type? : ProblemType,
-    language : Language
+    language : Language,
+    evaluatedBy? : String
 }

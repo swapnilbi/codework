@@ -11,6 +11,7 @@ import { CreateChallengeInstanceComponent } from './component/challenge/manage-c
 import { CreateChallengeComponent } from './component/challenge/manage-challenge/create-challenge/create-challenge.component';
 import { ChallengeComponent } from './challenge.component';
 import { EvaluateChallengeInstanceComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/evaluate-challenge-instance.component';
+import { BulkUploadSolutionsComponent } from './component/challenge/manage-challenge/evaluate-challenge-instance/bulk-upload-solutions/bulk-upload-solutions.component';
 
 const routes: Routes = [  
   {
@@ -48,7 +49,11 @@ const routes: Routes = [
           {
             path : "challenge/instance/:instanceId/evaluate",
             component : EvaluateChallengeInstanceComponent
-          },  
+          },
+          {
+            path : "challenge/instance/:instanceId/submissions/upload",
+            component : BulkUploadSolutionsComponent
+          },            
           {
             path : "challenge/instance/:id/problem/manage",
             component : ManageProblemComponent

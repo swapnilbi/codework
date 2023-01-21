@@ -44,7 +44,8 @@ export class ViewSubmissionComponent implements OnInit {
       "evaluationStatus": new FormControl(null, Validators.required),                
       "solutionResult": new FormControl(null, Validators.required),
       "points": new FormControl(null),    
-      "evaluationRemarks": new FormControl(null)                            
+      "evaluationRemarks": new FormControl(null),
+      "evaluatedBy": new FormControl(null)
     });   
   }
 
@@ -107,6 +108,7 @@ export class ViewSubmissionComponent implements OnInit {
       "solutionResult": selectedProblem.problemSolution.solutionResult,
       "points": selectedProblem.problemSolution.points,
       "evaluationRemarks": selectedProblem.problemSolution.evaluationRemarks,
+      "evaluatedBy": selectedProblem.evaluatedBy,
     }                  
     this.evaluationForm.patchValue(challengeForm);
   }

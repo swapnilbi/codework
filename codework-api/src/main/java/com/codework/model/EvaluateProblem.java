@@ -12,5 +12,6 @@ public class EvaluateProblem {
 	private String name;
 	private ProblemType type;
 	private Language language;
+	private String evaluatedBy;
 
 }

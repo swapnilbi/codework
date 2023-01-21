@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavChangeEvent, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridEvent, ColDef, FirstDataRenderedEvent, GridApi, GridReadyEvent, PostSortRowsParams } from 'ag-grid-community';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { UserProfile } from 'src/app/authentication/model/user-profile.model';
+import { UserAuthService } from 'src/app/authentication/service/user-auth.service';
 import { ChallengeInstance } from 'src/app/challenge/model/challenge-instance.model';
 import { ChallengeLeaderboard } from 'src/app/challenge/model/challenge-leaderboard';
 import { ChallengeSubscriptionStatus } from 'src/app/challenge/model/challenge-subscription.modal';
 import { Challenge, ChallengeStatus } from 'src/app/challenge/model/challenge.model';
 import { UserSubmission } from 'src/app/challenge/model/user-submission.model';
+import { TimeTakenPipe } from 'src/app/challenge/pipe/time-taken-pipe';
 import { ChallengInstanceService } from 'src/app/challenge/service/challenge-instance.service';
 import { AlertService } from '../../../../common/component/common/alert/alert-service.service';
 import { LoaderService } from '../../../../common/component/common/loader/loader.service';
@@ -17,21 +20,21 @@ import { AgGridRowNumberComponent } from './ag-grid-row-number/ag-grid-row-numbe
 
 @Component({
   selector: 'app-challenge-details',
-  templateUrl: './challenge-details.component.html',
-  styleUrls: ['./challenge-details.component.scss']
+  templateUrl: './challenge-details.component.html',  
+  styleUrls: ['./challenge-details.component.scss']  
 })
 export class ChallengeDetailsComponent implements OnInit {
 
   private gridApi!: GridApi;
   public challenge?: Challenge;
+  private userProfile?: UserProfile;
   public challengeLeaderboard?: ChallengeLeaderboard;
-
   public defaultColDef: ColDef = {
    
   };
 
   onGridReady(params: GridReadyEvent) {
-     this.gridApi = params.api;    
+     this.gridApi = params.api;         
      if(this.defaultColDef){
       this.gridApi.setColumnDefs(this.columnDefs);          
     }
@@ -43,7 +46,14 @@ export class ChallengeDetailsComponent implements OnInit {
 
   public columnDefs: ColDef[] = [
     { headerName: 'Rank', cellRendererFramework: AgGridRowNumberComponent, width: 100 },            
-    { field: 'userDetails.fullName', headerName: 'User', width: 300 }      
+    { field: 'userDetails.fullName', headerName: 'User', width: 300,
+    cellRenderer: (params: any) => {      
+      if(this.userProfile && this.userProfile.id == params.data.userDetails.id){
+        return '<span class="badge badge-primary">'+params.data.userDetails.fullName+'</span>';
+      }      
+      return params.data.userDetails.fullName;
+     }     
+    }      
   ];
 
   public domLayout: 'normal' | 'autoHeight' | 'print' = 'autoHeight';
@@ -53,10 +63,17 @@ export class ChallengeDetailsComponent implements OnInit {
   constructor(private router: Router, 
     private route: ActivatedRoute, 
     private challengeInstanceService : ChallengInstanceService,
+    private timeTakenPipe : TimeTakenPipe,
     private challengeService : ChallengeService, 
     protected alertService: AlertService, 
     private modalService: BsModalService,
-    private loaderService: LoaderService) {     
+    private userAuthService : UserAuthService, 
+    private loaderService: LoaderService) {   
+      this.userAuthService.getUser().subscribe(response =>{
+        if(response){
+          this.userProfile =  response;           
+        }     
+      });  
   }
 
   ngOnInit(): void {        
@@ -70,6 +87,9 @@ export class ChallengeDetailsComponent implements OnInit {
     });    
   }
 
+  exportAsExcel(){
+    this.gridApi.exportDataAsExcel();
+  }
 
   registerChallenge(){    
     if(this.challenge){
@@ -119,21 +139,20 @@ export class ChallengeDetailsComponent implements OnInit {
                       return c.challengeInstanceId.toString() == params.colDef.colId;
                   });        
                   if(challengeInstancePoint) {
-                      return challengeInstancePoint.points;
-                  }
-                  return 0;
+                      let timeTaken = _this.timeTakenPipe.transform(challengeInstancePoint.timeTaken);
+                      return '<b title="Time Taken : '+timeTaken+'">'+challengeInstancePoint.points+'</b>';
+                  }                    
+                  return '<b title="Not Evaluated">-</b>';
                 },
                 comparator: (valueA, valueB, nodeA, nodeB, isInverted) => {
-                  if(valueA && valueB){
-                    if (valueA.points == valueB.points) {
+                  if(valueA && valueB){                    
                       if (valueA.points == valueB.points) {
                         if (valueA.timeTaken == valueB.timeTaken) {
                             return 0;
                         }
                         return (valueA.timeTaken < valueB.timeTaken) ? 1 : -1;   
                       }
-                      return (valueA.points > valueA.points) ? 1 : -1;
-                    }
+                      return (valueA.points > valueA.points) ? 1 : -1;                    
                   }
                   if(valueA && !valueB){
                     return 1;
@@ -145,6 +164,31 @@ export class ChallengeDetailsComponent implements OnInit {
                 }
               })
             })  
+
+            _this.columnDefs.push({
+              colId : 'total',
+              headerName : 'Total',      
+              sortable: true,          
+              valueGetter: params => {         
+                let total  = 0;
+                params.data.challengeInstancePoints.forEach((c : any) => {
+                    if(c.points){
+                      total += c.points;
+                    }
+                });                        
+                return total;
+              },
+              cellRenderer: (params: any) => {                   
+                let total  = 0;
+                params.data.challengeInstancePoints.forEach((c : any) => {
+                   if(c.points){
+                     total += c.points;
+                   }
+                });                        
+                return '<b>'+total+'</b>';
+              }              
+            })
+
             if(this.gridApi){
               this.gridApi.setColumnDefs(this.columnDefs);          
             }            

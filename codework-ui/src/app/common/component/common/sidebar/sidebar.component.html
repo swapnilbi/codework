@@ -4,7 +4,7 @@
       <img class="img-responsive img-rounded" [src]="getUserImage()" alt="User picture">      
     </div>
     <div class="user-info">
-      <span class="user-name"><strong>{{userProfile.fullName}}</strong>
+      <span class="user-name"><strong>{{userProfile.fullName}} <br> (MBGT 53)</strong>
       </span>
       <span class="user-role" *ngIf="userProfile.roles.indexOf('ADMIN') !=-1">Admin</span>      
     </div>

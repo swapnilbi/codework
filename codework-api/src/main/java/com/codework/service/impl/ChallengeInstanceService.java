@@ -1,5 +1,6 @@
 package com.codework.service.impl;
 
+import com.codework.common.Constants;
 import com.codework.entity.*;
 import com.codework.enums.ChallengeInstanceStatus;
 import com.codework.enums.EvaluationStatus;
@@ -13,13 +14,16 @@ import com.codework.repository.ChallengeInstanceSubmissionRepository;
 import com.codework.repository.SequenceGenerator;
 import com.codework.service.*;
 import com.codework.task.ProblemEvaluationTask;
+import com.codework.utility.BulkUploadSolutionUtility;
 import com.codework.utility.DateUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -130,6 +134,11 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	}
 
 	@Override
+	public List<ChallengeInstance> getChallengeInstanceListByStatus(Long challengeId, List<ChallengeInstanceStatus> challengeInstanceStatuses) {
+		return challengeInstanceRepository.findByChallengeIdAndInstanceStatusIn(challengeId,challengeInstanceStatuses);
+	}
+
+	@Override
 	public ChallengeInstance getChallengeInstance(Long id) throws BusinessException {
 		Optional<ChallengeInstance> challengeInstance = challengeInstanceRepository.findById(id);
 		if(!challengeInstance.isPresent()){
@@ -186,26 +195,25 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	@Override
 	public List<UserSubmission> getChallengeInstanceSubmissions(Long challengeInstanceId) {
 		List<UserSubmission> submissionList = new ArrayList<>();
-		List<ChallengeInstanceSubmission> challengeInstanceSubmissions = challengeInstanceSubmissionRepository.findByChallengeInstanceIdAndSubmissionStatus(challengeInstanceId, SubmissionStatus.SUBMITTED);
+		List<ChallengeInstanceSubmission> challengeInstanceSubmissions = challengeInstanceSubmissionRepository.findByChallengeInstanceId(challengeInstanceId);
 		if (challengeInstanceSubmissions != null) {
 			for (ChallengeInstanceSubmission challengeInstanceSubmission : challengeInstanceSubmissions) {
 				UserSubmission submissionDetails = new UserSubmission(challengeInstanceSubmission);
-				List<ProblemSolution> problemSolutions = problemSolutionService.getProblemSolutions(challengeInstanceSubmission.getUserId(),challengeInstanceSubmission.getChallengeInstanceId());
-				EvaluationStatus evaluationStatus = EvaluationStatus.IN_PROGRESS;
-				if(problemSolutions !=null){
-					List<ProblemSolution> completedSolutionsList = problemSolutions.stream().filter(t-> EvaluationStatus.COMPLETED.equals(t.getEvaluationStatus())).collect(Collectors.toList());
-					Double totalPoints = completedSolutionsList.stream().mapToDouble(t-> t.getPoints()).sum();
-					submissionDetails.setTotalPoints(totalPoints);
-					if(completedSolutionsList.size()==problemSolutions.size()){
-						evaluationStatus = EvaluationStatus.COMPLETED;
+				if(Arrays.asList(SubmissionStatus.SUBMITTED,SubmissionStatus.EXPIRED).contains(challengeInstanceSubmission.getSubmissionStatus())){
+					List<ProblemSolution> problemSolutions = problemSolutionService.getProblemSolutions(challengeInstanceSubmission.getUserId(),challengeInstanceSubmission.getChallengeInstanceId());
+					EvaluationStatus evaluationStatus = EvaluationStatus.IN_PROGRESS;
+					if(problemSolutions !=null){
+						List<ProblemSolution> completedSolutionsList = problemSolutions.stream().filter(t-> EvaluationStatus.COMPLETED.equals(t.getEvaluationStatus())).collect(Collectors.toList());
+						Double totalPoints = completedSolutionsList.stream().mapToDouble(t-> t.getPoints()).sum();
+						submissionDetails.setTotalPoints(totalPoints);
+						if(completedSolutionsList.size()==problemSolutions.size()){
+							evaluationStatus = EvaluationStatus.COMPLETED;
+						}
+						submissionDetails.setEvaluationStatus(evaluationStatus);
 					}
-					submissionDetails.setEvaluationStatus(evaluationStatus);
 				}
 				User user = userService.getUserById(challengeInstanceSubmission.getUserId()).get();
-				UserProfile userProfile = new UserProfile();
-				userProfile.setFullName(user.getFullName());
-				userProfile.setGender(userProfile.getGender());
-				submissionDetails.setUserDetails(userProfile);
+				submissionDetails.setUserDetails(UserProfile.getUserProfile(user));
 				submissionList.add(submissionDetails);
 			}
 		}
@@ -254,6 +262,10 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		Problem problem = problemService.getProblem(problemSolution.getProblemId());
 		evaluateProblem.setName(problem.getName());
 		evaluateProblem.setType(problem.getType());
+		if(problemSolution.getEvaluatedBy()!=null){
+			User user = userService.getUserById(problemSolution.getUserId()).get();
+			evaluateProblem.setEvaluatedBy(user.getFullName());
+		}
 		if(problemSolution.getLanguageId()!=null){
 			Language language = languageService.getLanguage(problemSolution.getLanguageId());
 			evaluateProblem.setLanguage(language);
@@ -262,7 +274,7 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	}
 
 	@Override
-	public EvaluateProblem updateProblemSolution(ProblemSolution problemSolutionInput) {
+	public EvaluateProblem updateProblemSolution(ProblemSolution problemSolutionInput, Long userId) {
 		ProblemSolution problemSolution = problemSolutionService.getProblemSolution(problemSolutionInput.getId());
 		problemSolution.setEvaluationStatus(problemSolutionInput.getEvaluationStatus());
 		if(EvaluationStatus.IN_PROGRESS.equals(problemSolutionInput.getEvaluationStatus())){
@@ -277,6 +289,7 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 		}else{
 			problemSolution.setPoints(problemSolutionInput.getPoints());
 		}
+		problemSolution.setEvaluatedBy(userId);
 		problemSolutionService.updateSolution(problemSolution);
 		return getEvaluateProblem(problemSolution);
 	}
@@ -318,7 +331,7 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 	@Override
 	public Leaderboard getChallengeLeaderboard(Long challengeId) {
 		Leaderboard leaderboard = new Leaderboard();
-		List<ChallengeInstance> challengeInstanceList = getChallengeInstanceList(challengeId);
+		List<ChallengeInstance> challengeInstanceList = getChallengeInstanceListByStatus(challengeId,Arrays.asList(ChallengeInstanceStatus.EXPIRED,ChallengeInstanceStatus.CREATED,ChallengeInstanceStatus.LIVE));
 		if(challengeInstanceList!=null){
 			List<Leaderboard.ChallengeInstancePoints> challengeInstancePointsList = new ArrayList<>();
 			for(ChallengeInstance challengeInstance : challengeInstanceList){
@@ -378,6 +391,72 @@ public class ChallengeInstanceService implements IChallengeInstanceService {
 			challengeInstance.setInstanceStatus(ChallengeInstanceStatus.EXPIRED);
 			challengeInstanceRepository.save(challengeInstance);
 		}
+	}
+
+	@Override
+	public Response bulkUploadSolutions(MultipartFile file, Long challengeInstanceId) throws BusinessException, ParseException {
+		if(!Arrays.stream(Constants.TYPE_LIST).anyMatch(file.getContentType()::equals)){
+			throw new BusinessException("Please upload excel file");
+		}
+		List<BulkUploadSubmission> bulkUploadSubmissions = BulkUploadSolutionUtility.getBulkSolutionList(file);
+		if(bulkUploadSubmissions.isEmpty()){
+			throw new BusinessException("Invalid data");
+		}
+		ChallengeInstance challengeInstance = getChallengeInstance(challengeInstanceId);
+		List<Problem> problemList = problemService.getProblems(challengeInstanceId);
+		if(problemList== null || problemList.isEmpty()){
+			throw new BusinessException("Problem does not exist. Please create problem first");
+		}
+		Long problemId = problemList.get(0).getId();
+		Response response = new Response();
+		for(BulkUploadSubmission submission : bulkUploadSubmissions){
+			Optional<User> userOptional = userService.getUserByUsername(submission.getUsername());
+			if(!userOptional.isPresent()){
+				response.addError(" User does not exist "+submission.getUsername());
+			}else{
+				User user = userOptional.get();
+				Optional<ChallengeInstanceSubmission> challengeInstanceSubmissionOptional = getChallengeInstanceSubmission(challengeInstanceId,user.getId());
+				ChallengeInstanceSubmission challengeInstanceSubmission = null;
+				if(challengeInstanceSubmissionOptional.isPresent()){
+					challengeInstanceSubmission = challengeInstanceSubmissionOptional.get();
+				}else{
+					challengeInstanceSubmission = new ChallengeInstanceSubmission();
+					challengeInstanceSubmission.setId(sequenceGenerator.generateSequence(ChallengeInstanceSubmission.SEQUENCE_NAME));
+					challengeInstanceSubmission.setChallengeId(challengeInstance.getChallengeId());
+					challengeInstanceSubmission.setChallengeInstanceId(challengeInstanceId);
+					challengeInstanceSubmission.setUserId(user.getId());
+				}
+				challengeInstanceSubmission.setStartTime(submission.getStartTime());
+				challengeInstanceSubmission.setSubmissionTime(submission.getSubmissionTime());
+				challengeInstanceSubmission.setSubmissionStatus(SubmissionStatus.SUBMITTED);
+				challengeInstanceSubmission.setTimeTaken(submission.getTimeTaken());
+				challengeInstanceSubmissionRepository.save(challengeInstanceSubmission);
+				// save problem solution
+				List<ProblemSolution> problemSolutionList = problemSolutionService.getProblemSolutions(challengeInstanceSubmission.getId());
+				ProblemSolution problemSolution = null;
+				if(problemSolutionList!=null && !problemSolutionList.isEmpty()){
+					problemSolution = problemSolutionList.get(0);
+				}else{
+					problemSolution = new ProblemSolution();
+					problemSolution.setId(sequenceGenerator.generateSequence(ProblemSolution.SEQUENCE_NAME));
+					problemSolution.setChallengeInstanceSubmissionId(challengeInstanceSubmission.getId());
+					problemSolution.setChallengeInstanceId(challengeInstance.getId());
+					problemSolution.setCreatedAt(DateUtility.currentDate());
+					problemSolution.setUserId(user.getId());
+				}
+				problemSolution.setProblemId(problemId);
+				problemSolution.setTimeTaken(submission.getTimeTaken());
+				problemSolution.setSubmittedAt(submission.getSubmissionTime());
+				problemSolution.setEvaluationStatus(EvaluationStatus.COMPLETED);
+				problemSolution.setPoints(submission.getPoints());
+				problemSolution.setSolutionResult(submission.getSolutionResult());
+				problemSolution.setEvaluationRemarks(submission.getRemarks());
+				problemSolution.setSubmitted(true);
+				problemSolution.setSolution(submission.getSolution());
+				problemSolutionService.saveSolution(problemSolution);
+			}
+		}
+		return response;
 	}
 
 }

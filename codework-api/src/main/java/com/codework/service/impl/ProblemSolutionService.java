@@ -157,26 +157,33 @@ public class ProblemSolutionService implements IProblemSolutionService {
 
     @Override
     public ProblemSolution saveSolution(ProblemSolutionInput problemSolutionInput, Long userId) throws SystemException, BusinessException {
-            validateSolution(problemSolutionInput, userId);
-            Optional<ProblemSolution> savedSolution = problemSolutionRepository.findByUserIdAndProblemId(userId, problemSolutionInput.getProblemId());
-            ProblemSolution problemSolution = null;
-            if(savedSolution.isPresent()){
-                problemSolution = savedSolution.get();
-            }else{
-                problemSolution = new ProblemSolution();
-                problemSolution.setId(sequenceGenerator.generateSequence(ProblemSolution.SEQUENCE_NAME));
-                problemSolution.setCreatedAt(DateUtility.currentDate());
-                problemSolution.setProblemId(problemSolutionInput.getProblemId());
-                problemSolution.setUserId(userId); // temp
-            }
-            if(problemSolutionInput.isSubmitted()){
-                problemSolution.setSubmittedAt(new Date());
-            }
-            problemSolution.setChallengeInstanceSubmissionId(problemSolutionInput.getChallengeInstanceSubmissionId());
-            problemSolution.setChallengeInstanceId(problemSolutionInput.getChallengeInstanceId());
-            problemSolution.setSubmitted(problemSolutionInput.isSubmitted());
-            problemSolution.setSolution(problemSolutionInput.getSolution());
-            problemSolution.setLanguageId(problemSolutionInput.getLanguageId());
+        validateSolution(problemSolutionInput, userId);
+        Optional<ProblemSolution> savedSolution = problemSolutionRepository.findByUserIdAndProblemId(userId, problemSolutionInput.getProblemId());
+        ProblemSolution problemSolution = null;
+        if(savedSolution.isPresent()){
+            problemSolution = savedSolution.get();
+        }else{
+            problemSolution = new ProblemSolution();
+            problemSolution.setId(sequenceGenerator.generateSequence(ProblemSolution.SEQUENCE_NAME));
+            problemSolution.setCreatedAt(DateUtility.currentDate());
+            problemSolution.setProblemId(problemSolutionInput.getProblemId());
+            problemSolution.setUserId(userId); // temp
+        }
+        if(problemSolutionInput.isSubmitted()){
+            problemSolution.setSubmittedAt(new Date());
+        }
+        problemSolution.setChallengeInstanceSubmissionId(problemSolutionInput.getChallengeInstanceSubmissionId());
+        problemSolution.setChallengeInstanceId(problemSolutionInput.getChallengeInstanceId());
+        problemSolution.setSubmitted(problemSolutionInput.isSubmitted());
+        problemSolution.setSolution(problemSolutionInput.getSolution());
+        problemSolution.setLanguageId(problemSolutionInput.getLanguageId());
+        problemSolution.setUpdatedAt(DateUtility.currentDate());
+        problemSolutionRepository.save(problemSolution);
+        return problemSolution;
+    }
+
+    @Override
+    public ProblemSolution saveSolution(ProblemSolution problemSolution) throws SystemException {
             problemSolution.setUpdatedAt(DateUtility.currentDate());
             problemSolutionRepository.save(problemSolution);
             return problemSolution;

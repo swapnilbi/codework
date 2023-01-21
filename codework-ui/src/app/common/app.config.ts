@@ -32,6 +32,7 @@ export const AppConfig = {
     PUBLISH_CHALLENGE_INTANCE_URL : '/api/challenge/instance/:challengeInstanceId/publish',
     STOP_CHALLENGE_INTANCE_URL : '/api/challenge/instance/:challengeInstanceId/stop',    
     GET_CHALLENGE_INTANCE_SUBMISSIONS_URL : '/api/challenge/instance/:challengeInstanceId/submissions',    
+    BULK_UPLOAD_SOLUTION_SUBMISSIONS_URL : '/api/challenge/instance/:challengeInstanceId/submissions/upload',    
     EVALUATE_CHALLENGE_INTANCE_SUBMISSIONS_URL : '/api/challenge/instance/:challengeInstanceId/submissions/evaluate',    
     GET_SUBMITTED_PROBLEMS_URL : '/api/challenge/instance/submission/:challengeInstanceSubmissionId/problems',    
     GET_USER_SUBMITTED_PROBLEMS_URL : '/api/challenge/instance/submission/:challengeInstanceSubmissionId/solution',    

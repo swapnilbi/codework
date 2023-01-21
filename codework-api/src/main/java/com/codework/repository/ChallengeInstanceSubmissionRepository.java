@@ -12,4 +12,6 @@ public interface ChallengeInstanceSubmissionRepository extends MongoRepository<C
     Optional<ChallengeInstanceSubmission> findByChallengeInstanceIdAndUserId(Long challengeInstanceId, Long userId);
 
     List<ChallengeInstanceSubmission> findByChallengeInstanceIdAndSubmissionStatus(Long challengeInstanceId, SubmissionStatus submissionStatus);
+
+    List<ChallengeInstanceSubmission> findByChallengeInstanceId(Long challengeInstanceId);
 }

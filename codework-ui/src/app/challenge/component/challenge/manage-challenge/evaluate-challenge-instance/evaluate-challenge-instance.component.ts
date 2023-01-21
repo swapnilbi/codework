@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { UserSubmission } from 'src/app/challenge/model/user-submission.model';
 import { ChallengInstanceService } from 'src/app/challenge/service/challenge-instance.service';
@@ -21,6 +21,7 @@ export class EvaluateChallengeInstanceComponent implements OnInit {
     private route: ActivatedRoute,
     private modalService: BsModalService,
     private location: Location,
+    private router : Router,
     private alertService : AlertService,
     private loaderService: LoaderService) { }
 
@@ -42,18 +43,26 @@ export class EvaluateChallengeInstanceComponent implements OnInit {
     );
   }
 
+  bulkUploadSolutions(){
+    this.router.navigate(['challenge/instance/'+this.instanceId+'/submissions/upload']);                      
+  }
+
   viewSubmissions(userSubmission: UserSubmission){
     this.loaderService.show();
     this.challengeInstanceService.getSubmittedProblems(userSubmission.id).subscribe(response => {      
       this.loaderService.hide();
-      const initialState = {
-        submittedProblems : response 
-      };
-      let modalRef: BsModalRef = this.modalService.show(ViewSubmissionComponent, {initialState, class: 'modal-xl modal-dialog-scrollable'});            
-      if(modalRef.onHidden){
-        modalRef.onHidden.subscribe((result : any) => {
-          this.getChallengeInstanceSubmissions();
-        })
+      if(!response || response.length == 0){
+        this.alertService.warn("No submissions found");
+      }else{
+        const initialState = {
+          submittedProblems : response 
+        };
+        let modalRef: BsModalRef = this.modalService.show(ViewSubmissionComponent, {initialState, class: 'modal-xl modal-dialog-scrollable'});            
+        if(modalRef.onHidden){
+          modalRef.onHidden.subscribe((result : any) => {
+            this.getChallengeInstanceSubmissions();
+          })
+        }      
       }      
     }, error => {
       this.loaderService.hide();

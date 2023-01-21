@@ -39,5 +39,6 @@ public class ProblemSolution {
 	private List<TestCaseResult> testCaseResults;
 	private String evaluationRemarks;
 	private SolutionResult solutionResult;
+	private Long evaluatedBy;
 	private boolean isSubmitted = Boolean.FALSE;
 }

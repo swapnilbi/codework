@@ -1,37 +1,48 @@
 <div class="container-div">
     <div class="d-flex">
       <div class="mr-auto p-2">
-        <h6> <i (click)="back()" class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp; <strong>Evaluate Challenge Instance</strong></h6>
-      </div> 
+        <h6> <i (click)="back()" class="fa fa-arrow-left" aria-hidden="true"></i> &nbsp; <strong>Challenge Instance - Submissions</strong></h6>
+      </div>
 
       <div class="p-2" *ngIf="submissionList && submissionList.length">
-          <button (click)="checkSubmissionResult()" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Evaluate Programs</button>                  
-      </div>    
+          <button (click)="checkSubmissionResult()" type="submit" class="btn btn-info btn-sm"> <i class="fas fa-save"></i> Evaluate All Programs</button>          
+      </div>
+      <div class="p-2">
+        <button (click)="bulkUploadSolutions()" type="submit" class="btn btn-info btn-sm ml-2"> <i class="fas fa-file"></i> Upload Solutions</button>
+      </div>
   </div>
 
     <table class="table table-striped">
         <thead>
-        <tr>          
+        <tr>
           <th scope="col">#</th>
           <th scope="col">Participant Name</th>
+          <th scope="col">Submission Status</th>
           <th scope="col">Started At</th>
           <th scope="col">Submitted At</th>
+          <th scope="col">Time Taken</th>
           <th scope="col">Evaluation Status</th>
           <th scope="col">Total Points</th>
           <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let userSubmission of submissionList;  let i = index">   
-          <td>{{i+1}}</td>       
+        <tr *ngFor="let userSubmission of submissionList;  let i = index">
+          <td>{{i+1}}</td>
           <td *ngIf="userSubmission.userDetails">{{ userSubmission.userDetails.fullName }}</td>
-          <td><span class="badge badge-secondary">{{ userSubmission.startTime  | date :  "dd/MM/yyyy hh:mm:ss a" }}</span></td>         
+          <td>            
+            <span *ngIf="userSubmission.submissionStatus == 'SUBMITTED'" class="badge badge-success"> {{ userSubmission.submissionStatus}}</span>
+            <span *ngIf="userSubmission.submissionStatus == 'IN_PROGRESS'" class="badge badge-primary"> {{ userSubmission.submissionStatus}}</span>
+            <span *ngIf="userSubmission.submissionStatus == 'EXPIRED'" class="badge badge-danger"> {{ userSubmission.submissionStatus}}</span>
+          </td>
+          <td><span class="badge badge-secondary">{{ userSubmission.startTime  | date :  "dd/MM/yyyy hh:mm:ss a" }}</span></td>
           <td><span class="badge badge-secondary">{{ userSubmission.submittedTime  | date :  "dd/MM/yyyy hh:mm:ss a" }}</span></td>
+          <td>{{ userSubmission.timeTaken  | timeTaken }}</td>
           <td>
             <span *ngIf="userSubmission.evaluationStatus == 'NOT_STARTED'" class="badge badge-default"> {{ userSubmission.evaluationStatus}}</span>
             <span *ngIf="userSubmission.evaluationStatus == 'COMPLETED'" class="badge badge-success"> {{ userSubmission.evaluationStatus}}</span>
             <span *ngIf="userSubmission.evaluationStatus == 'IN_PROGRESS'" class="badge badge-primary"> {{ userSubmission.evaluationStatus}}</span>
-            <span *ngIf="userSubmission.evaluationStatus == 'FAILED'" class="badge badge-danger"> {{ userSubmission.evaluationStatus}}</span>            
+            <span *ngIf="userSubmission.evaluationStatus == 'FAILED'" class="badge badge-danger"> {{ userSubmission.evaluationStatus}}</span>
           </td>
           <td>{{ userSubmission.totalPoints }}</td>
           <td>
@@ -40,12 +51,12 @@
               <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Action
               </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">                
-                <a (click)="viewSubmissions(userSubmission)" class="dropdown-item"><i class="fas fa-list" aria-hidden="true"></i> &nbsp; Submissions</a>                                
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a (click)="viewSubmissions(userSubmission)" class="dropdown-item"><i class="fas fa-list" aria-hidden="true"></i> &nbsp; Evaluate</a>
               </div>
-            </div> 
+            </div>
 
-          </td>          
+          </td>
         </tr>
         </tbody>
       </table>

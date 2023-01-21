@@ -20,6 +20,8 @@ public interface IProblemSolutionService {
 
     ProblemSolution saveSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException;
 
+    ProblemSolution saveSolution(ProblemSolution problemSolution) throws SystemException;
+
     ProblemSolution updateSolution(ProblemSolution problemSolution) throws SystemException;
 
     ProblemSolution submitSolution(ProblemSolutionInput problemSolution, Long userId) throws SystemException, BusinessException;

@@ -46,7 +46,7 @@
                 <a (click)="startChallengeInstance(challengInstance)" class="dropdown-item" *ngIf="challengInstance.instanceStatus != 'LIVE'"><i class='fas fa-play'></i>&nbsp; Start</a> 
                 <a (click)="stopChallengeInstance(challengInstance)" class="dropdown-item" *ngIf="challengInstance.instanceStatus != 'INACTIVE'"><i class='fas fa-stop'></i>&nbsp; Stop</a> 
                 <a (click)="manageProblems(challengInstance)" class="dropdown-item" *ngIf="true"> <i class="fas fa-list" aria-hidden="true"></i> &nbsp;Problems </a>                                 
-                <a (click)="evaluateChallengeInstance(challengInstance)" class="dropdown-item" *ngIf="challengInstance.instanceStatus == 'LIVE' || challengInstance.instanceStatus == 'EXPIRED'"><i class="fas fa-poll"></i>&nbsp; Evaluate</a>                      
+                <a (click)="evaluateChallengeInstance(challengInstance)" class="dropdown-item" *ngIf="challengInstance.instanceStatus == 'LIVE' || challengInstance.instanceStatus == 'EXPIRED'"><i class="fas fa-poll"></i>&nbsp; Submissions</a>                      
               </div>
             </div>                        
           </td>          

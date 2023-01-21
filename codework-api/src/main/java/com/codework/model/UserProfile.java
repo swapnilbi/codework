@@ -26,6 +26,7 @@ public class UserProfile {
 		userProfile.setId(user.getId());
 		userProfile.setFullName(user.getFullName());
 		userProfile.setGender(user.getGender());
+		userProfile.setEmail(user.getEmail());
 		return userProfile;
 	}
 
